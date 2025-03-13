@@ -11,8 +11,5 @@ public class Main {
 
         // Adiciona a loja ao arquivo JSON
         LojaController.create(loja1);
-
-        // Exibe uma mensagem indicando que a loja foi adicionada
-        System.out.println("Loja adicionada: " + loja1.getNome() + " - " + loja1.getCpfCnpj());
     }
 }
