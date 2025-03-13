@@ -13,53 +13,68 @@ public class LojaController {
     private static final String ARQUIVO_LOJAS = "src/main/resources/data/lojas.json";
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static void create(Loja loja) {
-
-        boolean checkLoja = false;
-        List<Loja> lojas = new ArrayList<>();
-        File file = new File(ARQUIVO_LOJAS);
-
-        // Garantir que o diretório exista
-        File parentDir = file.getParentFile();
-        if (parentDir != null && !parentDir.exists()) {
-            parentDir.mkdirs(); // Cria o diretório, se necessário
+    public static Loja create(Loja loja) {
+        if (loja == null || loja.getCpfCnpj() == null || loja.getNome() == null || loja.getSenha() == null
+                || loja.getEmail() == null || loja.getEndereco() == null) {
+            throw new IllegalArgumentException("Loja ou dados inválidos.");
         }
-
-        // Se o arquivo já existir, lê as lojas, caso contrário, cria o arquivo
-        if (file.exists()) {
-            try (Reader reader = new FileReader(file)) {
-                System.out.println("Arquivo encontrado");
-
-                // Lê a lista de lojas do arquivo
-                lojas = objectMapper.readValue(reader,
-                        TypeFactory.defaultInstance().constructCollectionType(List.class, Loja.class));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-
-            try {
-                if (file.createNewFile()) {
-                    System.out.println("Arquivo criado: " + file.getName());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        List<Loja> lojas = carregarLojas();
 
         for (Loja l : lojas) {
             if (l.getCpfCnpj().equals(loja.getCpfCnpj())) {
                 System.out.println("Não foi possível adicionar a loja pois ela já está cadastrada no sistema.");
-                return;
+                throw new IllegalArgumentException("Loja já cadastrada no sistema.");
+
             }
         }
         lojas.add(loja);
+        salvarLojas(lojas);
+        System.out.println("Loja adicionada.");
+        return loja;
+    }
 
-        try (Writer writer = new FileWriter(file)) {
+    public static Loja getLojaPorCpfCnpj(String cpfCnpj) {
+        if (cpfCnpj == null || cpfCnpj.isEmpty()) {
+            throw new IllegalArgumentException("CPF/CNPJ inválido.");
+        }
+        List<Loja> lojas = carregarLojas();
+        for (Loja loja : lojas) {
+            if (loja.getCpfCnpj().equals(cpfCnpj)) {
+                return loja;
+            }
+        }
+        return null;
+    }
+
+    public static List<Loja> getTodasLojas() {
+        List<Loja> lojas = carregarLojas();
+        lojas.sort((l1, l2) -> l1.getNome().compareToIgnoreCase(l2.getNome()));
+        return lojas;
+    }
+
+    private static List<Loja> carregarLojas() {
+        File file = new File(ARQUIVO_LOJAS);
+        if (!file.exists()) {
+            return new ArrayList<>();
+        }
+        try (Reader reader = new FileReader(file)) {
+            return objectMapper.readValue(reader,
+                    TypeFactory.defaultInstance().constructCollectionType(List.class, Loja.class));
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar lojas.", e);
+        }
+    }
+
+    private static List<Loja> salvarLojas(List<Loja> lojas) {
+        if (lojas == null) {
+            throw new IllegalArgumentException("Lista de lojas não pode ser nula.");
+        }
+        try (Writer writer = new FileWriter(ARQUIVO_LOJAS)) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, lojas);
-            System.out.println("Loja adicionada.\nProcesso finalizado.");
+            return lojas;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

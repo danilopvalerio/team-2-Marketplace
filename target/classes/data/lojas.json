@@ -4,4 +4,10 @@
   "senha" : "senha123",
   "cpfCnpj" : "11.345.678/0001-94",
   "endereco" : "Rua Exemplo, 123"
+}, {
+  "nome" : "Loja Exemplo4",
+  "email" : "loja@exemplo2.com",
+  "senha" : "senha123",
+  "cpfCnpj" : "12.345.678/9000-01",
+  "endereco" : "Rua Exemplo, 123"
 } ]
