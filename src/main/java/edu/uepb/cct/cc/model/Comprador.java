@@ -1,25 +1,24 @@
+package edu.uepb.cct.cc.model;
 import java.util.regex.Pattern;
 
-public class Loja {
+public class Comprador {
     private String nome;
     private String email;
     private String senha;
-    private String cpfCnpj;
+    private String cpf;
     private String endereco;
 
-    // Regex para validação de e-mail e CPF/CNPJ
+    // Regex para validação de e-mail e CPF
     private static final Pattern EMAIL_PATTERN = 
         Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final Pattern CPF_PATTERN = 
         Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
-    private static final Pattern CNPJ_PATTERN = 
-        Pattern.compile("\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}");
 
-    public Loja(String nome, String email, String senha, String cpfCnpj, String endereco) {
+    public Comprador(String nome, String email, String senha, String cpf, String endereco) {
         this.nome = nome;
         setEmail(email);
-        this.senha = senha;
-        setCpfCnpj(cpfCnpj);
+        setSenha(senha);
+        setCpf(cpf);
         this.endereco = endereco;
     }
 
@@ -47,18 +46,21 @@ public class Loja {
     }
 
     public void setSenha(String senha) {
+        if (senha.length() < 6) {
+            throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres");
+        }
         this.senha = senha;
     }
 
-    public String getCpfCnpj() {
-        return cpfCnpj;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setCpfCnpj(String cpfCnpj) {
-        if (!CPF_PATTERN.matcher(cpfCnpj).matches() && !CNPJ_PATTERN.matcher(cpfCnpj).matches()) {
-            throw new IllegalArgumentException("CPF ou CNPJ inválido");
+    public void setCpf(String cpf) {
+        if (!CPF_PATTERN.matcher(cpf).matches()) {
+            throw new IllegalArgumentException("CPF inválido");
         }
-        this.cpfCnpj = cpfCnpj;
+        this.cpf = cpf;
     }
 
     public String getEndereco() {
@@ -71,10 +73,10 @@ public class Loja {
 
     @Override
     public String toString() {
-        return "Loja {" +
+        return "Comprador {" +
                 "nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
-                ", cpfCnpj='" + cpfCnpj + '\'' +
+                ", cpf='" + cpf + '\'' +
                 ", endereco='" + endereco + '\'' +
                 '}';
     }

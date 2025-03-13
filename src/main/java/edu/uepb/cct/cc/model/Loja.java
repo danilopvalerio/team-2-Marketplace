@@ -1,24 +1,31 @@
+package edu.uepb.cct.cc.model;
 import java.util.regex.Pattern;
 
-public class Comprador {
+public class Loja {
     private String nome;
     private String email;
     private String senha;
-    private String cpf;
+    private String cpfCnpj;
     private String endereco;
 
-    // Regex para validação de e-mail e CPF
+    // Regex para validação de e-mail e CPF/CNPJ
     private static final Pattern EMAIL_PATTERN = 
         Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final Pattern CPF_PATTERN = 
         Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
+    private static final Pattern CNPJ_PATTERN = 
+        Pattern.compile("\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}");
 
-    public Comprador(String nome, String email, String senha, String cpf, String endereco) {
+    public Loja(String nome, String email, String senha, String cpfCnpj, String endereco) {
         this.nome = nome;
         setEmail(email);
-        setSenha(senha);
-        setCpf(cpf);
+        this.senha = senha;
+        setCpfCnpj(cpfCnpj);
         this.endereco = endereco;
+    }
+
+    public Loja() {
+        
     }
 
     public String getNome() {
@@ -45,21 +52,18 @@ public class Comprador {
     }
 
     public void setSenha(String senha) {
-        if (senha.length() < 6) {
-            throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres");
-        }
         this.senha = senha;
     }
 
-    public String getCpf() {
-        return cpf;
+    public String getCpfCnpj() {
+        return cpfCnpj;
     }
 
-    public void setCpf(String cpf) {
-        if (!CPF_PATTERN.matcher(cpf).matches()) {
-            throw new IllegalArgumentException("CPF inválido");
+    public void setCpfCnpj(String cpfCnpj) {
+        if (!CPF_PATTERN.matcher(cpfCnpj).matches() && !CNPJ_PATTERN.matcher(cpfCnpj).matches()) {
+            throw new IllegalArgumentException("CPF ou CNPJ inválido");
         }
-        this.cpf = cpf;
+        this.cpfCnpj = cpfCnpj;
     }
 
     public String getEndereco() {
@@ -72,10 +76,10 @@ public class Comprador {
 
     @Override
     public String toString() {
-        return "Comprador {" +
+        return "Loja {" +
                 "nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
-                ", cpf='" + cpf + '\'' +
+                ", cpfCnpj='" + cpfCnpj + '\'' +
                 ", endereco='" + endereco + '\'' +
                 '}';
     }

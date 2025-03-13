@@ -1,0 +1,4 @@
+edu\uepb\cct\cc\controller\ProdutoController.class
+edu\uepb\cct\cc\model\Produto.class
+edu\uepb\cct\cc\model\Comprador.class
+edu\uepb\cct\cc\model\Loja.class

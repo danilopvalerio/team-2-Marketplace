@@ -1,3 +1,4 @@
+package edu.uepb.cct.cc.model;
 public class Produto {
     private String nome;
     private float valor;
