@@ -1,6 +1,7 @@
 package edu.uepb.cct.cc;
 
 import edu.uepb.cct.cc.controller.LojaController;
+import edu.uepb.cct.cc.controller.ProdutoController;
 import edu.uepb.cct.cc.model.Loja;
 
 public class Main {
@@ -18,18 +19,23 @@ public class Main {
         // LojaController.create(loja1);
         // LojaController.create(loja2);
 
-        System.out.println("Todas as lojas:");
-        for (Loja loja : LojaController.getTodasLojas()) {
-            System.out.println(loja.getNome() + " - " + loja.getCpfCnpj());
-        }
+        // System.out.println("Todas as lojas:");
+        // for (Loja loja : LojaController.getTodasLojas()) {
+        //     System.out.println(loja.getNome() + " - " + loja.getCpfCnpj());
+        // }
 
-        System.out.println("\nBuscando loja pelo CNPJ: 12.345.678/9000-01");
-        Loja lojaEncontrada = LojaController.getLojaPorCpfCnpj("12.345.678/9000-01");
-        if (lojaEncontrada != null) {
-            System.out.println("Loja encontrada: " + lojaEncontrada.getNome());
-        } else {
-            System.out.println("Loja não encontrada.");
-        }
+        // System.out.println("\nBuscando loja pelo CNPJ: 12.345.678/9000-01");
+        // Loja lojaEncontrada = LojaController.getLojaPorCpfCnpj("12.345.678/9000-01");
+        // if (lojaEncontrada != null) {
+        //     System.out.println("Loja encontrada: " + lojaEncontrada.getNome());
+        // } else {
+        //     System.out.println("Loja não encontrada.");
+        // }
 
+        ProdutoController produtoController = new ProdutoController();
+        
+        // Teste de cadastro de produto
+        String resultado = produtoController.cadastrarProduto("Short", 49.90f, "Vestuário", 100, "Nike", "Camiseta esportiva de algodão");
+        System.out.println(resultado);  // Espera-se "Produto cadastrado com sucesso.
     }
 }
