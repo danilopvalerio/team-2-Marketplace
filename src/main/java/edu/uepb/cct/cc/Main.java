@@ -1,8 +1,13 @@
 package edu.uepb.cct.cc;
 
+import edu.uepb.cct.cc.controller.CompradorController;
+import edu.uepb.cct.cc.model.Comprador;
+
 import edu.uepb.cct.cc.controller.LojaController;
-import edu.uepb.cct.cc.controller.ProdutoController;
 import edu.uepb.cct.cc.model.Loja;
+
+import edu.uepb.cct.cc.controller.ProdutoController;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -32,10 +37,27 @@ public class Main {
         //     System.out.println("Loja não encontrada.");
         // }
 
-        ProdutoController produtoController = new ProdutoController();
+
+
+
+//CADASTRANDO PRODUTO
+        /*ProdutoController produtoController = new ProdutoController();
         
         // Teste de cadastro de produto
         String resultado = produtoController.cadastrarProduto("Short", 49.90f, "Vestuário", 100, "Nike", "Camiseta esportiva de algodão");
-        System.out.println(resultado);  // Espera-se "Produto cadastrado com sucesso.
+        System.out.println(resultado);  // Espera-se "Produto cadastrado com sucesso.*/
+
+
+//CADASTRANDO COMPRADOR
+
+        Comprador comprador = new Comprador(
+                "Maria Silva",
+                "maria.silva@email.com",
+                "senha456",
+                "127.456.797-40",
+                "Rua das Flores, 128"
+        );
+        // Adicionar o comprador ao sistema
+        CompradorController.create(comprador);
     }
 }

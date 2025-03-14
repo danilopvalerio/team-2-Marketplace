@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class CompradorController {
-    private static final String ARQUIVO_COMPRADORES = Paths.get("src", "main", "resources", "data", "compradores.json").toString();
+    private static final String ARQUIVO_COMPRADORES = "compradores.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = Logger.getLogger(CompradorController.class.getName());
 
@@ -26,20 +26,26 @@ public class CompradorController {
         }
 
         // Se o arquivo existir, lê os compradores
-        if (file.exists()) {
+        if (file.exists() && file.length() > 0) {  // Verifique se o arquivo não está vazio
             try (Reader reader = new FileReader(file)) {
                 compradores = objectMapper.readValue(reader,
                         TypeFactory.defaultInstance().constructCollectionType(List.class, Comprador.class));
+                System.out.println("Compradores lidos do arquivo: " + compradores);
             } catch (IOException e) {
                 logger.severe("Erro ao ler o arquivo de compradores: " + e.getMessage());
             }
         } else {
-            try {
-                if (file.createNewFile()) {
-                    logger.info("Arquivo criado: " + file.getName());
+            // Arquivo vazio ou não existe, apenas cria a lista vazia
+            if (!file.exists()) {
+                try {
+                    if (file.createNewFile()) {
+                        logger.info("Arquivo criado: " + file.getName());
+                    }
+                } catch (IOException e) {
+                    logger.severe("Erro ao criar o arquivo de compradores: " + e.getMessage());
                 }
-            } catch (IOException e) {
-                logger.severe("Erro ao criar o arquivo de compradores: " + e.getMessage());
+            } else {
+                System.out.println("Iniciando lista de Compradores.");
             }
         }
 

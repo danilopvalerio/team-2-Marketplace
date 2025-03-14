@@ -14,6 +14,10 @@ public class Comprador {
     private static final Pattern CPF_PATTERN = 
         Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
 
+    public Comprador(){
+
+    }
+
     public Comprador(String nome, String email, String senha, String cpf, String endereco) {
         this.nome = nome;
         setEmail(email);
