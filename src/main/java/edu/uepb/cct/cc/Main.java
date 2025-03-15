@@ -1,7 +1,4 @@
-package edu.uepb.cct.cc;
-
-import edu.uepb.cct.cc.controller.CompradorController;
-import edu.uepb.cct.cc.model.Comprador;
+/*package edu.uepb.cct.cc;
 
 import edu.uepb.cct.cc.controller.LojaController;
 import edu.uepb.cct.cc.model.Loja;
@@ -68,18 +65,57 @@ public class Main {
          * System.out.println(resultado); // Espera-se "Produto cadastrado com sucesso.
          */
 
-        // CADASTRANDO COMPRADOR
+    /*}
 
-        // Comprador comprador = new Comprador(
-        // "Maria Silva",
-        // "maria.silva@email.com",
-        // "senha456",
-        // "127.456.797-40",
-        // "Rua das Flores, 128"
-        // );
-        // // Adicionar o comprador ao sistema
-        // CompradorController.create(comprador);
+}*/
 
+
+
+//MAIN PARA CADASTRO E EXIBIÇÃO DE COMPRADOR (TESTE)
+package edu.uepb.cct.cc;
+
+import edu.uepb.cct.cc.controller.CompradorController;
+import edu.uepb.cct.cc.model.Comprador;
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        // Criando alguns compradores para teste
+        Comprador comprador1 = new Comprador("João Silva", "joao@email.com", "senha123", "123.456.789-00", "Rua A, 123");
+        Comprador comprador2 = new Comprador("Maria Oliveira", "maria@email.com", "senha456", "987.654.321-00", "Rua B, 456");
+
+        // Adicionando compradores ao sistema
+        System.out.println("Adicionando compradores...");
+        CompradorController.create(comprador1);
+        CompradorController.create(comprador2);
+
+        // Listando todos os compradores
+        System.out.println("Lista de compradores cadastrados:");
+        List<Comprador> compradores = CompradorController.getTodosCompradores();
+        if (compradores.isEmpty()) {
+            System.out.println("Nenhum comprador cadastrado.");
+        } else {
+            for (Comprador c : compradores) {
+                System.out.println(c);
+            }
+        }
+
+        // Buscando um comprador pelo CPF
+        System.out.println("Buscando comprador pelo CPF:");
+        Comprador compradorEncontrado = CompradorController.getCompradorPorCpf("123.456.789-00");
+        if (compradorEncontrado != null) {
+            System.out.println("Comprador encontrado: " + compradorEncontrado);
+        } else {
+            System.out.println("Comprador não encontrado.");
+        }
     }
-
 }
+
+
+
+
+
+
+
+
