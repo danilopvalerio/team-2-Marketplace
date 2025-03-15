@@ -77,4 +77,18 @@ public class LojaController {
             return null;
         }
     }
+
+    public static List<Loja> deleteLojaPorCpfCnpj(String cpfCnpj) {
+        if (cpfCnpj == null || cpfCnpj.isEmpty()) {
+            throw new IllegalArgumentException("CPF/CNPJ inválido.");
+        }
+        List<Loja> lojas = carregarLojas();
+        boolean removido = lojas.removeIf(loja -> loja.getCpfCnpj().equals(cpfCnpj));
+        if (!removido) {
+            throw new IllegalArgumentException("Loja não encontrada.");
+        }
+        salvarLojas(lojas);
+        System.out.println("Loja removida com sucesso.");
+        return lojas;
+    }
 }
