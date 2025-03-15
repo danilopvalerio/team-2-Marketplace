@@ -1,4 +1,5 @@
 package edu.uepb.cct.cc.model;
+
 public class Produto {
     private String nome;
     private float valor;
@@ -7,6 +8,8 @@ public class Produto {
     private String marca;
     private String descricao;
 
+    private static final String DATA_PATTERN = "^[a-zA-Z0-9\\s]+$"; 
+
     public Produto(String nome, float valor, String tipo, int quantidade, String marca, String descricao) {
         setNome(nome);
         setValor(valor);
@@ -14,6 +17,9 @@ public class Produto {
         setQuantidade(quantidade);
         setMarca(marca);
         setDescricao(descricao);
+    }
+
+    public Produto() {
     }
 
     public String getNome() {
@@ -41,7 +47,12 @@ public class Produto {
     }
 
     public void setNome(String nome) {
-        validarString(nome, "Nome");
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome não pode ser vazio ou nulo.");
+        }
+        if (!nome.matches(DATA_PATTERN)) {
+            throw new IllegalArgumentException("Nome do produto contém caracteres inválidos.");
+        }
         this.nome = nome;
     }
 
@@ -53,7 +64,12 @@ public class Produto {
     }
 
     public void setTipo(String tipo) {
-        validarString(tipo, "Tipo");
+        if (tipo == null || tipo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Tipo não pode ser vazio ou nulo.");
+        }
+        if (!tipo.matches(DATA_PATTERN)) {
+            throw new IllegalArgumentException("Tipo do produto contém caracteres inválidos.");
+        }
         this.tipo = tipo;
     }
 
@@ -65,19 +81,20 @@ public class Produto {
     }
 
     public void setMarca(String marca) {
-        validarString(marca, "Marca");
+        if (marca == null || marca.trim().isEmpty()) {
+            throw new IllegalArgumentException("Marca não pode ser vazia ou nula.");
+        }
+        if (!marca.matches(DATA_PATTERN)) {
+            throw new IllegalArgumentException("Marca do produto contém caracteres inválidos.");
+        }
         this.marca = marca;
     }
 
     public void setDescricao(String descricao) {
-        validarString(descricao, "Descrição");
-        this.descricao = descricao;
-    }
-
-    private void validarString(String valor, String campo) {
-        if (valor == null || valor.trim().isEmpty()) {
-            throw new IllegalArgumentException(campo + " não pode ser vazio ou nulo.");
+        if (descricao == null || descricao.trim().isEmpty()) {
+            throw new IllegalArgumentException("Descrição não pode ser vazia ou nula.");
         }
+        this.descricao = descricao;
     }
 
     @Override

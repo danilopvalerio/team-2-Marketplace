@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ProdutoController {
@@ -55,5 +56,37 @@ public class ProdutoController {
         } catch (Exception e) {
             return "Erro inesperado ao cadastrar o produto.";
         }
+    }
+
+    public String visualizarProduto(String nome) {
+        carregarProdutos(); // Garante que temos os dados mais recentes
+        
+        if (produtos == null || produtos.isEmpty()) {
+            return "Produto não encontrado.";
+        }
+        
+        if (nome == null || nome.trim().isEmpty()) {
+            return listarTodosOsProdutos();
+        }
+        
+        for (Produto p : produtos) {
+            if (p.getNome().equalsIgnoreCase(nome)) {
+                return p.toString();
+            }
+        }
+        return "Produto não encontrado.";
+    }
+
+    private String listarTodosOsProdutos() {
+        if (produtos == null || produtos.isEmpty()) {
+            return "Nenhum produto cadastrado.";
+        }
+        
+        produtos.sort(Comparator.comparing(Produto::getNome));
+        StringBuilder lista = new StringBuilder("Lista de Produtos:\n");
+        for (Produto p : produtos) {
+            lista.append(p.toString()).append("\n");
+        }
+        return lista.toString();
     }
 }
