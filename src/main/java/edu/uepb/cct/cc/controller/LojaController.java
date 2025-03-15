@@ -78,6 +78,31 @@ public class LojaController {
         }
     }
 
+    public static Loja atualizarLoja(String cpfCnpj, Loja lojaAtualizada) {
+        if (cpfCnpj == null || cpfCnpj.isEmpty() || lojaAtualizada == null) {
+            throw new IllegalArgumentException("CPF/CNPJ ou dados inválidos.");
+        }
+        List<Loja> lojas = carregarLojas();
+        boolean atualizado = false;
+
+        for (int i = 0; i < lojas.size(); i++) {
+            if (lojas.get(i).getCpfCnpj().equals(cpfCnpj)) {
+                lojaAtualizada.setCpfCnpj(cpfCnpj);
+                lojas.set(i, lojaAtualizada);
+                atualizado = true;
+                break;
+            }
+        }
+
+        if (!atualizado) {
+            throw new IllegalArgumentException("Loja não encontrada.");
+        }
+
+        salvarLojas(lojas);
+        System.out.println("Loja atualizada com sucesso.");
+        return lojaAtualizada;
+    }
+
     public static List<Loja> deleteLojaPorCpfCnpj(String cpfCnpj) {
         if (cpfCnpj == null || cpfCnpj.isEmpty()) {
             throw new IllegalArgumentException("CPF/CNPJ inválido.");

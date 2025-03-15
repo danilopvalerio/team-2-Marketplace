@@ -17,9 +17,9 @@ public class Main {
         // "11.345.678/0001-94",
         // "Rua Exemplo, 123");
 
-        Loja loja2 = new Loja("Loja Exemplo4", "loja@exemplo2.com", "senha123",
-                "12.345.678/9000-01",
-                "Rua Exemplo, 123");
+        // Loja loja2 = new Loja("Loja Exemplo4", "loja@exemplo2.com", "senha123",
+        // "12.345.678/9000-01",
+        // "Rua Exemplo, 123");
 
         // // Adiciona a loja ao arquivo JSON
         // LojaController.create(loja1);
@@ -39,6 +39,24 @@ public class Main {
         // }
 
         // LojaController.deleteLojaPorCpfCnpj("12.345.678/9000-01");
+
+        String cpfCnpj = "12.345.678/9000-01";
+
+        // Criando uma nova loja com dados atualizados
+        Loja lojaAtualizada = new Loja();
+        lojaAtualizada.setCpfCnpj(cpfCnpj);
+        lojaAtualizada.setNome("Loja Atualizada");
+        lojaAtualizada.setEmail("loja@atualizada.com");
+        lojaAtualizada.setEndereco("Rua Atualizada, 123");
+        lojaAtualizada.setSenha("novaSenha");
+
+        try {
+            // Atualizando a loja
+            Loja loja = LojaController.atualizarLoja(cpfCnpj, lojaAtualizada);
+            System.out.println("Loja atualizada: " + loja);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
 
         // CADASTRANDO PRODUTO
         /*
