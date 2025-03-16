@@ -28,21 +28,8 @@ public class CompradorController {
             try (Reader reader = new FileReader(file)) {
                 compradores = objectMapper.readValue(reader,
                         TypeFactory.defaultInstance().constructCollectionType(List.class, Comprador.class));
-                System.out.println("Compradores lidos do arquivo: " + compradores);
             } catch (IOException e) {
                 logger.severe("Erro ao ler o arquivo de compradores: " + e.getMessage());
-            }
-        } else {
-            if (!file.exists()) {
-                try {
-                    if (file.createNewFile()) {
-                        logger.info("Arquivo criado: " + file.getName());
-                    }
-                } catch (IOException e) {
-                    logger.severe("Erro ao criar o arquivo de compradores: " + e.getMessage());
-                }
-            } else {
-                System.out.println("Iniciando lista de Compradores.");
             }
         }
 
@@ -66,7 +53,6 @@ public class CompradorController {
     public static List<Comprador> getTodosCompradores() {
         File file = new File(ARQUIVO_COMPRADORES);
         if (!file.exists() || file.length() == 0) {
-            System.out.println("Nenhum comprador cadastrado.");
             return new ArrayList<>();
         }
         try (Reader reader = new FileReader(file)) {
@@ -90,8 +76,26 @@ public class CompradorController {
                 return comprador;
             }
         }
-        System.out.println("Comprador não encontrado.");
         return null;
     }
 
+    public static String deleteCompradorPorCpf(String cpf) {
+        if (cpf == null || cpf.isEmpty()) {
+            return "CPF inválido.";
+        }
+        List<Comprador> compradores = getTodosCompradores();
+        boolean removido = compradores.removeIf(comprador -> comprador.getCpf().equals(cpf));
+
+        if (!removido) {
+            return "Comprador não encontrado.";
+        }
+
+        try (Writer writer = new FileWriter(ARQUIVO_COMPRADORES)) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, compradores);
+            return "Comprador removido com sucesso.";
+        } catch (IOException e) {
+            logger.severe("Erro ao salvar compradores após remoção: " + e.getMessage());
+            return "Erro ao remover comprador.";
+        }
+    }
 }
