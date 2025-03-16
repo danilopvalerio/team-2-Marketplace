@@ -71,7 +71,7 @@ public class Main {
 
 
 
-//MAIN PARA CADASTRO E EXIBIÇÃO DE COMPRADOR (TESTE)
+//MAIN PARA CADASTRO, EXIBIÇÃO e EXCLUSÃO DE COMPRADOR (TESTE)
 package edu.uepb.cct.cc;
 
 import edu.uepb.cct.cc.controller.CompradorController;
@@ -92,6 +92,28 @@ public class Main {
 
         // Listando todos os compradores
         System.out.println("Lista de compradores cadastrados:");
+        listarCompradores();
+
+        // Buscando um comprador pelo CPF
+        System.out.println("Buscando comprador pelo CPF: 123.456.789-00");
+        Comprador compradorEncontrado = CompradorController.getCompradorPorCpf("123.456.789-00");
+        if (compradorEncontrado != null) {
+            System.out.println("Comprador encontrado: " + compradorEncontrado);
+        } else {
+            System.out.println("Comprador não encontrado.");
+        }
+
+        // Removendo um comprador pelo CPF
+        System.out.println("Removendo comprador com CPF: 123.456.789-00");
+        String mensagemRemocao = CompradorController.deleteCompradorPorCpf("123.456.789-00");
+        System.out.println(mensagemRemocao);
+
+        // Listando novamente para verificar a remoção
+        System.out.println("Lista de compradores após remoção:");
+        listarCompradores();
+    }
+
+    private static void listarCompradores() {
         List<Comprador> compradores = CompradorController.getTodosCompradores();
         if (compradores.isEmpty()) {
             System.out.println("Nenhum comprador cadastrado.");
@@ -100,17 +122,9 @@ public class Main {
                 System.out.println(c);
             }
         }
-
-        // Buscando um comprador pelo CPF
-        System.out.println("Buscando comprador pelo CPF:");
-        Comprador compradorEncontrado = CompradorController.getCompradorPorCpf("123.456.789-00");
-        if (compradorEncontrado != null) {
-            System.out.println("Comprador encontrado: " + compradorEncontrado);
-        } else {
-            System.out.println("Comprador não encontrado.");
-        }
     }
 }
+
 
 
 
