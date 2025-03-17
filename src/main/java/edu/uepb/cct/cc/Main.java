@@ -103,6 +103,16 @@ public class Main {
             System.out.println("Comprador não encontrado.");
         }
 
+        // Atualizando dados do comprador
+        System.out.println("Atualizando comprador com CPF: 123.456.789-00");
+        Comprador compradorAtualizado = new Comprador("João Souza", "joaosouza@email.com", "novaSenha123", "123.456.789-00", "Rua Nova, 789");
+        CompradorController.atualizarComprador("123.456.789-00", compradorAtualizado);
+
+        // Verificando atualização
+        System.out.println("Comprador atualizado:");
+        Comprador compradorAtualizadoEncontrado = CompradorController.getCompradorPorCpf("123.456.789-00");
+        System.out.println(compradorAtualizadoEncontrado);
+
         // Removendo um comprador pelo CPF
         System.out.println("Removendo comprador com CPF: 123.456.789-00");
         String mensagemRemocao = CompradorController.deleteCompradorPorCpf("123.456.789-00");
