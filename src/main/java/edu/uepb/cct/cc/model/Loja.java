@@ -12,7 +12,7 @@ public class Loja {
     private static final Pattern EMAIL_PATTERN = 
         Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final Pattern CPF_PATTERN = 
-        Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
+        Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"); //  o "\d" é para aceitar apenas digitos numéricos
     private static final Pattern CNPJ_PATTERN = 
         Pattern.compile("\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}");
 
