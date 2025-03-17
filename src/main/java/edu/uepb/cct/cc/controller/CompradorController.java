@@ -98,4 +98,34 @@ public class CompradorController {
             return "Erro ao remover comprador.";
         }
     }
+
+    public static Comprador atualizarComprador(String cpf, Comprador compradorAtualizado) {
+        if (cpf == null || cpf.isEmpty() || compradorAtualizado == null) {
+            throw new IllegalArgumentException("CPF ou dados inválidos.");
+        }
+        List<Comprador> compradores = getTodosCompradores();
+        boolean atualizado = false;
+
+        for (int i = 0; i < compradores.size(); i++) {
+            if (compradores.get(i).getCpf().equals(cpf)) {
+                compradorAtualizado.setCpf(cpf); // Mantém o CPF original
+                compradores.set(i, compradorAtualizado);
+                atualizado = true;
+                break;
+            }
+        }
+
+        if (!atualizado) {
+            throw new IllegalArgumentException("Comprador não encontrado.");
+        }
+
+        try (Writer writer = new FileWriter(ARQUIVO_COMPRADORES)) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, compradores);
+            System.out.println("Comprador atualizado com sucesso.");
+            return compradorAtualizado;
+        } catch (IOException e) {
+            logger.severe("Erro ao salvar compradores após atualização: " + e.getMessage());
+            throw new RuntimeException("Erro ao atualizar comprador.", e);
+        }
+    }
 }
