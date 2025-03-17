@@ -1,5 +1,7 @@
 package edu.uepb.cct.cc.model;
 
+import java.util.Locale;
+
 public class Produto {
     private String nome;
     private float valor;
@@ -57,13 +59,10 @@ public class Produto {
     }
 
     public void setValor(float valor) {
-        try {
-            if (valor <= 0) {
-                throw new IllegalArgumentException("O valor do produto deve ser maior que zero.");
-            }
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("O valor do produto deve ser numérico.");
+        if (valor <= 0) {
+            throw new IllegalArgumentException("O valor do produto deve ser maior que zero.");
         }
+        this.valor = valor; // Agora o valor será salvo corretamente
     }
 
     public void setTipo(String tipo) {
@@ -77,13 +76,10 @@ public class Produto {
     }
 
     public void setQuantidade(int quantidade) {
-        try {
-            if (quantidade < 0) {
-                throw new IllegalArgumentException("A quantidade não pode ser negativa.");
-            }
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("A quantidade deve ser um número inteiro.");
+        if (quantidade < 0) {
+            throw new IllegalArgumentException("A quantidade não pode ser negativa.");
         }
+        this.quantidade = quantidade; // Atribui a quantidade corretamente
     }
 
     public void setMarca(String marca) {
@@ -105,13 +101,16 @@ public class Produto {
 
     @Override
     public String toString() {
+        // Formatar o valor usando o locale dos EUA para garantir o ponto como separador
+        // decimal
         return "Produto: {" +
                 "nome='" + nome + '\'' +
-                ", valor=" + String.format("R$ %.2f", valor) +
+                ", valor=" + String.format(Locale.US, "R$ %.2f", valor) +
                 ", tipo='" + tipo + '\'' +
                 ", quantidade=" + quantidade +
                 ", marca='" + marca + '\'' +
                 ", descricao='" + descricao + '\'' +
                 '}';
     }
+
 }

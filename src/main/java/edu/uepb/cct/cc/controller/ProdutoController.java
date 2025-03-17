@@ -134,4 +134,89 @@ public class ProdutoController {
         }
         return lista.toString();
     }
+
+    public String atualizarProduto(String nome, String campo, String novoValor) {
+        carregarProdutos();
+
+        if (produtos == null || produtos.isEmpty()) {
+            return "Nenhum produto cadastrado.";
+        }
+
+        for (Produto p : produtos) {
+            if (p.getNome().equalsIgnoreCase(nome)) {
+                boolean atualizado = false;
+
+                switch (campo.toLowerCase()) {
+                    case "nome":
+                        if (novoValor != null && !novoValor.trim().isEmpty()) {
+                            p.setNome(novoValor);
+                            atualizado = true;
+                        } else {
+                            return "Nome inválido.";
+                        }
+                        break;
+                    case "valor":
+                        try {
+                            float valor = Float.parseFloat(novoValor);
+                            if (valor > 0) {
+                                p.setValor(valor);
+                                atualizado = true;
+                            } else {
+                                return "Valor deve ser maior que zero.";
+                            }
+                        } catch (NumberFormatException e) {
+                            return "Valor inválido.";
+                        }
+                        break;
+                    case "tipo":
+                        if (novoValor != null && !novoValor.trim().isEmpty()) {
+                            p.setTipo(novoValor);
+                            atualizado = true;
+                        } else {
+                            return "Tipo inválido.";
+                        }
+                        break;
+                    case "quantidade":
+                        try {
+                            int quantidade = Integer.parseInt(novoValor);
+                            if (quantidade >= 0) {
+                                p.setQuantidade(quantidade);
+                                atualizado = true;
+                            } else {
+                                return "Quantidade não pode ser negativa.";
+                            }
+                        } catch (NumberFormatException e) {
+                            return "Quantidade inválida.";
+                        }
+                        break;
+                    case "marca":
+                        if (novoValor != null && !novoValor.trim().isEmpty()) {
+                            p.setMarca(novoValor);
+                            atualizado = true;
+                        } else {
+                            return "Marca inválida.";
+                        }
+                        break;
+                    case "descricao":
+                        if (novoValor != null && !novoValor.trim().isEmpty()) {
+                            p.setDescricao(novoValor);
+                            atualizado = true;
+                        } else {
+                            return "Descrição inválida.";
+                        }
+                        break;
+                    default:
+                        return "Campo para atualização inválido.";
+                }
+
+                if (atualizado) {
+                    salvarProdutos();
+                    return "Produto atualizado com sucesso.";
+                } else {
+                    return "Não foi possível atualizar o produto. Verifique os dados informados.";
+                }
+            }
+        }
+        return "Produto não encontrado.";
+    }
 }
