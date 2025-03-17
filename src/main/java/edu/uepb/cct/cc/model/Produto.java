@@ -8,7 +8,7 @@ public class Produto {
     private String marca;
     private String descricao;
 
-    private static final String DATA_PATTERN = "^[a-zA-Z0-9\\s]+$"; 
+    private static final String PRODUCT_FIELD_PATTERN = "^[\\p{L}0-9\\s]+$";
 
     public Produto(String nome, float valor, String tipo, int quantidade, String marca, String descricao) {
         setNome(nome);
@@ -50,41 +50,47 @@ public class Produto {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome não pode ser vazio ou nulo.");
         }
-        if (!nome.matches(DATA_PATTERN)) {
+        if (!nome.matches(PRODUCT_FIELD_PATTERN)) {
             throw new IllegalArgumentException("Nome do produto contém caracteres inválidos.");
         }
         this.nome = nome;
     }
 
     public void setValor(float valor) {
-        if (valor <= 0) {
-            throw new IllegalArgumentException("O valor do produto deve ser maior que zero.");
+        try {
+            if (valor <= 0) {
+                throw new IllegalArgumentException("O valor do produto deve ser maior que zero.");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("O valor do produto deve ser numérico.");
         }
-        this.valor = valor;
     }
 
     public void setTipo(String tipo) {
         if (tipo == null || tipo.trim().isEmpty()) {
             throw new IllegalArgumentException("Tipo não pode ser vazio ou nulo.");
         }
-        if (!tipo.matches(DATA_PATTERN)) {
+        if (!tipo.matches(PRODUCT_FIELD_PATTERN)) {
             throw new IllegalArgumentException("Tipo do produto contém caracteres inválidos.");
         }
         this.tipo = tipo;
     }
 
     public void setQuantidade(int quantidade) {
-        if (quantidade < 0) {
-            throw new IllegalArgumentException("A quantidade não pode ser negativa.");
+        try {
+            if (quantidade < 0) {
+                throw new IllegalArgumentException("A quantidade não pode ser negativa.");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("A quantidade deve ser um número inteiro.");
         }
-        this.quantidade = quantidade;
     }
 
     public void setMarca(String marca) {
         if (marca == null || marca.trim().isEmpty()) {
             throw new IllegalArgumentException("Marca não pode ser vazia ou nula.");
         }
-        if (!marca.matches(DATA_PATTERN)) {
+        if (!marca.matches(PRODUCT_FIELD_PATTERN)) {
             throw new IllegalArgumentException("Marca do produto contém caracteres inválidos.");
         }
         this.marca = marca;
