@@ -25,53 +25,57 @@ public class Loja {
     }
 
     public Loja() {
-        
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public Loja setNome(String nome) {
         this.nome = nome;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public Loja setEmail(String email) {
         if (!EMAIL_PATTERN.matcher(email).matches()) {
             throw new IllegalArgumentException("E-mail inválido");
         }
         this.email = email;
+        return this;
     }
 
     public String getSenha() {
         return senha;
     }
 
-    public void setSenha(String senha) {
+    public Loja setSenha(String senha) {
         this.senha = senha;
+        return this;
     }
 
     public String getCpfCnpj() {
         return cpfCnpj;
     }
 
-    public void setCpfCnpj(String cpfCnpj) {
+    public Loja setCpfCnpj(String cpfCnpj) {
         if (!CPF_PATTERN.matcher(cpfCnpj).matches() && !CNPJ_PATTERN.matcher(cpfCnpj).matches()) {
             throw new IllegalArgumentException("CPF ou CNPJ inválido");
         }
         this.cpfCnpj = cpfCnpj;
+        return this;
     }
 
     public String getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public Loja setEndereco(String endereco) {
         this.endereco = endereco;
+        return this;
     }
 
     @Override

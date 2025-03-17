@@ -80,6 +80,7 @@ import edu.uepb.cct.cc.model.Comprador;
 import java.util.List;
 
 public class Main {
+    
     public static void main(String[] args) {
         // Criando alguns compradores para teste
         Comprador comprador1 = new Comprador("João Silva", "joao@email.com", "senha123", "123.456.789-00", "Rua A, 123");

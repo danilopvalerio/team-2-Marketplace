@@ -1,10 +1,4 @@
 [ {
-  "nome" : "João Silva",
-  "email" : "joao@email.com",
-  "senha" : "senha123",
-  "cpf" : "123.456.789-00",
-  "endereco" : "Rua A, 123"
-}, {
   "nome" : "Maria Oliveira",
   "email" : "maria@email.com",
   "senha" : "senha456",
