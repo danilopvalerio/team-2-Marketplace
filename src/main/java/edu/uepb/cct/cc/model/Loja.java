@@ -15,6 +15,7 @@ public class Loja {
         Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"); //  o "\d" é para aceitar apenas digitos numéricos
     private static final Pattern CNPJ_PATTERN = 
         Pattern.compile("\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}");
+    
 
     public Loja(String nome, String email, String senha, String cpfCnpj, String endereco) {
         this.nome = nome;

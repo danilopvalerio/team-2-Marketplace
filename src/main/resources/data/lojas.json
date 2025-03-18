@@ -10,10 +10,4 @@
   "senha" : "novaSenha",
   "cpfCnpj" : "12.345.678/9000-01",
   "endereco" : "Rua Atualizada, 123"
-}, {
-  "nome" : "Loja A Atualizada",
-  "email" : "novaLojaA@email.com",
-  "senha" : "novaSenha123",
-  "cpfCnpj" : "123.456.789-00",
-  "endereco" : "Novo Endereço A"
 } ]
