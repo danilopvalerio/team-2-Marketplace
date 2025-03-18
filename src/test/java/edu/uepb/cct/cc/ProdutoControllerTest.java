@@ -15,11 +15,7 @@ class ProdutoControllerTest {
 
     @Test
     void testCadastrarProduto() {
-        try {
-            controller.excluirProduto(null)
-        } catch (Exception e) {
-            // Ignora a exceção caso o produto já exista
-        }
+        
         String resultado = controller.cadastrarProduto("Mouse", 150.00f, "Periférico", 20, "Logitech", "Mouse sem fio");
         assertEquals("Produto cadastrado com sucesso.", resultado);
     }
