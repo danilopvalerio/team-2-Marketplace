@@ -1,181 +1,183 @@
-/*package edu.uepb.cct.cc;
-
-import edu.uepb.cct.cc.controller.LojaController;
-import edu.uepb.cct.cc.model.Loja;
-
-import edu.uepb.cct.cc.controller.ProdutoController;
-
-public class Main {
-    public static void main(String[] args) {
-
-        // Teste de execução de lojas.
-        // // Criação de uma nova loja com 5 parâmetros, incluindo a senha
-        // Loja loja1 = new Loja("Loja Exemplo4", "loja@exemplo2.com", "senha123",
-        // "11.345.678/0001-94",
-        // "Rua Exemplo, 123");
-
-        // Loja loja2 = new Loja("Loja Exemplo4", "loja@exemplo2.com", "senha123",
-        // "12.345.678/9000-01",
-        // "Rua Exemplo, 123");
-
-        // // Adiciona a loja ao arquivo JSON
-        // LojaController.create(loja1);
-        // LojaController.create(loja2);
-
-        // System.out.println("Todas as lojas:");
-        // for (Loja loja : LojaController.getTodasLojas()) {
-        // System.out.println(loja.getNome() + " - " + loja.getCpfCnpj());
-        // }
-
-        // System.out.println("\nBuscando loja pelo CNPJ: 12.345.678/9000-01");
-        // Loja lojaEncontrada = LojaController.getLojaPorCpfCnpj("12.345.678/9000-01");
-        // if (lojaEncontrada != null) {
-        // System.out.println("Loja encontrada: " + lojaEncontrada.getNome());
-        // } else {
-        // System.out.println("Loja não encontrada.");
-        // }
-
-        // LojaController.deleteLojaPorCpfCnpj("12.345.678/9000-01");
-
-        String cpfCnpj = "12.345.678/9000-01";
-
-        // Criando uma nova loja com dados atualizados
-        Loja lojaAtualizada = new Loja();
-        lojaAtualizada.setCpfCnpj(cpfCnpj);
-        lojaAtualizada.setNome("Loja Atualizada");
-        lojaAtualizada.setEmail("loja@atualizada.com");
-        lojaAtualizada.setEndereco("Rua Atualizada, 123");
-        lojaAtualizada.setSenha("novaSenha");
-
-        try {
-            // Atualizando a loja
-            Loja loja = LojaController.atualizarLoja(cpfCnpj, lojaAtualizada);
-            System.out.println("Loja atualizada: " + loja);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
-        }
-
-        // CADASTRANDO PRODUTO
-        /*
-         * ProdutoController produtoController = new ProdutoController();
-         * 
-         * // Teste de cadastro de produto
-         * String resultado = produtoController.cadastrarProduto("Short", 49.90f,
-         * "Vestuário", 100, "Nike", "Camiseta esportiva de algodão");
-         * System.out.println(resultado); // Espera-se "Produto cadastrado com sucesso.
-         */
-
-    /*}
-
-}*/
-
-
-
-//MAIN PARA CADASTRO, EXIBIÇÃO e EXCLUSÃO DE COMPRADOR (TESTE)
 package edu.uepb.cct.cc;
 
 import edu.uepb.cct.cc.controller.CompradorController;
 import edu.uepb.cct.cc.controller.LojaController;
+import edu.uepb.cct.cc.controller.ProdutoController;
 import edu.uepb.cct.cc.model.Comprador;
 import edu.uepb.cct.cc.model.Loja;
+import edu.uepb.cct.cc.model.Produto;
 
 import java.util.List;
 
 public class Main {
-    
+    public static void printOrganizadoDeProduto(Produto produto) {
+        System.out.println(
+                "Nome: " + produto.getNome() + "\n" +
+                        "Valor: R$ " + produto.getValor() + "\n" +
+                        "Categoria: " + produto.getTipo() + "\n" +
+                        "Quantidade: " + produto.getQuantidade() + "\n" +
+                        "Marca: " + produto.getMarca() + "\n" +
+                        "Descrição: " + produto.getDescricao() + "\n" +
+                        "ID Produto: " + produto.getId() + "\n" +
+                        "ID Loja: " + produto.getIdLoja() + "\n" +
+                        "------------------------------------");
+    }
+
+    public static void printOrganizadoDeLoja(Loja loja) {
+        System.out.println(
+                "Nome: " + loja.getNome() + "\n" +
+                        "Email: " + loja.getEmail() + "\n" +
+                        "Senha: " + loja.getSenha() + "\n" +
+                        "CPF/CNPJ: " + loja.getCpfCnpj() + "\n" +
+                        "Endereço: " + loja.getEndereco() + "\n" +
+                        "------------------------------------");
+    }
+
+    public static void printOrganizadoDeComprador(Comprador comprador) {
+        System.out.println(
+                "Nome: " + comprador.getNome() + "\n" +
+                        "Email: " + comprador.getEmail() + "\n" +
+                        "CPF: " + comprador.getCpf() + "\n" +
+                        "Endereço: " + comprador.getEndereco() + "\n" +
+                        "------------------------------------");
+    }
+
     public static void main(String[] args) {
-        
+
+        System.out.println("\n_______________________________________________LOJAS_______________________________________________\n\n");
         // Criando lojas
+
         Loja loja1 = new Loja("Loja A", "lojaA@email.com", "senha123", "123.456.789-00", "Endereço A");
-        Loja loja2 = new Loja("Loja B", "lojaB@email.com", "senha456", "11.222.333/0001-44", "Endereço B");
-        
+        Loja loja2 = new Loja("Loja Y", "lojaY@email.com", "senha4D56", "11.222.333/0001-44", "Endereço B");
+
         // Adicionando lojas
         LojaController.create(loja1);
         LojaController.create(loja2);
-        System.out.println("Lojas adicionadas com sucesso!");
 
         // Listando todas as lojas
         List<Loja> lojas = LojaController.getTodasLojas();
-        System.out.println("Lista de lojas:");
-        lojas.forEach(System.out::println);
-        
+        System.out.println("\n\n------------------------------------\nLista de lojas:\n" +
+                "------------------------------------");
+        for (Loja loja : lojas) {
+            printOrganizadoDeLoja(loja);
+        }
+
         // Buscando uma loja pelo CPF/CNPJ
         Loja lojaEncontrada = LojaController.getLojaPorCpfCnpj("123.456.789-00");
-        System.out.println("Loja encontrada: " + (lojaEncontrada != null ? lojaEncontrada : "Não encontrada"));
+        System.out.println((lojaEncontrada != null ? "\nLoja encontrada." : "\nLoja não encontrada."));
 
         // Atualizando uma loja
-        Loja lojaAtualizada = new Loja("Loja A Atualizada", "novaLojaA@email.com", "novaSenha123", "123.456.789-00", "Novo Endereço A");
+        Loja lojaAtualizada = new Loja("Loja A Atualizada", "novaLojaA@email.com", "novaSenha123", "123.456.789-00",
+                "Novo Endereço A");
         LojaController.atualizarLoja("123.456.789-00", lojaAtualizada);
-        System.out.println("Loja atualizada com sucesso!");
 
         // Removendo uma loja
         LojaController.deleteLojaPorCpfCnpj("11.222.333/0001-44");
-        System.out.println("Loja removida com sucesso!");
-        
+        System.out.println("------------------------------------\n");
+
         // Listando novamente após a remoção
         lojas = LojaController.getTodasLojas();
-        System.out.println("Lista de lojas após remoção:");
-        lojas.forEach(System.out::println);
+        System.out.println("\n------------------------------------\nLista de lojas após remoção:\n" +
+                "------------------------------------");
+        for (Loja loja : lojas) {
+            printOrganizadoDeLoja(loja);
+        }
+        if (lojas.isEmpty()) {
+            System.out.println("Sem lojas para exibir.");
+        }
 
-        // // Criando alguns compradores para teste
-        // Comprador comprador1 = new Comprador("João Silva", "joao@email.com", "senha123", "123.456.789-00", "Rua A, 123");
-        // Comprador comprador2 = new Comprador("Maria Oliveira", "maria@email.com", "senha456", "987.654.321-00", "Rua B, 456");
+        System.out.println("\n_______________________________________________PRODUTOS_______________________________________________\n\n");
 
-        // // Adicionando compradores ao sistema
-        // System.out.println("Adicionando compradores...");
-        // CompradorController.create(comprador1);
-        // CompradorController.create(comprador2);
+        // Criando produtos
+        Produto produto1 = new Produto("Produto A", 100.0f, "Categoria A", 10, "Marca A", "Descrição do Produto A",
+                "idProduto1", "123.456.789-00");
+        Produto produto2 = new Produto("Produto B", 150.0f, "Categoria B", 5, "Marca B", "Descrição do Produto B",
+                "idProduto2", "123.456.789-00");
 
-        // // Listando todos os compradores
-        // System.out.println("Lista de compradores cadastrados:");
-        // listarCompradores();
+        // Adicionando produtos
+        ProdutoController.create(produto1);
+        ProdutoController.create(produto2);
 
-        // // Buscando um comprador pelo CPF
-        // System.out.println("Buscando comprador pelo CPF: 123.456.789-00");
-        // Comprador compradorEncontrado = CompradorController.getCompradorPorCpf("123.456.789-00");
-        // if (compradorEncontrado != null) {
-        //     System.out.println("Comprador encontrado: " + compradorEncontrado);
-        // } else {
-        //     System.out.println("Comprador não encontrado.");
-        // }
+        // Listando todos os produtos
+        List<Produto> produtos = ProdutoController.getTodosProdutos();
+        System.out.println("\nLista de produtos:\n" + //
+                "------------------------------------");
+        for (Produto produto : produtos) {
+            printOrganizadoDeProduto(produto);
+        }
 
-        // // Atualizando dados do comprador
-        // System.out.println("Atualizando comprador com CPF: 123.456.789-00");
-        // Comprador compradorAtualizado = new Comprador("João Souza", "joaosouza@email.com", "novaSenha123", "123.456.789-00", "Rua Nova, 789");
-        // CompradorController.atualizarComprador("123.456.789-00", compradorAtualizado);
+        // Buscando um produto pelo nome
+        Produto produtoEncontrado = ProdutoController.getProdutoPorID("idProduto1");
+        System.out.println((produtoEncontrado != null ? "\nProduto encontrado." : "\nProduto não encontrado."));
 
-        // // Verificando atualização
-        // System.out.println("Comprador atualizado:");
-        // Comprador compradorAtualizadoEncontrado = CompradorController.getCompradorPorCpf("123.456.789-00");
-        // System.out.println(compradorAtualizadoEncontrado);
+        // Atualizando um produto
+        Produto produtoAtualizado = new Produto("Produto A Atualizado", 120.0f, "Categoria A", 12, "Marca A",
+                "Nova descrição do Produto A", "idProduto1", "123.456.789-00");
+        ProdutoController.atualizarProduto("idProduto1", produtoAtualizado);
 
-        // // Removendo um comprador pelo CPF
-        // System.out.println("Removendo comprador com CPF: 123.456.789-00");
-        // String mensagemRemocao = CompradorController.deleteCompradorPorCpf("123.456.789-00");
-        // System.out.println(mensagemRemocao);
+        // Removendo um produto
+        ProdutoController.deleteProdutoPorID("idProduto1");
+        ProdutoController.deleteProdutoPorID("idProduto2");
+        System.out.println("------------------------------------\n");
 
-        // // Listando novamente para verificar a remoção
-        // System.out.println("Lista de compradores após remoção:");
-        // listarCompradores();
+        // Listando novamente após a remoção
+        produtos = ProdutoController.getTodosProdutos();
+        System.out.println("\n" + //
+                "------------------------------------------\nLista de produtos após remoção:");
+        for (Produto produto : produtos) {
+            printOrganizadoDeProduto(produto);
+        }
+        if (produtos.isEmpty()) {
+            System.out.println("Sem produtos para exibir.");
+        }
+        System.out.println("\n" + //
+                "------------------------------------------");
+
+        LojaController.deleteLojaPorCpfCnpj("123.456.789-00");
+        
+        System.out.println("\n_______________________________________________COMPRADORES_______________________________________________\n\n");
+        
+        // Criando compradores
+        Comprador comprador1 = new Comprador("João Silva", "joao@email.com", "senha123", "123.456.789-00",
+                "Rua A, 123");
+        Comprador comprador2 = new Comprador("Maria Oliveira", "maria@email.com", "senha456", "987.654.321-00",
+                "Rua B, 456");
+        // Adicionando compradores
+        CompradorController.create(comprador1);
+        CompradorController.create(comprador2);
+
+        // Listando todos os compradores
+        List<Comprador> compradores = CompradorController.getTodosCompradores();
+        System.out.println("\nLista de compradores:\n" + "------------------------------------");
+        for (Comprador comprador : compradores) {
+            printOrganizadoDeComprador(comprador);
+        }
+
+        // Buscando um comprador pelo CPF
+        Comprador compradorEncontrado = CompradorController.getCompradorPorCpf("123.456.789-00");
+        System.out.println((compradorEncontrado != null ? "\nComprador encontrado." : "\nComprador não encontrado."));
+
+        // Atualizando um comprador
+        Comprador compradorAtualizado = new Comprador("João Souza", "joaosouza@email.com", "novaSenha123",
+                "123.456.789-00", "Rua Nova, 789");
+        System.out.println("\n------------------------------------\nComprador atualizado:");
+        printOrganizadoDeComprador(CompradorController.atualizarComprador("123.456.789-00", compradorAtualizado));
+
+        // Removendo um comprador
+        System.out.println("\n\n\n------------------------------------");
+        System.out.println(CompradorController.deleteCompradorPorCpf("987.654.321-00"));
+        System.out.println(CompradorController.deleteCompradorPorCpf("123.456.789-00"));
+        System.out.println("------------------------------------\n");
+
+        // Listando novamente após a remoção
+        compradores = CompradorController.getTodosCompradores();
+        System.out.println("\nLista de compradores após remoção:\n" + "------------------------------------");
+        for (Comprador comprador : compradores) {
+            printOrganizadoDeComprador(comprador);
+        }
+        if (compradores.isEmpty()) {
+            System.out.println("Sem compradores para exibir.");
+        }
+        System.out.println("\n------------------------------------");
     }
-
-    // private static void listarCompradores() {
-    //     List<Comprador> compradores = CompradorController.getTodosCompradores();
-    //     if (compradores.isEmpty()) {
-    //         System.out.println("Nenhum comprador cadastrado.");
-    //     } else {
-    //         for (Comprador c : compradores) {
-    //             System.out.println(c);
-    //         }
-    //     }
-    // }
 }
-
-
-
-
-
-
-
-
-
