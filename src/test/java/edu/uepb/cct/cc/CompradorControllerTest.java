@@ -1,57 +1,126 @@
 package edu.uepb.cct.cc;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.uepb.cct.cc.model.Comprador;
 import edu.uepb.cct.cc.controller.CompradorController;
-import org.junit.jupiter.api.*;
-import java.io.File;
+import edu.uepb.cct.cc.model.Comprador;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class CompradorControllerTest {
-    private static final String TEST_FILE_PATH = "src/main/resources/data/compradores_test.json";
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final String ARQUIVO_COMPRADORES = "src/main/resources/data/compradores.json";
 
     @BeforeEach
-    void setUp() throws IOException {
-        // Limpa o arquivo antes de cada teste
-        new FileWriter(TEST_FILE_PATH, false).close();
-    }
-
-    @AfterAll
-    static void cleanUp() {
-        new File(TEST_FILE_PATH).delete();
+    void limparArquivo() {
+        try (Writer writer = new FileWriter(ARQUIVO_COMPRADORES)) {
+            writer.write("[]"); // Resetando os dados antes de cada teste
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    void testCreateComprador() {
-        Comprador comprador = new Comprador("João", "joao@email.com", "senha123", "123.456.789-00", "Rua A");
+    public void testCreateComprador() {
+        Comprador comprador = new Comprador("Ana", "ana@email.com", "senha123", "111.222.333-44", "Rua 1");
         CompradorController.create(comprador);
+
+        Comprador compradorEncontrado = CompradorController.getCompradorPorCpf("111.222.333-44");
+
+        assertNotNull(compradorEncontrado);
+        assertEquals("Ana", compradorEncontrado.getNome());
+    }
+
+    @Test
+    public void testCreateCompradorJaCadastrado() {
+        Comprador comprador = new Comprador("Carlos", "carlos@email.com", "senha123", "999.888.777-66", "Rua 2");
+        CompradorController.create(comprador);
+
+        Comprador compradorDuplicado = new Comprador("Marcos", "marcos@email.com", "senha456", "999.888.777-66", "Rua 3");
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            CompradorController.create(compradorDuplicado);
+        });
+
+        assertEquals("Não foi possível adicionar o comprador pois ele já está cadastrado no sistema.", exception.getMessage());
+    }
+
+    @Test
+    public void testGetCompradorPorCpf() {
+        Comprador comprador = new Comprador("João", "joao@email.com", "senha123", "123.456.789-00", "Rua A, 123");
+        CompradorController.create(comprador);
+
+        Comprador compradorEncontrado = CompradorController.getCompradorPorCpf("123.456.789-00");
+
+        assertNotNull(compradorEncontrado);
+        assertEquals("João", compradorEncontrado.getNome());
+    }
+
+    @Test
+    public void testDeleteCompradorPorCpf() {
+        Comprador comprador = new Comprador("Maria", "maria@email.com", "senha123", "222.333.444-55", "Rua B");
+        CompradorController.create(comprador);
+
+        String resultado = CompradorController.deleteCompradorPorCpf("222.333.444-55");
+
+        assertEquals("Comprador removido com sucesso.", resultado);
+        assertNull(CompradorController.getCompradorPorCpf("222.333.444-55"));
+    }
+
+    @Test
+    public void testDeleteCompradorInexistente() {
+        String resultado = CompradorController.deleteCompradorPorCpf("000.000.000-00");
+        assertEquals("Comprador não encontrado.", resultado);
+    }
+
+    @Test
+    public void testAtualizarComprador() {
+        Comprador comprador = new Comprador("Pedro", "pedro@email.com", "senha123", "777.666.555-44", "Rua C");
+        CompradorController.create(comprador);
+
+        Comprador compradorAtualizado = new Comprador("Pedro Silva", "pedrosilva@email.com", "novaSenha", "777.666.555-44", "Rua D");
+        CompradorController.atualizarComprador("777.666.555-44", compradorAtualizado);
+
+        Comprador compradorModificado = CompradorController.getCompradorPorCpf("777.666.555-44");
+
+        assertNotNull(compradorModificado);
+        assertEquals("Pedro Silva", compradorModificado.getNome());
+        assertEquals("pedrosilva@email.com", compradorModificado.getEmail());
+        assertEquals("novaSenha", compradorModificado.getSenha());
+        assertEquals("Rua D", compradorModificado.getEndereco());
+    }
+
+    @Test
+    public void testAtualizarCompradorInexistente() {
+        Comprador compradorAtualizado = new Comprador("Lucas", "lucas@email.com", "senha123", "555.444.333-22", "Rua E");
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            CompradorController.atualizarComprador("555.444.333-22", compradorAtualizado);
+        });
+
+        assertEquals("Comprador não encontrado.", exception.getMessage());
+    }
+
+    @Test
+    public void testGetTodosCompradoresOrdenados() {
+        Comprador comprador1 = new Comprador("Zara", "zara@email.com", "senha123", "333.222.111-00", "Rua X");
+        Comprador comprador2 = new Comprador("Ana", "ana@email.com", "senha123", "444.555.666-77", "Rua Y");
+        Comprador comprador3 = new Comprador("Carlos", "carlos@email.com", "senha123", "555.666.777-88", "Rua Z");
+
+        CompradorController.create(comprador1);
+        CompradorController.create(comprador2);
+        CompradorController.create(comprador3);
 
         List<Comprador> compradores = CompradorController.getTodosCompradores();
-        assertFalse(compradores.isEmpty());
-        assertEquals("João", compradores.get(0).getNome());
-    }
 
-    @Test
-    void testGetCompradorPorCpf() {
-        Comprador comprador = new Comprador("Maria", "maria@email.com", "senha456", "987.654.321-00", "Rua B");
-        CompradorController.create(comprador);
-
-        Comprador encontrado = CompradorController.getCompradorPorCpf("987.654.321-00");
-        assertNotNull(encontrado);
-        assertEquals("Maria", encontrado.getNome());
-    }
-
-    @Test
-    void testDeleteCompradorPorCpf() {
-        Comprador comprador = new Comprador("Carlos", "carlos@email.com", "senha789", "111.222.333-44", "Rua C");
-        CompradorController.create(comprador);
-
-        String resultado = CompradorController.deleteCompradorPorCpf("111.222.333-44");
-        assertEquals("Comprador removido com sucesso.", resultado);
+        assertEquals(3, compradores.size());
+        assertEquals("Ana", compradores.get(0).getNome());
+        assertEquals("Carlos", compradores.get(1).getNome());
+        assertEquals("Zara", compradores.get(2).getNome());
     }
 }
