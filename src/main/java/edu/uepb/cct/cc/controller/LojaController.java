@@ -10,6 +10,7 @@ import java.util.List;
 
 public class LojaController {
 
+    
     private static final String ARQUIVO_LOJAS = "src/main/resources/data/lojas.json";
     private static ObjectMapper objectMapper = new ObjectMapper();
 

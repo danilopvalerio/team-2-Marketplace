@@ -1,50 +1,82 @@
 package edu.uepb.cct.cc;
 
+import edu.uepb.cct.cc.model.Produto;
+import edu.uepb.cct.cc.controller.LojaController;
 import edu.uepb.cct.cc.controller.ProdutoController;
+
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ProdutoControllerTest {
-    private ProdutoController controller;
+public class ProdutoControllerTest {
 
-    @BeforeEach
-    void setUp() {
-        controller = new ProdutoController();
+    @Test
+    public void testCreateProduto() {
+        try {
+            ProdutoController.deleteProdutoPorID("1");
+        } catch (Exception e) {
+            
+        }
+        Produto produto = new Produto("Produto Teste", 100.0f, "Eletrônicos", 10, "Marca Teste", "Descrição do produto", "1", "123.456.789-00");
+        Produto createdProduto = ProdutoController.create(produto);
+
+        assertNotNull(createdProduto);
+        assertEquals("Produto Teste", createdProduto.getNome());
+        assertEquals("Eletrônicos", createdProduto.getTipo());
+        assertEquals(100.0f, createdProduto.getValor());
     }
 
     @Test
-    void testCadastrarProduto() {
+    public void testAtualizarProduto() {
         
-        String resultado = controller.cadastrarProduto("Mouse", 150.00f, "Periférico", 20, "Logitech", "Mouse sem fio");
-        assertEquals("Produto cadastrado com sucesso.", resultado);
+        Produto produtoAtualizado = new Produto("Produto Teste Atualizado", 150.0f, "Eletrônicos", 5, "Marca Teste", "Descrição atualizada", "1", "123.456.789-00");
+        ProdutoController.atualizarProduto("1", produtoAtualizado);
+
+        Produto produtoVerificado = ProdutoController.getProdutoPorID("1");
+        assertNotNull(produtoVerificado);
+        assertEquals("Produto Teste Atualizado", produtoVerificado.getNome());
+        assertEquals(150.0f, produtoVerificado.getValor());
     }
 
     @Test
-    void testCadastrarProdutoDuplicado() {
-        controller.cadastrarProduto("Mouse", 150.00f, "Periférico", 20, "Logitech", "Mouse sem fio");
-        String resultado = controller.cadastrarProduto("Mouse", 150.00f, "Periférico", 20, "Logitech", "Mouse sem fio");
-        assertEquals("Produto já existe no sistema.", resultado);
+    public void testCreateProdutoInvalido() {
+        
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ProdutoController.create(new Produto("Produto Teste", -10.0f, "Eletrônicos", 10, "Marca Teste", "Descrição do produto", "1", "123.456.789-00"));
+        });
+
+        assertEquals("O valor do produto deve ser maior que zero.", exception.getMessage());
     }
 
     @Test
-    void testVisualizarProduto() {
-        controller.cadastrarProduto("Teclado", 200.00f, "Periférico", 10, "Razer", "Teclado mecânico");
-        String resultado = controller.visualizarProduto("Teclado");
-        assertTrue(resultado.contains("Teclado"));
+    public void testGetProdutoPorID() {
+        
+        Produto produtoEncontrado = ProdutoController.getProdutoPorID("1");
+        assertNotNull(produtoEncontrado);
+        assertEquals("Produto Teste Atualizado", produtoEncontrado.getNome());
     }
 
     @Test
-    void testExcluirProduto() {
-        controller.cadastrarProduto("Monitor", 800.00f, "Display", 5, "LG", "Monitor Full HD");
-        String resultado = controller.excluirProduto("Monitor");
-        assertEquals("Produto removido com sucesso.", resultado);
+    public void testGetProdutoPorIDNaoEncontrado() {
+        Produto produto = ProdutoController.getProdutoPorID("9ADSFF99");
+        assertNull(produto);
+    }
+
+
+    @Test
+    public void testDeleteProduto() {
+        
+        ProdutoController.deleteProdutoPorID("1");
+
+        Produto produtoVerificado = ProdutoController.getProdutoPorID("1");
+        assertNull(produtoVerificado);
     }
 
     @Test
-    void testAtualizarProduto() {
-        controller.cadastrarProduto("Cadeira", 1000.00f, "Mobiliário", 3, "DXRacer", "Cadeira gamer");
-        String resultado = controller.atualizarProduto("Cadeira", "valor", "1200.00");
-        assertEquals("Produto atualizado com sucesso.", resultado);
+    public void testDeleteProdutoNaoEncontrado() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ProdutoController.deleteProdutoPorID("999");
+        });
+        assertEquals("Produto não encontrado.", exception.getMessage());
     }
 }

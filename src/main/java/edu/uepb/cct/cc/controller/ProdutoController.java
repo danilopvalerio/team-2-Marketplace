@@ -1,222 +1,125 @@
 package edu.uepb.cct.cc.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import edu.uepb.cct.cc.model.Produto;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
+
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ProdutoController {
-    private static final String ARQUIVO_JSON = "produtos.json";
-    private List<Produto> produtos;
-    private Gson gson;
 
-    public ProdutoController() {
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
-        this.produtos = carregarProdutos();
+    
+    private static final String ARQUIVO_PRODUTOS = "src/main/resources/data/produtos.json";
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
+    public static Produto create(Produto produto) {
+        if (produto == null || produto.getNome() == null || produto.getTipo() == null || produto.getMarca() == null
+                || produto.getDescricao() == null || produto.getValor() <= 0 || produto.getQuantidade() < 0) {
+            throw new IllegalArgumentException("Produto ou dados inválidos.");
+        }
+        List<Produto> produtos = carregarProdutos();
+
+        for (Produto p : produtos) {
+            if (p.getNome().equalsIgnoreCase(produto.getNome()) && p.getMarca().equalsIgnoreCase(produto.getMarca())) {
+                System.out.println(
+                        "-------------------------------------------------------------------------------------\n" + //
+                                "Não foi possível adicionar o produto pois ele já está cadastrado no sistema." + //
+                                "-------------------------------------------------------------------------------------\n");
+                throw new IllegalArgumentException("Produto já cadastrado no sistema.");
+            }
+        }
+        produtos.add(produto);
+        salvarProdutos(produtos);
+        System.out.println("------------------------------------\n" + //
+                "Produto adicionado.");
+        return produto;
     }
 
-    private List<Produto> carregarProdutos() {
-        try (FileReader reader = new FileReader(ARQUIVO_JSON)) {
-            Type listType = new TypeToken<ArrayList<Produto>>() {
-            }.getType();
-            return gson.fromJson(reader, listType);
-        } catch (IOException e) {
+    public static Produto getProdutoPorID(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("ID inválido.");
+        }
+        List<Produto> produtos = carregarProdutos();
+        for (Produto produto : produtos) {
+            if (produto.getId().equalsIgnoreCase(id)) {
+                return produto;
+            }
+        }
+        return null;
+    }
+
+    public static List<Produto> getTodosProdutos() {
+        List<Produto> produtos = carregarProdutos();
+        produtos.sort((p1, p2) -> p1.getNome().compareToIgnoreCase(p2.getNome()));
+        return produtos;
+    }
+
+    private static List<Produto> carregarProdutos() {
+        File file = new File(ARQUIVO_PRODUTOS);
+        if (!file.exists()) {
             return new ArrayList<>();
         }
-    }
-
-    private void salvarProdutos() {
-        try (FileWriter writer = new FileWriter(ARQUIVO_JSON)) {
-            gson.toJson(produtos, writer);
+        try (Reader reader = new FileReader(file)) {
+            return objectMapper.readValue(reader,
+                    TypeFactory.defaultInstance().constructCollectionType(List.class, Produto.class));
         } catch (IOException e) {
-            throw new RuntimeException("Erro ao salvar produtos.", e);
+            throw new RuntimeException("Erro ao carregar produtos.", e);
         }
     }
 
-    public String cadastrarProduto(String nome, float valor, String tipo, int quantidade, String marca,
-            String descricao) {
-        try {
-            // Validações adicionais antes de criar o produto
-            if (nome == null || nome.trim().isEmpty()) {
-                return "Nome não pode ser vazio ou nulo.";
-            }
-
-            if (valor <= 0) {
-                return "O valor do produto deve ser maior que zero.";
-            }
-
-            if (tipo == null || tipo.trim().isEmpty()) {
-                return "Tipo não pode ser vazio ou nulo.";
-            }
-
-            if (quantidade < 0) {
-                return "A quantidade não pode ser negativa.";
-            }
-
-            if (marca == null || marca.trim().isEmpty()) {
-                return "Marca não pode ser vazia ou nula.";
-            }
-
-            if (descricao == null || descricao.trim().isEmpty()) {
-                return "Descrição não pode ser vazia ou nula.";
-            }
-
-            for (Produto p : produtos) {
-                if (p.getNome().equalsIgnoreCase(nome) && p.getMarca().equalsIgnoreCase(marca)) {
-                    return "Produto já existe no sistema.";
-                }
-            }
-
-            Produto novoProduto = new Produto(nome, valor, tipo, quantidade, marca, descricao);
-            produtos.add(novoProduto);
-            salvarProdutos();
-            return "Produto cadastrado com sucesso.";
-        } catch (IllegalArgumentException e) {
-            return "Erro ao cadastrar produto: " + e.getMessage();
-        } catch (Exception e) {
-            return "Erro inesperado ao cadastrar o produto.";
+    private static List<Produto> salvarProdutos(List<Produto> produtos) {
+        if (produtos == null) {
+            throw new IllegalArgumentException("Lista de produtos não pode ser nula.");
+        }
+        try (Writer writer = new FileWriter(ARQUIVO_PRODUTOS)) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, produtos);
+            return produtos;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    public String visualizarProduto(String nome) {
-        carregarProdutos();
-
-        if (produtos == null || produtos.isEmpty()) {
-            return "Produto não encontrado.";
+    public static Produto atualizarProduto(String id, Produto produtoAtualizado) {
+        if (id == null || id.isEmpty() || produtoAtualizado == null) {
+            throw new IllegalArgumentException("ID ou dados inválidos.");
         }
+        List<Produto> produtos = carregarProdutos();
+        boolean atualizado = false;
 
-        if (nome == null || nome.trim().isEmpty()) {
-            return listarTodosOsProdutos();
-        }
-
-        for (Produto p : produtos) {
-            if (p.getNome().equalsIgnoreCase(nome)) {
-                return p.toString();
+        for (int i = 0; i < produtos.size(); i++) {
+            if (produtos.get(i).getId().equals(id)) { // Comparar pelo id, não pelo nome
+                produtoAtualizado.setId(id); // Atualizar o id
+                produtos.set(i, produtoAtualizado);
+                atualizado = true;
+                break;
             }
         }
-        return "Produto não encontrado.";
+
+        if (!atualizado) {
+            throw new IllegalArgumentException("Produto não encontrado.");
+        }
+
+        salvarProdutos(produtos);
+        System.out.println("------------------------------------\n" +
+                "Produto atualizado com sucesso.");
+        return produtoAtualizado;
     }
 
-    public String excluirProduto(String nome) {
-        carregarProdutos();
-
-        if (produtos == null || produtos.isEmpty()) {
-            return "Nenhum produto cadastrado.";
+    public static List<Produto> deleteProdutoPorID(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("ID inválido.");
         }
-
-        Iterator<Produto> iterator = produtos.iterator();
-        while (iterator.hasNext()) {
-            Produto p = iterator.next();
-            if (p.getNome().equalsIgnoreCase(nome)) {
-                iterator.remove();
-                salvarProdutos();
-                return "Produto removido com sucesso.";
-            }
+        List<Produto> produtos = carregarProdutos();
+        boolean removido = produtos.removeIf(produto -> produto.getId().equalsIgnoreCase(id));
+        if (!removido) {
+            throw new IllegalArgumentException("Produto não encontrado.");
         }
-        return "Produto não encontrado.";
-    }
-
-    private String listarTodosOsProdutos() {
-        if (produtos == null || produtos.isEmpty()) {
-            return "Nenhum produto cadastrado.";
-        }
-
-        StringBuilder lista = new StringBuilder("Lista de Produtos:\n");
-        for (Produto p : produtos) {
-            lista.append(p.toString()).append("\n");
-        }
-        return lista.toString();
-    }
-
-    public String atualizarProduto(String nome, String campo, String novoValor) {
-        carregarProdutos();
-
-        if (produtos == null || produtos.isEmpty()) {
-            return "Nenhum produto cadastrado.";
-        }
-
-        for (Produto p : produtos) {
-            if (p.getNome().equalsIgnoreCase(nome)) {
-                boolean atualizado = false;
-
-                switch (campo.toLowerCase()) {
-                    case "nome":
-                        if (novoValor != null && !novoValor.trim().isEmpty()) {
-                            p.setNome(novoValor);
-                            atualizado = true;
-                        } else {
-                            return "Nome inválido.";
-                        }
-                        break;
-                    case "valor":
-                        try {
-                            float valor = Float.parseFloat(novoValor);
-                            if (valor > 0) {
-                                p.setValor(valor);
-                                atualizado = true;
-                            } else {
-                                return "Valor deve ser maior que zero.";
-                            }
-                        } catch (NumberFormatException e) {
-                            return "Valor inválido.";
-                        }
-                        break;
-                    case "tipo":
-                        if (novoValor != null && !novoValor.trim().isEmpty()) {
-                            p.setTipo(novoValor);
-                            atualizado = true;
-                        } else {
-                            return "Tipo inválido.";
-                        }
-                        break;
-                    case "quantidade":
-                        try {
-                            int quantidade = Integer.parseInt(novoValor);
-                            if (quantidade >= 0) {
-                                p.setQuantidade(quantidade);
-                                atualizado = true;
-                            } else {
-                                return "Quantidade não pode ser negativa.";
-                            }
-                        } catch (NumberFormatException e) {
-                            return "Quantidade inválida.";
-                        }
-                        break;
-                    case "marca":
-                        if (novoValor != null && !novoValor.trim().isEmpty()) {
-                            p.setMarca(novoValor);
-                            atualizado = true;
-                        } else {
-                            return "Marca inválida.";
-                        }
-                        break;
-                    case "descricao":
-                        if (novoValor != null && !novoValor.trim().isEmpty()) {
-                            p.setDescricao(novoValor);
-                            atualizado = true;
-                        } else {
-                            return "Descrição inválida.";
-                        }
-                        break;
-                    default:
-                        return "Campo para atualização inválido.";
-                }
-
-                if (atualizado) {
-                    salvarProdutos();
-                    return "Produto atualizado com sucesso.";
-                } else {
-                    return "Não foi possível atualizar o produto. Verifique os dados informados.";
-                }
-            }
-        }
-        return "Produto não encontrado.";
+        salvarProdutos(produtos);
+        System.out.println("------------------------------------\n" + //
+                "Produto removido com sucesso.");
+        return produtos;
     }
 }

@@ -8,6 +8,7 @@ public class Loja {
     private String cpfCnpj;
     private String endereco;
 
+    
     // Regex para validação de e-mail e CPF/CNPJ
     private static final Pattern EMAIL_PATTERN = 
         Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");

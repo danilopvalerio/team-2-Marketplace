@@ -1,13 +1,1 @@
-[ {
-  "nome" : "Maria",
-  "email" : "maria@email.com",
-  "senha" : "senha456",
-  "cpf" : "987.654.321-00",
-  "endereco" : "Rua B, 456"
-}, {
-  "nome" : "João",
-  "email" : "joao@email.com",
-  "senha" : "senha123",
-  "cpf" : "123.456.789-00",
-  "endereco" : "Rua A"
-} ]
+[]

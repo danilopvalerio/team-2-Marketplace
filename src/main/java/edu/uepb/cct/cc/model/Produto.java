@@ -1,27 +1,85 @@
 package edu.uepb.cct.cc.model;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
+
+import edu.uepb.cct.cc.controller.LojaController;
 
 public class Produto {
+    private String id; // ID do produto
     private String nome;
     private float valor;
     private String tipo;
     private int quantidade;
     private String marca;
     private String descricao;
+    private String idLoja; // CNPJ ou CPF da loja
 
+    // Padrões para validação de cpf/cnpj
     private static final String PRODUCT_FIELD_PATTERN = "^[\\p{L}0-9\\s]+$";
+    private static final Pattern CPF_PATTERN = Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
+    private static final Pattern CNPJ_PATTERN = Pattern.compile("\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}");
+    /*
+     * ^: Início da string.
+     * [\\p{L}0-9\\s]: Define o conjunto de caracteres permitidos. Ele inclui:
+     * \\p{L}: Qualquer letra (maiúscula ou minúscula) de qualquer idioma.
+     * 0-9: Qualquer número de 0 a 9.
+     * \\s: Qualquer caractere de espaço em branco (como espaço, tabulação, etc.).
+     * +: Significa que deve haver pelo menos um caractere do conjunto permitido.
+     * $: Fim da string.
+     * \\d: caractere numérico
+     */
 
-    public Produto(String nome, float valor, String tipo, int quantidade, String marca, String descricao) {
+    public Produto(String nome, float valor, String tipo, int quantidade, String marca, String descricao, String id,
+            String idLoja) {
+        setId(id);
         setNome(nome);
         setValor(valor);
         setTipo(tipo);
         setQuantidade(quantidade);
         setMarca(marca);
         setDescricao(descricao);
+        setIdLoja(idLoja);
     }
 
     public Produto() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String setId(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID inválido.");
+        }
+        this.id = id;
+        return this.id;
+    }
+
+    public String getIdLoja() {
+        return idLoja;
+    }
+
+    public String setIdLoja(String idLoja) {
+        if (idLoja == null || idLoja.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID da loja não pode ser vazio ou nulo.");
+        }
+        if (!validarCnpjOuCpf(idLoja)) {
+            throw new IllegalArgumentException("ID da loja (CNPJ ou CPF) inválido.");
+        }
+        try {
+            LojaController.getLojaPorCpfCnpj(idLoja);
+            this.idLoja = idLoja;
+            return this.idLoja;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Loja não encontrada para o CNPJ/CPF fornecido.");
+        }
+        
+    }
+
+    private boolean validarCnpjOuCpf(String idLoja) {
+        return CPF_PATTERN.matcher(idLoja).matches() || CNPJ_PATTERN.matcher(idLoja).matches();
     }
 
     public String getNome() {
@@ -58,14 +116,16 @@ public class Produto {
         this.nome = nome;
     }
 
-    public void setValor(float valor) {
+    public Float setValor(float valor) {
         if (valor <= 0) {
             throw new IllegalArgumentException("O valor do produto deve ser maior que zero.");
         }
-        this.valor = valor; // Agora o valor será salvo corretamente
+        this.valor = valor; 
+        return this.valor;
     }
 
-    public void setTipo(String tipo) {
+
+    public String setTipo(String tipo) {
         if (tipo == null || tipo.trim().isEmpty()) {
             throw new IllegalArgumentException("Tipo não pode ser vazio ou nulo.");
         }
@@ -73,16 +133,19 @@ public class Produto {
             throw new IllegalArgumentException("Tipo do produto contém caracteres inválidos.");
         }
         this.tipo = tipo;
+        return this.tipo;
     }
 
-    public void setQuantidade(int quantidade) {
+    public int setQuantidade(int quantidade) {
         if (quantidade < 0) {
             throw new IllegalArgumentException("A quantidade não pode ser negativa.");
         }
-        this.quantidade = quantidade; // Atribui a quantidade corretamente
+        this.quantidade = quantidade;
+        return this.quantidade;
+
     }
 
-    public void setMarca(String marca) {
+    public String setMarca(String marca) {
         if (marca == null || marca.trim().isEmpty()) {
             throw new IllegalArgumentException("Marca não pode ser vazia ou nula.");
         }
@@ -90,27 +153,30 @@ public class Produto {
             throw new IllegalArgumentException("Marca do produto contém caracteres inválidos.");
         }
         this.marca = marca;
+        return this.marca;
     }
 
-    public void setDescricao(String descricao) {
+    public String setDescricao(String descricao) {
         if (descricao == null || descricao.trim().isEmpty()) {
             throw new IllegalArgumentException("Descrição não pode ser vazia ou nula.");
         }
         this.descricao = descricao;
+        return this.descricao;
     }
 
     @Override
     public String toString() {
-        // Formatar o valor usando o locale dos EUA para garantir o ponto como separador
+        // Formatando o valor usando o locale dos EUA para garantir o ponto como separador
         // decimal
         return "Produto: {" +
-                "nome='" + nome + '\'' +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
                 ", valor=" + String.format(Locale.US, "R$ %.2f", valor) +
                 ", tipo='" + tipo + '\'' +
                 ", quantidade=" + quantidade +
                 ", marca='" + marca + '\'' +
                 ", descricao='" + descricao + '\'' +
+                ", idLoja='" + idLoja + '\'' +
                 '}';
     }
-
 }
