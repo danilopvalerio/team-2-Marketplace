@@ -35,8 +35,7 @@ public class CompradorController {
 
         for (Comprador c : compradores) {
             if (c.getCpf().equals(comprador.getCpf())) {
-                System.out.println("Não foi possível adicionar o comprador pois ele já está cadastrado no sistema.");
-                return;
+                throw new IllegalArgumentException("Não foi possível adicionar o comprador pois ele já está cadastrado no sistema.");
             }
         }
 
@@ -121,7 +120,6 @@ public class CompradorController {
 
         try (Writer writer = new FileWriter(ARQUIVO_COMPRADORES)) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, compradores);
-            System.out.println("Comprador atualizado com sucesso.");
             return compradorAtualizado;
         } catch (IOException e) {
             logger.severe("Erro ao salvar compradores após atualização: " + e.getMessage());
