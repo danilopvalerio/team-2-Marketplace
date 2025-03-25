@@ -16,14 +16,23 @@ public class CompradorController {
     private static final Logger logger = Logger.getLogger(CompradorController.class.getName());
 
     public static void create(Comprador comprador) {
+        // Validações
+        validarNome(comprador.getNome());
+        validarEmail(comprador.getEmail());
+        validarSenha(comprador.getSenha());
+        validarCpf(comprador.getCpf());
+        validarEndereco(comprador.getEndereco());
+
         List<Comprador> compradores = new ArrayList<>();
         File file = new File(ARQUIVO_COMPRADORES);
 
+        // Verifica e cria diretório, se necessário
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
             parentDir.mkdirs();
         }
 
+        // Carrega os compradores existentes, se houver
         if (file.exists() && file.length() > 0) {
             try (Reader reader = new FileReader(file)) {
                 compradores = objectMapper.readValue(reader,
@@ -33,14 +42,17 @@ public class CompradorController {
             }
         }
 
+        // Verifica se o comprador já existe
         for (Comprador c : compradores) {
             if (c.getCpf().equals(comprador.getCpf())) {
-                throw new IllegalArgumentException("Não foi possível adicionar o comprador pois ele já está cadastrado no sistema.");
+                throw new IllegalArgumentException("Não foi possível adicionar o comprador, pois ele já está cadastrado no sistema.");
             }
         }
 
+        // Adiciona o novo comprador à lista
         compradores.add(comprador);
 
+        // Salva a lista atualizada de compradores no arquivo
         try (Writer writer = new FileWriter(file)) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, compradores);
             System.out.println("Comprador adicionado com sucesso.");
@@ -124,6 +136,42 @@ public class CompradorController {
         } catch (IOException e) {
             logger.severe("Erro ao salvar compradores após atualização: " + e.getMessage());
             throw new RuntimeException("Erro ao atualizar comprador.", e);
+        }
+    }
+
+    // Validação de Nome
+    private static void validarNome(String nome) {
+        if (nome == null || nome.isEmpty()) {
+            throw new IllegalArgumentException("Nome não pode ser vazio.");
+        }
+    }
+
+    // Validação de E-mail
+    private static void validarEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("E-mail não pode ser vazio.");
+        }
+        // Adicionar validação de formato de e-mail se necessário, por exemplo, usando regex.
+    }
+
+    // Validação de Senha
+    private static void validarSenha(String senha) {
+        if (senha == null || senha.length() < 6) {
+            throw new IllegalArgumentException("A senha deve ter no mínimo 6 caracteres.");
+        }
+    }
+
+    // Validação de CPF
+    private static void validarCpf(String cpf) {
+        if (cpf == null || cpf.isEmpty() || !cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")) {
+            throw new IllegalArgumentException("CPF inválido. O formato deve ser XXX.XXX.XXX-XX.");
+        }
+    }
+
+    // Validação de Endereço
+    private static void validarEndereco(String endereco) {
+        if (endereco == null || endereco.isEmpty()) {
+            throw new IllegalArgumentException("Endereço não pode ser vazio.");
         }
     }
 }
