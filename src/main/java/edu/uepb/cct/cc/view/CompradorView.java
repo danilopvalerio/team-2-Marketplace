@@ -70,4 +70,34 @@ public class CompradorView {
         }
     }
 
+    public void listarCompradores() {
+        List<Comprador> compradores = CompradorController.getTodosCompradores();
+
+        System.out.println("=== Lista de Compradores Cadastrados ===");
+        if (compradores.isEmpty()) {
+            System.out.println("Nenhum comprador cadastrado.");
+            return;
+        }
+
+        for (int i = 0; i < compradores.size(); i++) {
+            Comprador comprador = compradores.get(i);
+            System.out.println((i + 1) + ". " + comprador.getNome() + " - " + comprador.getCpf());
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Digite o número do comprador para ver detalhes ou 0 para sair: ");
+        int escolha = scanner.nextInt();
+        scanner.nextLine();
+
+        if (escolha > 0 && escolha <= compradores.size()) {
+            Comprador compradorSelecionado = compradores.get(escolha - 1);
+            System.out.println("Detalhes do Comprador:");
+            System.out.println("Nome: " + compradorSelecionado.getNome());
+            System.out.println("E-mail: " + compradorSelecionado.getEmail());
+            System.out.println("CPF: " + compradorSelecionado.getCpf());
+            System.out.println("Endereço: " + compradorSelecionado.getEndereco());
+        } else {
+            System.out.println("Saindo da visualização de compradores.");
+        }
+    }
 }
