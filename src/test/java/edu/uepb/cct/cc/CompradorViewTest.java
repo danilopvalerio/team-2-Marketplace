@@ -60,4 +60,21 @@ public class CompradorViewTest {
         assertTrue(outputStream.toString().contains("Não foi possível adicionar o comprador"));
     }
 
+    @Test
+    public void testListarCompradores() {
+        Comprador comprador = new Comprador("Carlos Souza", "carlos@email.com", "senha789", "123.456.789-00", "Rua C, 789");
+        CompradorController.create(comprador);
+
+        System.setIn(new ByteArrayInputStream("0\n".getBytes()));
+        compradorView.listarCompradores();
+
+        assertTrue(outputStream.toString().contains("Carlos Souza"));
+    }
+
+    @Test
+    public void testListarCompradoresSemNenhumCadastrado() {
+        compradorView.listarCompradores();
+        assertTrue(outputStream.toString().contains("Nenhum comprador cadastrado."));
+    }
+
 }
