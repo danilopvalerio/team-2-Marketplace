@@ -13,6 +13,7 @@ public class Main {
             System.out.println("\n=== Menu Comprador ===");
             System.out.println("1. Cadastrar Comprador");
             System.out.println("2. Listar Compradores");
+            System.out.println("3. Deletar Comprador");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -25,6 +26,9 @@ public class Main {
                     break;
                 case 2:
                     compradorView.listarCompradores();
+                    break;
+                case 3:
+                    compradorView.deletarComprador();
                     break;
                 case 0:
                     System.out.println("Saindo...");
