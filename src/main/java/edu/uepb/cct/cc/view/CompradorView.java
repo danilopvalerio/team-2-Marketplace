@@ -101,6 +101,56 @@ public class CompradorView {
         }
     }
 
+    public void atualizarComprador() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("=== Atualizar Comprador ===");
+
+        System.out.print("Digite o CPF do comprador a ser atualizado (XXX.XXX.XXX-XX): ");
+        String cpf = scanner.nextLine();
+
+        while (cpf == null || cpf.isEmpty() || !cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")) {
+            System.out.print("CPF inválido. O formato deve ser XXX.XXX.XXX-XX. Por favor, insira um CPF válido: ");
+            cpf = scanner.nextLine();
+        }
+
+        Comprador compradorExistente = CompradorController.getCompradorPorCpf(cpf);
+        if (compradorExistente == null) {
+            System.out.println("Comprador não encontrado.");
+            return;
+        }
+
+        System.out.println("OBS: Deixe os campos vazios para manter os dados atuais.");
+
+        System.out.print("Novo Nome (atual: " + compradorExistente.getNome() + "): ");
+        String nome = scanner.nextLine();
+        if (nome.isEmpty()) nome = compradorExistente.getNome();
+
+        System.out.print("Novo E-mail (atual: " + compradorExistente.getEmail() + "): ");
+        String email = scanner.nextLine();
+        if (email.isEmpty()) email = compradorExistente.getEmail();
+
+        System.out.print("Nova Senha (mínimo 6 caracteres, deixar vazio para manter): ");
+        String senha = scanner.nextLine();
+        if (senha.isEmpty()) senha = compradorExistente.getSenha();
+        while (senha.length() < 6) {
+            System.out.print("A senha deve ter pelo menos 6 caracteres. Insira novamente: ");
+            senha = scanner.nextLine();
+        }
+
+        System.out.print("Novo Endereço (atual: " + compradorExistente.getEndereco() + "): ");
+        String endereco = scanner.nextLine();
+        if (endereco.isEmpty()) endereco = compradorExistente.getEndereco();
+
+        Comprador compradorAtualizado = new Comprador(nome, email, senha, cpf, endereco);
+        try {
+            CompradorController.atualizarComprador(cpf, compradorAtualizado);
+            System.out.println("Comprador atualizado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao atualizar comprador: " + e.getMessage());
+        }
+    }
+
     public void deletarComprador() {
         Scanner scanner = new Scanner(System.in);
 
