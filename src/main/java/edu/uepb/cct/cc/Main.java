@@ -1,4 +1,3 @@
-
 package edu.uepb.cct.cc;
 
 import edu.uepb.cct.cc.view.CompradorView;
@@ -15,7 +14,8 @@ public class Main {
             System.out.println("\n=== Menu Comprador ===");
             System.out.println("1. Cadastrar Comprador");
             System.out.println("2. Listar Compradores");
-            System.out.println("3. Deletar Comprador");
+            System.out.println("3. Atualizar Comprador");
+            System.out.println("4. Deletar Comprador");
             System.out.println("0. Voltar");
             System.out.print("Escolha uma opção: ");
 
@@ -25,7 +25,8 @@ public class Main {
             switch (escolha) {
                 case 1 -> compradorView.cadastrarComprador();
                 case 2 -> compradorView.listarCompradores();
-                case 3 -> compradorView.deletarComprador();
+                case 3 -> compradorView.atualizarComprador();
+                case 4 -> compradorView.deletarComprador();
                 case 0 -> { return; }
                 default -> System.out.println("Opção inválida. Tente novamente.");
             }
@@ -39,7 +40,6 @@ public class Main {
         while (true) {
             System.out.println("\n=== Menu Loja ===");
             System.out.println("1. Cadastrar Loja");
-            //System.out.println("2. Listar Lojas");
             System.out.println("2. Deletar Loja");
             System.out.println("0. Voltar");
             System.out.print("Escolha uma opção: ");
@@ -49,7 +49,6 @@ public class Main {
 
             switch (escolha) {
                 case 1 -> lojaView.cadastrarLoja();
-                //case 2 -> lojaView.listarLojas();
                 case 2 -> lojaView.deletarLoja();
                 case 0 -> { return; }
                 default -> System.out.println("Opção inválida. Tente novamente.");
