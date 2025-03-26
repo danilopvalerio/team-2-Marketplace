@@ -100,4 +100,34 @@ public class CompradorView {
             System.out.println("Saindo da visualização de compradores.");
         }
     }
+
+    public void deletarComprador() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("=== Deletar Comprador ===");
+
+        List<Comprador> compradores = CompradorController.getTodosCompradores();
+        if (compradores.isEmpty()) {
+            System.out.println("Nenhum comprador cadastrado para deletar.");
+            return;
+        }
+
+        System.out.println("Lista de Compradores:");
+        for (Comprador comprador : compradores) {
+            System.out.println("Nome: " + comprador.getNome() + " | CPF: " + comprador.getCpf());
+        }
+
+        System.out.print("Digite o CPF do comprador a ser deletado (XXX.XXX.XXX-XX): ");
+        String cpf = scanner.nextLine();
+
+        // Validação de CPF
+        while (cpf == null || cpf.isEmpty() || !cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")) {
+            System.out.print("CPF inválido. O formato deve ser XXX.XXX.XXX-XX. Por favor, insira um CPF válido: ");
+            cpf = scanner.nextLine();
+        }
+
+        // Chamar o controller para deletar
+        String resultado = CompradorController.deleteCompradorPorCpf(cpf);
+        System.out.println(resultado);
+    }
 }
