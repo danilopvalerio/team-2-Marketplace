@@ -3,82 +3,90 @@ package edu.uepb.cct.cc.view;
 import edu.uepb.cct.cc.controller.LojaController;
 import edu.uepb.cct.cc.model.Loja;
 
-// import java.util.List;
+import java.util.List;
 import java.util.Scanner;
 
 public class LojaView {
+    private static final Scanner scanner = new Scanner(System.in);
 
     public void cadastrarLoja() {
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Cadastro de Loja ===");
+        String nome, email, senha, cpfCnpj, endereco;
 
-        try {
-            System.out.println("=== Cadastro de Loja ===");
-            String nome, email, senha, cpfCnpj, endereco;
-
-            System.out.print("Nome: ");
+        System.out.print("Nome: ");
+        nome = scanner.nextLine();
+        while (nome.isEmpty()) {
+            System.out.print("Nome não pode ser vazio. Insira novamente: ");
             nome = scanner.nextLine();
-            while (nome.isEmpty()) {
-                System.out.print("Nome não pode ser vazio. Insira novamente: ");
-                nome = scanner.nextLine();
-            }
+        }
 
-            System.out.print("E-mail: ");
+        System.out.print("E-mail: ");
+        email = scanner.nextLine();
+        while (email.isEmpty() || !email.contains("@")) {
+            System.out.print("E-mail inválido. Insira um e-mail válido: ");
             email = scanner.nextLine();
-            while (email.isEmpty() || !email.contains("@")) {
-                System.out.print("E-mail inválido. Insira um e-mail válido: ");
-                email = scanner.nextLine();
-            }
+        }
 
-            System.out.print("Senha (mínimo 6 caracteres): ");
+        System.out.print("Senha (mínimo 6 caracteres): ");
+        senha = scanner.nextLine();
+        while (senha.length() < 6) {
+            System.out.print("A senha deve ter pelo menos 6 caracteres. Insira novamente: ");
             senha = scanner.nextLine();
-            while (senha.length() < 6) {
-                System.out.print("A senha deve ter pelo menos 6 caracteres. Insira novamente: ");
-                senha = scanner.nextLine();
-            }
+        }
 
-            System.out.print("CPF/CNPJ: ");
+        System.out.print("CPF/CNPJ: ");
+        cpfCnpj = scanner.nextLine();
+        while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
+            System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
             cpfCnpj = scanner.nextLine();
-            while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
-                System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
-                cpfCnpj = scanner.nextLine();
-            }
+        }
 
-            System.out.print("Endereço: ");
+        System.out.print("Endereço: ");
+        endereco = scanner.nextLine();
+        while (endereco.isEmpty()) {
+            System.out.print("Endereço não pode ser vazio. Insira novamente: ");
             endereco = scanner.nextLine();
-            while (endereco.isEmpty()) {
-                System.out.print("Endereço não pode ser vazio. Insira novamente: ");
-                endereco = scanner.nextLine();
-            }
+        }
 
-            Loja loja = new Loja(nome, email, senha, cpfCnpj, endereco);
-            LojaController.create(loja);
+        Loja loja = new Loja(nome, email, senha, cpfCnpj, endereco);
+        LojaController.create(loja);
 
-            System.out.println("Cadastro realizado com sucesso!");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Ocorreu um erro inesperado.");
+        System.out.println("Cadastro realizado com sucesso!");
+    }
+
+    public void listarLojas() {
+        List<Loja> lojas = LojaController.getTodasLojas();
+        System.out.println("=== Lista de Lojas Cadastradas ===");
+        if (lojas.isEmpty()) {
+            System.out.println("Nenhuma loja cadastrada.");
+            return;
+        }
+
+        for (int i = 0; i < lojas.size(); i++) {
+            Loja loja = lojas.get(i);
+            System.out.println((i + 1) + ". " + loja.getNome() + " - " + loja.getCpfCnpj());
         }
     }
 
-    // public void listarLojas() {
-    //     List<Loja> lojas = LojaController.getTodasLojas();
-    //     System.out.println("=== Lista de Lojas Cadastradas ===");
-    //     if (lojas.isEmpty()) {
-    //         System.out.println("Nenhuma loja cadastrada.");
-    //         return;
-    //     }
+    public void buscarLoja() {
+        System.out.println("=== Buscar Loja ===");
+        System.out.print("Digite o CPF/CNPJ da loja a ser buscada: ");
+        String cpfCnpj = scanner.nextLine();
+        while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
+            System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
+            cpfCnpj = scanner.nextLine();
+        }
 
-    //     for (int i = 0; i < lojas.size(); i++) {
-    //         Loja loja = lojas.get(i);
-    //         System.out.println((i + 1) + ". " + loja.getNome() + " - " + loja.getCpfCnpj());
-    //     }
-    // }
+        try {
+            Loja loja = LojaController.getLojaPorCpfCnpj(cpfCnpj);
+            System.out.println("Nome: " + loja.getNome() + "\nCPF/CNPJ: " + loja.getCpfCnpj() + "\nEmail: " + loja.getEmail() + "\nEndereço: " + loja.getEndereco());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
 
     public void deletarLoja() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("=== Deletar Loja ===");
-
         System.out.print("Digite o CPF/CNPJ da loja a ser deletada: ");
         String cpfCnpj = scanner.nextLine();
         while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
@@ -87,7 +95,7 @@ public class LojaView {
         }
 
         try {
-            LojaController.deleteLojaPorCpfCnpj(cpfCnpj);
+            LojaController.deletarLoja(cpfCnpj);
             System.out.println("Loja deletada com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());

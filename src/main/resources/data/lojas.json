@@ -1,1 +1,7 @@
-[ ]
+[ {
+  "nome" : "Sandrine Modas",
+  "email" : "Sandrine@gmail.com",
+  "senha" : "danilo123",
+  "cpfCnpj" : "111.222.333-45",
+  "endereco" : "rua maria"
+} ]
