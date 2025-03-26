@@ -100,7 +100,6 @@ public class LojaController {
         }
 
         salvarLojas(lojas);
-        System.out.println("Loja atualizada com sucesso.");
         return lojaAtualizada;
     }
 
@@ -114,7 +113,6 @@ public class LojaController {
             throw new IllegalArgumentException("Loja não encontrada.");
         }
         salvarLojas(lojas);
-        System.out.println("Loja removida com sucesso.");
         return lojas;
     }
 }

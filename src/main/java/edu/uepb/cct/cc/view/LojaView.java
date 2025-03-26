@@ -95,7 +95,7 @@ public class LojaView {
         }
 
         try {
-            LojaController.deletarLoja(cpfCnpj);
+            LojaController.deleteLojaPorCpfCnpj(cpfCnpj);
             System.out.println("Loja deletada com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
