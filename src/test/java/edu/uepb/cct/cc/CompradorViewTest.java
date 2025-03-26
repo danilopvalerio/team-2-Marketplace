@@ -77,4 +77,49 @@ public class CompradorViewTest {
         assertTrue(outputStream.toString().contains("Nenhum comprador cadastrado."));
     }
 
+    @Test
+    public void testAtualizarComprador() {
+        Comprador comprador = new Comprador("Ana Paula", "ana@email.com", "senha456", "222.333.444-55", "Rua D, 123");
+        CompradorController.create(comprador);
+
+        String input = "222.333.444-55\nAna Atualizada\nana_atualizado@email.com\nsenhaNova\nRua Nova, 456\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        compradorView.atualizarComprador();
+
+        Comprador atualizado = CompradorController.getCompradorPorCpf("222.333.444-55");
+        assertEquals("Ana Atualizada", atualizado.getNome());
+        assertEquals("ana_atualizado@email.com", atualizado.getEmail());
+        assertTrue(outputStream.toString().contains("Comprador atualizado com sucesso!"));
+    }
+
+    @Test
+    public void testAtualizarCompradorInexistente() {
+        String input = "999.888.777-66\nNovo Nome\nnova@email.com\nnovaSenha\nNovo Endereco\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        compradorView.atualizarComprador();
+
+        assertTrue(outputStream.toString().contains("Comprador não encontrado."));
+    }
+
+    @Test
+    public void testDeletarComprador() {
+        Comprador comprador = new Comprador("Bruno Lima", "bruno@email.com", "senha789", "333.444.555-66", "Rua E, 321");
+        CompradorController.create(comprador);
+
+        String input = "333.444.555-66\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        compradorView.deletarComprador();
+
+        assertNull(CompradorController.getCompradorPorCpf("333.444.555-66"));
+        assertTrue(outputStream.toString().contains("Comprador removido com sucesso."));
+    }
+
+    @Test
+    public void testDeletarCompradorInexistente() {
+        String input = "999.888.777-66\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        compradorView.deletarComprador();
+
+        assertTrue(outputStream.toString().contains("Nenhum comprador cadastrado para deletar."));
+    }
 }
