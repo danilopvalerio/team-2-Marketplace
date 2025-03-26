@@ -40,7 +40,7 @@ public class Main {
             System.out.println("\n=== Menu Loja ===");
             System.out.println("1. Cadastrar Loja");
             //System.out.println("2. Listar Lojas");
-            //System.out.println("3. Deletar Loja");
+            System.out.println("2. Deletar Loja");
             System.out.println("0. Voltar");
             System.out.print("Escolha uma opção: ");
 
@@ -50,7 +50,7 @@ public class Main {
             switch (escolha) {
                 case 1 -> lojaView.cadastrarLoja();
                 //case 2 -> lojaView.listarLojas();
-                //case 3 -> lojaView.deletarLoja();
+                case 2 -> lojaView.deletarLoja();
                 case 0 -> { return; }
                 default -> System.out.println("Opção inválida. Tente novamente.");
             }

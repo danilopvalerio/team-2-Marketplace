@@ -75,22 +75,22 @@ public class LojaView {
     //     }
     // }
 
-    // public void deletarLoja() {
-    //     Scanner scanner = new Scanner(System.in);
-    //     System.out.println("=== Deletar Loja ===");
+    public void deletarLoja() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Deletar Loja ===");
 
-    //     System.out.print("Digite o CPF/CNPJ da loja a ser deletada: ");
-    //     String cpfCnpj = scanner.nextLine();
-    //     while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
-    //         System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
-    //         cpfCnpj = scanner.nextLine();
-    //     }
+        System.out.print("Digite o CPF/CNPJ da loja a ser deletada: ");
+        String cpfCnpj = scanner.nextLine();
+        while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
+            System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
+            cpfCnpj = scanner.nextLine();
+        }
 
-    //     try {
-    //         LojaController.deleteLojaPorCpfCnpj(cpfCnpj);
-    //         System.out.println("Loja deletada com sucesso!");
-    //     } catch (IllegalArgumentException e) {
-    //         System.out.println("Erro: " + e.getMessage());
-    //     }
-    // }
+        try {
+            LojaController.deleteLojaPorCpfCnpj(cpfCnpj);
+            System.out.println("Loja deletada com sucesso!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
 }
