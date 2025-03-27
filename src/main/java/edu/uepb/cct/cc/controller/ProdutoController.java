@@ -122,4 +122,21 @@ public class ProdutoController {
                 "Produto removido com sucesso.");
         return produtos;
     }
+
+    public static List<Produto> getProdutosPorLoja(String cnpjCpfLoja) {
+        if (cnpjCpfLoja == null || cnpjCpfLoja.isEmpty()) {
+            throw new IllegalArgumentException("CNPJ ou CPF inválido.");
+        }
+        List<Produto> produtos = carregarProdutos();
+        List<Produto> produtosDaLoja = new ArrayList<>();
+
+        for (Produto produto : produtos) {
+            if (produto.getIdLoja().equalsIgnoreCase(cnpjCpfLoja)) {
+                produtosDaLoja.add(produto);
+            }
+        }
+
+        return produtosDaLoja;
+    }
+
 }

@@ -1,1 +1,10 @@
-[ ]
+[ {
+  "id" : "25A",
+  "nome" : "sapato",
+  "valor" : 20.0,
+  "tipo" : "calcado",
+  "quantidade" : 20,
+  "marca" : "adidas",
+  "descricao" : "sapato overflow linha snap ",
+  "idLoja" : "133.222.344-98"
+} ]

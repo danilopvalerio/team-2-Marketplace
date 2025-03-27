@@ -1,1 +1,7 @@
-[ ]
+[ {
+  "nome" : "Danilo Pedro",
+  "email" : "danilovalerio2003@gmail.com",
+  "senha" : "danilo123",
+  "cpf" : "123.456.789-10",
+  "endereco" : "rua maladena"
+} ]
