@@ -45,7 +45,7 @@ public class CompradorController {
         // Verifica se o comprador já existe
         for (Comprador c : compradores) {
             if (c.getCpf().equals(comprador.getCpf())) {
-                throw new IllegalArgumentException("Não foi possível adicionar o comprador, pois ele já está cadastrado no sistema.");
+                throw new IllegalArgumentException("Não foi possível adicionar o comprador pois ele já está cadastrado no sistema.");
             }
         }
 

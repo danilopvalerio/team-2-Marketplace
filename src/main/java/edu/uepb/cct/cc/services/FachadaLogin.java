@@ -25,6 +25,11 @@ public class FachadaLogin {
                 return;
             }
 
+            if (!tipoUsuario.equals("1") && !tipoUsuario.equals("2") && !tipoUsuario.equals("3") && !tipoUsuario.equals("0")) {
+                System.out.println("Opção inválida! Por favor, escolha uma opção válida.");
+                continue; // Volta para o início do loop e exibe o menu novamente
+            }
+
             // Pedir o identificador e a senha
             System.out.print("Digite seu identificador: ");
             id = scanner.nextLine();
