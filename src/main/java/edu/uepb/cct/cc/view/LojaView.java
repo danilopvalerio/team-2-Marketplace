@@ -79,7 +79,8 @@ public class LojaView {
 
         try {
             Loja loja = LojaController.getLojaPorCpfCnpj(cpfCnpj);
-            System.out.println("Nome: " + loja.getNome() + "\nCPF/CNPJ: " + loja.getCpfCnpj() + "\nEmail: " + loja.getEmail() + "\nEndereço: " + loja.getEndereco());
+            System.out.println("Nome: " + loja.getNome() + "\nCPF/CNPJ: " + loja.getCpfCnpj() + "\nEmail: "
+                    + loja.getEmail() + "\nEndereço: " + loja.getEndereco());
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }
@@ -97,6 +98,49 @@ public class LojaView {
         try {
             LojaController.deleteLojaPorCpfCnpj(cpfCnpj);
             System.out.println("Loja deletada com sucesso!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    public void atualizarLoja() {
+        System.out.println("=== Atualizar Loja ===");
+        System.out.print("Digite o CPF/CNPJ da loja a ser atualizada: ");
+        String cpfCnpj = scanner.nextLine();
+        while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
+            System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
+            cpfCnpj = scanner.nextLine();
+        }
+
+        try {
+            Loja lojaExistente = LojaController.getLojaPorCpfCnpj(cpfCnpj);
+            if (lojaExistente == null) {
+                System.out.println("Loja não encontrada.");
+                return;
+            }
+
+            System.out.println("Deixe em branco os campos que não deseja alterar.");
+
+            System.out.print("Novo Nome [" + lojaExistente.getNome() + "]: ");
+            String nome = scanner.nextLine();
+            nome = nome.isEmpty() ? lojaExistente.getNome() : nome;
+
+            System.out.print("Novo E-mail [" + lojaExistente.getEmail() + "]: ");
+            String email = scanner.nextLine();
+            email = email.isEmpty() ? lojaExistente.getEmail() : email;
+
+            System.out.print("Nova Senha (mínimo 6 caracteres) [*****]: ");
+            String senha = scanner.nextLine();
+            senha = senha.isEmpty() ? lojaExistente.getSenha() : senha;
+
+            System.out.print("Novo Endereço [" + lojaExistente.getEndereco() + "]: ");
+            String endereco = scanner.nextLine();
+            endereco = endereco.isEmpty() ? lojaExistente.getEndereco() : endereco;
+
+            Loja lojaAtualizada = new Loja(nome, email, senha, cpfCnpj, endereco);
+            LojaController.atualizarLoja(cpfCnpj, lojaAtualizada);
+
+            System.out.println("Loja atualizada com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }

@@ -1,1 +1,7 @@
-[ ]
+[ {
+  "nome" : "Sandrine Modas",
+  "email" : "Sandrine@gmail.com",
+  "senha" : "sandrine123",
+  "cpfCnpj" : "133.222.344-98",
+  "endereco" : "Rua maria jos� de f�tima - 94- santa tereza"
+} ]

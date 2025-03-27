@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class ProdutoView {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void cadastrarProduto() {
+    public void cadastrarProduto() {
         System.out.println("");
         System.out.println("=== Cadastro de Produto ===");
 
