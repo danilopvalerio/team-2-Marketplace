@@ -20,9 +20,7 @@ public class LojaControllerTest {
         } catch (Exception e) {
             // Este try catch é necessário para caso a loja exista no sistema, ela deve ser removida.
         }
-
-        Loja loja = new Loja("Loja Teste", "teste@email.com", "senha123", "123.456.789-00", "Endereço Teste");
-        Loja createdLoja = LojaController.create(loja);
+        Loja createdLoja = LojaController.createLoja("Loja Teste", "teste@email.com", "senha123", "123.456.789-00", "Endereço Teste");
 
         // Verifica se a loja foi criada corretamente
         assertNotNull(createdLoja);
@@ -32,13 +30,11 @@ public class LojaControllerTest {
 
     @Test
     public void testCreateLojaJaCadastrada() {
-        Loja loja = new Loja("Loja Teste", "teste@email.com", "senha123", "123.456.789-00", "Endereço Teste");
-        LojaController.create(loja);
 
-        Loja loja2 = new Loja("Loja Teste 2", "teste2@email.com", "senha456", "123.456.789-00", "Endereço Teste 2");
+        LojaController.createLoja("Loja Teste", "teste@email.com", "senha123", "123.456.789-00", "Endereço Teste");
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            LojaController.create(loja2);
+            LojaController.createLoja("Loja Teste 2", "teste2@email.com", "senha456", "123.456.789-00", "Endereço Teste 2");
         });
 
         assertEquals("Loja já cadastrada no sistema.", exception.getMessage());
@@ -62,9 +58,8 @@ public class LojaControllerTest {
     @Test
     public void testAtualizarLoja() {
 
-        Loja lojaAtualizada = new Loja("Loja Teste Atualizada", "teste@email.com", "novaSenha123", "123.456.789-00",
+        LojaController.atualizarLoja("123.456.789-00", "Loja Teste Atualizada", "teste@email.com", "novaSenha123",
                 "Novo Endereço Teste");
-        LojaController.atualizarLoja("123.456.789-00", lojaAtualizada);
 
         Loja lojaVerificada = LojaController.getLojaPorCpfCnpj("123.456.789-00");
         assertNotNull(lojaVerificada);

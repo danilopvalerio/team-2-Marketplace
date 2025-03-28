@@ -1,15 +1,14 @@
 package edu.uepb.cct.cc.view;
 
 import edu.uepb.cct.cc.controller.LojaController;
-import edu.uepb.cct.cc.model.Loja;
-
+import edu.uepb.cct.cc.model.*;
 import java.util.List;
 import java.util.Scanner;
 
 public class LojaView {
-    private static final Scanner scanner = new Scanner(System.in);
 
     public void cadastrarLoja() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("=== Cadastro de Loja ===");
         String nome, email, senha, cpfCnpj, endereco;
 
@@ -48,8 +47,8 @@ public class LojaView {
             endereco = scanner.nextLine();
         }
 
-        Loja loja = new Loja(nome, email, senha, cpfCnpj, endereco);
-        LojaController.create(loja);
+        // Passa os dados diretamente para o controller
+        LojaController.createLoja(nome, email, senha, cpfCnpj, endereco);
 
         System.out.println("Cadastro realizado com sucesso!");
     }
@@ -69,6 +68,7 @@ public class LojaView {
     }
 
     public void buscarLoja() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("=== Buscar Loja ===");
         System.out.print("Digite o CPF/CNPJ da loja a ser buscada: ");
         String cpfCnpj = scanner.nextLine();
@@ -87,6 +87,7 @@ public class LojaView {
     }
 
     public void deletarLoja() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("=== Deletar Loja ===");
         System.out.print("Digite o CPF/CNPJ da loja a ser deletada: ");
         String cpfCnpj = scanner.nextLine();
@@ -104,6 +105,7 @@ public class LojaView {
     }
 
     public void atualizarLoja() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("=== Atualizar Loja ===");
         System.out.print("Digite o CPF/CNPJ da loja a ser atualizada: ");
         String cpfCnpj = scanner.nextLine();
@@ -137,8 +139,7 @@ public class LojaView {
             String endereco = scanner.nextLine();
             endereco = endereco.isEmpty() ? lojaExistente.getEndereco() : endereco;
 
-            Loja lojaAtualizada = new Loja(nome, email, senha, cpfCnpj, endereco);
-            LojaController.atualizarLoja(cpfCnpj, lojaAtualizada);
+            LojaController.atualizarLoja(cpfCnpj, nome, email, senha, endereco);
 
             System.out.println("Loja atualizada com sucesso!");
         } catch (IllegalArgumentException e) {

@@ -1,10 +1,10 @@
 [ {
-  "id" : "25A",
-  "nome" : "sapato",
-  "valor" : 20.0,
-  "tipo" : "calcado",
-  "quantidade" : 20,
-  "marca" : "adidas",
-  "descricao" : "sapato overflow linha snap ",
-  "idLoja" : "133.222.344-98"
+  "id" : "P005",
+  "nome" : "Produto E",
+  "valor" : 15.0,
+  "tipo" : "Tipo V",
+  "quantidade" : 30,
+  "marca" : "Marca C",
+  "descricao" : "Descrição",
+  "idLoja" : "123.456.789-00"
 } ]

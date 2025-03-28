@@ -22,12 +22,12 @@ public class ProdutoController {
         List<Produto> produtos = carregarProdutos();
 
         for (Produto p : produtos) {
-            if (p.getNome().equalsIgnoreCase(produto.getNome()) && p.getMarca().equalsIgnoreCase(produto.getMarca())) {
+            if (p.getId().equalsIgnoreCase(produto.getId())) {
                 System.out.println(
-                        "-------------------------------------------------------------------------------------\n" + //
-                                "Não foi possível adicionar o produto pois ele já está cadastrado no sistema." + //
-                                "-------------------------------------------------------------------------------------\n");
-                throw new IllegalArgumentException("Produto já cadastrado no sistema.");
+                        "-------------------------------------------------------------------------------------\n" + 
+                        "Não foi possível adicionar o produto pois o ID já está cadastrado no sistema." + 
+                        "-------------------------------------------------------------------------------------\n");
+                throw new IllegalArgumentException("Produto já cadastrado no sistema com o mesmo ID.");
             }
         }
         produtos.add(produto);

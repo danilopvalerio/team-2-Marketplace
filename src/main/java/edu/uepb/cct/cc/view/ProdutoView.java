@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ProdutoView {
-    private static final Scanner scanner = new Scanner(System.in);
+    
 
     public void cadastrarProduto(String idLoja) {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("");
         System.out.println("=== Cadastro de Produto ===");
 
