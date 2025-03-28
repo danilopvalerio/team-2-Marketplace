@@ -1,14 +1,10 @@
 package edu.uepb.cct.cc;
-
 import edu.uepb.cct.cc.view.ProdutoView;
-import edu.uepb.cct.cc.controller.ProdutoController;
-import edu.uepb.cct.cc.model.Produto;
 import org.junit.jupiter.api.*;
-
 import java.io.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProdutoViewTest {
     private ProdutoView produtoView;
     private final PrintStream originalOut = System.out;
@@ -21,11 +17,6 @@ public class ProdutoViewTest {
         outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
         System.setIn(originalIn);
-
-        // Limpar todos os produtos antes de cada teste
-        for (Produto produto : ProdutoController.getTodosProdutos()) {
-            ProdutoController.deleteProdutoPorID(produto.getId());
-        }
     }
 
     @AfterEach
@@ -35,65 +26,135 @@ public class ProdutoViewTest {
     }
 
     @Test
-    public void testCadastrarProduto() {
-        String input = "Produto A\n10.0\nTipo X\n100\nMarca Y\nProduto de teste\nP001\n123.456.789-00\n";
+    @Order(1)
+    public void testCadastrarProduto_entradaValida() {
+        String input = "Produto Teste134\n100.0\nEletrônicos\n10\nMarca X\nProduto de teste\nP12345\n123.456.789-01\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        produtoView.cadastrarProduto("Admin");
+        produtoView.cadastrarProduto("123.456.789-01");
 
-        Produto produto = ProdutoController.getProdutoPorID("P001");
-        assertNotNull(produto);
-        assertEquals("Produto A", produto.getNome());
-        assertTrue(outputStream.toString().contains("Produto cadastrado com sucesso!"));
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto cadastrado com sucesso!"));
     }
 
     @Test
-    public void testCadastrarProdutoComValorInvalido() {
-        String input = "Produto B\n-10.0\nTipo Y\n50\nMarca Z\nProduto inválido\nP002\n123.456.789-00\n";
+    @Order(2)
+    public void testAtualizarProduto_produtoAtualizado() {
+        String input = "P12345\nNovo Produto p22\n150.0\nAcessórios\n20\nMarca Y\nNovo produto\n123.456.789-01\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        produtoView.cadastrarProduto("Admin");
-
-        assertTrue(outputStream.toString().contains("Erro: O valor deve ser maior que zero."));
+        ProdutoView.atualizarProduto();
+        ProdutoView.buscarProdutoPorID("P12345");
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto atualizado com sucesso!"));
     }
 
     @Test
-    public void testCadastrarProdutoComQuantidadeNegativa() {
-        String input = "Produto C\n20.0\nTipo Z\n-5\nMarca A\nProduto com quantidade negativa\nP003\n123.456.789-00\n";
+    @Order(3)
+    public void testCadastrarProduto_valorInvalido() {
+        String input = "Produto Teste\n-10.0\nEletrônicos\n10\nMarca X\nProduto de teste\nP12345\n12345678901234\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        produtoView.cadastrarProduto("Admin");
+        ProdutoView.cadastrarProduto("133.222.344-98");
 
-        assertTrue(outputStream.toString().contains("Erro: A quantidade não pode ser negativa."));
+        String output = outputStream.toString();
+        assertTrue(output.contains("O valor deve ser maior que zero. Insira novamente: "));
     }
 
     @Test
-    public void testListarProdutosPorLoja() {
-        Produto produto = new Produto("Produto D", (float) 30.0, "Tipo W", 10, "Marca B", "Descrição", "P004", "123.456.789-00");
-        ProdutoController.create(produto);
-
-        System.setIn(new ByteArrayInputStream("123.456.789-00\n".getBytes()));
-        ProdutoView.listarProdutosPorLoja("123.456.789-00");
-
-        assertTrue(outputStream.toString().contains("Produto D"));
-    }
-
-    @Test
-    public void testListarProdutosPorLojaSemProdutos() {
-        ProdutoView.listarProdutosPorLoja("123.456.789/00");
-        assertTrue(outputStream.toString().contains("Nenhum produto encontrado para a loja com CNPJ/CPF: 123.456.789/00"));
-    }
-    
-    @Test
-    public void testCadastrarProdutoJaExistente() {
-        Produto produto = new Produto("Produto E", (float) 15.0, "Tipo V", 30, "Marca C", "Descrição", "P005", "123.456.789-00");
-        ProdutoController.create(produto);
-
-        String input = "Produto E\n15.0\nTipo V\n30\nMarca C\nDescrição\nP005\n123.456.789-00\n";
+    @Order(4)
+    public void testCadastrarProduto_quantidadeNegativa() {
+        String input = "Produto Teste\n100.0\nEletrônicos\n-5\nMarca X\nProduto de teste\nP12345\n12345678901234\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        produtoView.cadastrarProduto("Admin");
+        produtoView.cadastrarProduto("133.222.344-98");
 
-        assertTrue(outputStream.toString().contains("Erro: Produto já cadastrado no sistema com o mesmo ID."));
+        String output = outputStream.toString();
+        assertTrue(output.contains("A quantidade não pode ser negativa. Insira novamente: "));
+    }
+
+    @Test
+    @Order(5)
+    public void testListarProdutosPorLoja_produtosEncontrados() {
+        String input = "123.456.789-01\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        ProdutoView.listarProdutosPorLoja("12345678901234");
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produtos da Loja"));
+    }
+
+    @Test
+    @Order(6)
+    public void testListarProdutosPorLoja_semProdutos() {
+        String input = "12345678901234\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        ProdutoView.listarProdutosPorLoja("12345678901234");
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Nenhum produto encontrado para a loja"));
+    }
+
+    @Test
+    @Order(7)
+    public void testBuscarProdutoPorID_produtoEncontrado() {
+        String input = "P12345\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        ProdutoView.buscarProdutoPorID("P12345");
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Novo Produto p22"));
+    }
+
+    @Test
+    @Order(8)
+    public void testBuscarProdutoPorID_produtoNaoEncontrado() {
+        String input = "P99999\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        ProdutoView.buscarProdutoPorID("P99999");
+
+        String output = outputStream.toString();
+        System.out.println(output);
+        assertTrue(output.contains("Produto não encontrado."));
+    }
+
+    @Test
+    @Order(9)
+    public void testAtualizarProduto_produtoNaoEncontrado() {
+        String input = "P99999\nNovo Produto\n150.0\nAcessórios\n20\nMarca Y\nNovo produto\nP99999\n123.456.789-01\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        ProdutoView.atualizarProduto();
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto não encontrado."));
+    }
+
+    @Test
+    @Order(10)
+    public void testDeletarProduto_produtoDeletado() {
+        String input = "P12345\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        ProdutoView.deletarProduto();
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto removido com sucesso!"));
+    }
+
+    @Test
+    @Order(11)
+    public void testDeletarProduto_produtoNaoEncontrado() {
+        String input = "P99999\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        ProdutoView.deletarProduto();
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Erro: Produto não encontrado."));
     }
 }

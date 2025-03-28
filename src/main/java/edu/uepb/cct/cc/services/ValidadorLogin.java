@@ -27,7 +27,7 @@ public class ValidadorLogin {
 
     public static boolean loginADM(String id, String senha){
         try {
-            return "biscoito".equals(id) && "YTB-8@".equals(senha);
+            return "admin".equals(id) && "123".equals(senha);
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
             return false;

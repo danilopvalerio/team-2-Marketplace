@@ -1,10 +1,10 @@
 [ {
-  "id" : "P005",
-  "nome" : "Produto E",
-  "valor" : 15.0,
-  "tipo" : "Tipo V",
-  "quantidade" : 30,
-  "marca" : "Marca C",
-  "descricao" : "Descrição",
-  "idLoja" : "123.456.789-00"
+  "id" : "poco",
+  "nome" : "pocophone",
+  "valor" : 2500.0,
+  "tipo" : "android",
+  "quantidade" : 20,
+  "marca" : "xiaomi",
+  "descricao" : "pocophone x8 azul",
+  "idLoja" : "133.222.344-98"
 } ]

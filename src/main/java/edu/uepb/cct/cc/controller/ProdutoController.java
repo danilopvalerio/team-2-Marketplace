@@ -10,17 +10,18 @@ import java.util.List;
 
 public class ProdutoController {
 
-    
     private static final String ARQUIVO_PRODUTOS = "src/main/resources/data/produtos.json";
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static Produto create(Produto produto) {
-        if (produto == null || produto.getNome() == null || produto.getTipo() == null || produto.getMarca() == null
-                || produto.getDescricao() == null || produto.getValor() <= 0 || produto.getQuantidade() < 0) {
+    public static String create(String nome, float valor, String tipo, int quantidade, String marca, String descricao, String id, String idLoja) {
+        if (nome == null || tipo == null || marca == null || descricao == null
+                || id == null || idLoja == null || quantidade <= 0 || valor < 0) {
             throw new IllegalArgumentException("Produto ou dados inválidos.");
         }
+        
         List<Produto> produtos = carregarProdutos();
 
+        Produto produto = new Produto(nome, valor, tipo, quantidade, marca, descricao, id, idLoja);
         for (Produto p : produtos) {
             if (p.getId().equalsIgnoreCase(produto.getId())) {
                 System.out.println(
@@ -34,26 +35,32 @@ public class ProdutoController {
         salvarProdutos(produtos);
         System.out.println("------------------------------------\n" + //
                 "Produto adicionado.");
-        return produto;
+        return formatarProduto(produto);
     }
 
-    public static Produto getProdutoPorID(String id) {
+    public static String getProdutoPorID(String id) {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("ID inválido.");
         }
         List<Produto> produtos = carregarProdutos();
         for (Produto produto : produtos) {
             if (produto.getId().equalsIgnoreCase(id)) {
-                return produto;
+                return formatarProduto(produto);
             }
         }
         return null;
     }
 
-    public static List<Produto> getTodosProdutos() {
+    public static List<String> getTodosProdutos() {
         List<Produto> produtos = carregarProdutos();
         produtos.sort((p1, p2) -> p1.getNome().compareToIgnoreCase(p2.getNome()));
-        return produtos;
+        
+        List<String> produtosFormatados = new ArrayList<>();
+        for (Produto produto : produtos) {
+            produtosFormatados.add(formatarProduto(produto));
+        }
+        
+        return produtosFormatados;
     }
 
     private static List<Produto> carregarProdutos() {
@@ -82,61 +89,77 @@ public class ProdutoController {
         }
     }
 
-    public static Produto atualizarProduto(String id, Produto produtoAtualizado) {
-        if (id == null || id.isEmpty() || produtoAtualizado == null) {
-            throw new IllegalArgumentException("ID ou dados inválidos.");
+    public static boolean atualizarProduto(String nome, float valor, String tipo, int quantidade, String marca, String descricao, String id, String idLoja) {
+        if (nome == null || tipo == null || marca == null || descricao == null
+                || id == null || idLoja == null || quantidade <= 0 || valor < 0) {
+            throw new IllegalArgumentException("Produto ou dados inválidos.");
         }
         List<Produto> produtos = carregarProdutos();
         boolean atualizado = false;
-
+        Produto produtoAtualizado = new Produto(nome, valor, tipo, quantidade, marca, descricao, id, idLoja);
+    
         for (int i = 0; i < produtos.size(); i++) {
-            if (produtos.get(i).getId().equals(id)) { // Comparar pelo id, não pelo nome
-                produtoAtualizado.setId(id); // Atualizar o id
+            if (produtos.get(i).getId().equals(id)) {
+                produtoAtualizado.setId(id); 
                 produtos.set(i, produtoAtualizado);
                 atualizado = true;
                 break;
             }
         }
-
+    
         if (!atualizado) {
             throw new IllegalArgumentException("Produto não encontrado.");
         }
-
+    
         salvarProdutos(produtos);
-        System.out.println("------------------------------------\n" +
-                "Produto atualizado com sucesso.");
-        return produtoAtualizado;
+        return atualizado;
     }
 
-    public static List<Produto> deleteProdutoPorID(String id) {
+    public static boolean deleteProdutoPorID(String id) {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("ID inválido.");
         }
         List<Produto> produtos = carregarProdutos();
         boolean removido = produtos.removeIf(produto -> produto.getId().equalsIgnoreCase(id));
+        
         if (!removido) {
             throw new IllegalArgumentException("Produto não encontrado.");
         }
+    
         salvarProdutos(produtos);
-        System.out.println("------------------------------------\n" + //
-                "Produto removido com sucesso.");
-        return produtos;
+        System.out.println("------------------------------------\n" + "Produto removido com sucesso.");
+        
+        // Retorna true se o produto foi removido com sucesso
+        return removido;
     }
-
-    public static List<Produto> getProdutosPorLoja(String cnpjCpfLoja) {
+    
+    public static List<String> getProdutosPorLoja(String cnpjCpfLoja) {
         if (cnpjCpfLoja == null || cnpjCpfLoja.isEmpty()) {
             throw new IllegalArgumentException("CNPJ ou CPF inválido.");
         }
         List<Produto> produtos = carregarProdutos();
-        List<Produto> produtosDaLoja = new ArrayList<>();
-
+        List<String> produtosFormatados = new ArrayList<>();
+    
         for (Produto produto : produtos) {
             if (produto.getIdLoja().equalsIgnoreCase(cnpjCpfLoja)) {
-                produtosDaLoja.add(produto);
+                produtosFormatados.add(formatarProduto(produto));
             }
         }
-
-        return produtosDaLoja;
+    
+        return produtosFormatados;
     }
-
+    
+    private static String formatarProduto(Produto produto) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ID: ").append(produto.getId()).append("\n");
+        sb.append("Nome: ").append(produto.getNome()).append("\n");
+        sb.append("Tipo: ").append(produto.getTipo()).append("\n");
+        sb.append("Marca: ").append(produto.getMarca()).append("\n");
+        sb.append("Descrição: ").append(produto.getDescricao()).append("\n");
+        sb.append("Valor: ").append(produto.getValor()).append("\n");
+        sb.append("Quantidade: ").append(produto.getQuantidade()).append("\n");
+        sb.append("ID Loja: ").append(produto.getIdLoja()).append("\n");
+        sb.append("------------------------------------");
+        return sb.toString();
+    }
 }

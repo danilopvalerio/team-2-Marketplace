@@ -1,6 +1,7 @@
 package edu.uepb.cct.cc.view;
 
 import edu.uepb.cct.cc.controller.LojaController;
+import edu.uepb.cct.cc.controller.ProdutoController;
 import edu.uepb.cct.cc.model.*;
 import java.util.List;
 import java.util.Scanner;
@@ -67,24 +68,36 @@ public class LojaView {
         }
     }
 
-    public void buscarLoja() {
+    public static void buscarLoja() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("=== Buscar Loja ===");
-        System.out.print("Digite o CPF/CNPJ da loja a ser buscada: ");
-        String cpfCnpj = scanner.nextLine();
-        while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
-            System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
-            cpfCnpj = scanner.nextLine();
-        }
-
         try {
+            System.out.println("=== Buscar Loja ===");
+            System.out.print("Digite o CPF/CNPJ da loja a ser buscada: ");
+            String cpfCnpj = scanner.nextLine();
+            while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
+                System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
+                cpfCnpj = scanner.nextLine();
+            }
+
             Loja loja = LojaController.getLojaPorCpfCnpj(cpfCnpj);
-            System.out.println("Nome: " + loja.getNome() + "\nCPF/CNPJ: " + loja.getCpfCnpj() + "\nEmail: "
+
+            if (loja == null) {
+                System.out.println("Loja não encontrada.");
+                return;
+            } else {
+                System.out.println("Nome: " + loja.getNome() + "\nCPF/CNPJ: " + loja.getCpfCnpj() + "\nEmail: "
                     + loja.getEmail() + "\nEndereço: " + loja.getEndereco());
+            }
+
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
+            return;
+        } catch (Exception e) {
+            System.out.println("Erro inesperado ao buscar o produto.");
+            return;
         }
     }
+
 
     public void deletarLoja() {
         Scanner scanner = new Scanner(System.in);
