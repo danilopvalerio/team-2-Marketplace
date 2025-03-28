@@ -123,4 +123,43 @@ public class ProdutoViewTest {
     }
 
 
+    @Test
+    @Order(9)
+    public void testDeletarProduto_naoEncontrado() {
+        String input = "P99999\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        produtoView.deletarProduto("Admin");
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto não encontrado."));
+    }
+
+    @Test
+    @Order(10)
+    public void testDeletarProduto_comSucesso() {
+        String input = "P12345\n"; // ID de produto válido
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        produtoView.deletarProduto("Admin");
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto removido com sucesso!"));
+    }
+
+
+
+    @Test
+    @Order(11)
+    public void testAtualizarProduto_naoEncontrado() {
+        String input = "P99999\nProduto Atualizado\n150.0\nEletrônicos\n15\nMarca Y\nNova descrição\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        produtoView.atualizarProduto("Admin");
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto não encontrado."));
+    }
+
+
 }
