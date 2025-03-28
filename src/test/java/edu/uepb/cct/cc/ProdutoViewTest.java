@@ -1,4 +1,5 @@
 package edu.uepb.cct.cc;
+
 import edu.uepb.cct.cc.view.ProdutoView;
 import org.junit.jupiter.api.*;
 import java.io.*;
@@ -6,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProdutoViewTest {
+
     private ProdutoView produtoView;
     private final PrintStream originalOut = System.out;
     private final InputStream originalIn = System.in;
@@ -17,7 +19,9 @@ public class ProdutoViewTest {
         outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
         System.setIn(originalIn);
+
     }
+
 
     @AfterEach
     public void tearDown() {
@@ -43,7 +47,7 @@ public class ProdutoViewTest {
         String input = "Produto Teste\n-10.0\nEletrônicos\n10\nMarca X\nProduto de teste\nP12345\n12345678901234\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        ProdutoView.cadastrarProduto("133.222.344-98");
+        produtoView.cadastrarProduto("133.222.344-98");
 
         String output = outputStream.toString();
         assertTrue(output.contains("O valor deve ser maior que zero. Insira novamente: "));
@@ -67,7 +71,7 @@ public class ProdutoViewTest {
         String input = "123.456.789-01\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        ProdutoView.listarProdutosPorLoja("12345678901234");
+        produtoView.listarProdutosPorLoja("12345678901234");
 
         String output = outputStream.toString();
         assertTrue(output.contains("Produtos da Loja"));
@@ -79,39 +83,44 @@ public class ProdutoViewTest {
         String input = "12345678901234\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        ProdutoView.listarProdutosPorLoja("12345678901234");
+        produtoView.listarProdutosPorLoja("12345678901234");
 
         String output = outputStream.toString();
         assertTrue(output.contains("Nenhum produto encontrado para a loja"));
     }
 
     @Test
-    @Order(7)
+    @Order(6)
     public void testBuscarProdutoPorID_produtoEncontrado() {
-        
+        String input = "P12345\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        produtoView.buscarProdutoPorID("Admin");
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto"));
+    }
+
+    @Test
+    @Order(7)
+    public void testBuscarProdutoPorID_produtoNaoEncontrado() {
+        String input = "P99999\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        produtoView.buscarProdutoPorID("Admin");
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Produto não encontrado."));
     }
 
     @Test
     @Order(8)
-    public void testBuscarProdutoPorID_produtoNaoEncontrado() {
-        
+    public void testListarTodosProdutos_comProdutos() {
+        produtoView.listarTodosProdutos();
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Listar Todos os Produtos"));
     }
 
-    @Test
-    @Order(9)
-    public void testAtualizarProduto_produtoNaoEncontrado() {
-        
-    }
 
-    @Test
-    @Order(10)
-    public void testDeletarProduto_produtoDeletado() {
-
-    }
-
-    @Test
-    @Order(11)
-    public void testDeletarProduto_produtoNaoEncontrado() {
-        
-    }
 }
