@@ -1,7 +1,6 @@
 package edu.uepb.cct.cc.view;
 
 import edu.uepb.cct.cc.controller.LojaController;
-import edu.uepb.cct.cc.controller.ProdutoController;
 import edu.uepb.cct.cc.model.*;
 import java.util.List;
 import java.util.Scanner;
@@ -48,10 +47,16 @@ public class LojaView {
             endereco = scanner.nextLine();
         }
 
-        // Passa os dados diretamente para o controller
-        LojaController.createLoja(nome, email, senha, cpfCnpj, endereco);
+        try {
+            LojaController.createLoja(nome, email, senha, cpfCnpj, endereco);
+            System.out.println("Cadastro realizado com sucesso!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erro desconhecido.");
+        }
 
-        System.out.println("Cadastro realizado com sucesso!");
+        
     }
 
     public void listarLojas() {
@@ -68,7 +73,7 @@ public class LojaView {
         }
     }
 
-    public static void buscarLoja() {
+    public void buscarLoja() {
         Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("=== Buscar Loja ===");
