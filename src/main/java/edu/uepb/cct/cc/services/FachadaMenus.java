@@ -118,8 +118,8 @@ public class FachadaMenus {
                 case "2" -> ProdutoView.listarTodosProdutos();
                 case "3" -> ProdutoView.buscarProdutoPorID("Admin");
                 case "4" -> ProdutoView.listarProdutosPorLoja("Admin");
-                case "5" -> ProdutoView.atualizarProduto();
-                case "6" -> ProdutoView.deletarProduto();
+                case "5" -> ProdutoView.atualizarProduto("Admin");
+                case "6" -> ProdutoView.deletarProduto("Admin");
                 case "0" -> {
                     return;
                 }
@@ -146,10 +146,10 @@ public class FachadaMenus {
 
             switch (escolha) {
                 case "1" -> ProdutoView.cadastrarProduto(id);
-                case "3" -> ProdutoView.buscarProdutoPorID("Admin");
-                case "4" -> ProdutoView.listarProdutosPorLoja("Admin");
-                case "5" -> ProdutoView.atualizarProduto();
-                case "6" -> ProdutoView.deletarProduto();
+                case "2" -> ProdutoView.listarProdutosPorLoja(id);
+                case "3" -> ProdutoView.buscarProdutoPorID(id);
+                case "4" -> ProdutoView.atualizarProduto(id);
+                case "5" -> ProdutoView.deletarProduto(id);
 
                 case "0" -> {
                     return;

@@ -1,10 +1,28 @@
 [ {
-  "id" : "poco",
-  "nome" : "pocophone",
-  "valor" : 2500.0,
-  "tipo" : "android",
+  "id" : "VB01",
+  "nome" : "Vestido bolinha",
+  "valor" : 250.0,
+  "tipo" : "vestuario",
   "quantidade" : 20,
-  "marca" : "xiaomi",
-  "descricao" : "pocophone x8 azul",
-  "idLoja" : "133.222.344-98"
+  "marca" : "gucci",
+  "descricao" : "Vstido bolinha pp",
+  "idLoja" : "123.456.789-10"
+}, {
+  "id" : "CP01",
+  "nome" : "Calca jeans",
+  "valor" : 250.0,
+  "tipo" : "vestuario",
+  "quantidade" : 20,
+  "marca" : "prada",
+  "descricao" : "calca prada azul pp",
+  "idLoja" : "123.456.789-10"
+}, {
+  "id" : "CP012",
+  "nome" : "Calca jeans",
+  "valor" : 250.0,
+  "tipo" : "vestuario",
+  "quantidade" : 20,
+  "marca" : "prada",
+  "descricao" : "calca prada azul pp",
+  "idLoja" : "123.456.789-11"
 } ]

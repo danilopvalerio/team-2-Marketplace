@@ -91,18 +91,17 @@ public class ProdutoView {
         try {
             System.out.println("\n=== Buscar Produto por ID ===");
 
-            
             System.out.print("Digite o Id do produto a ser buscado: ");
             String idProduto = scanner.nextLine();
 
-            if(!(id.equals("Admin"))){
+            if (!(id.equals("Admin"))) {
                 List<Produto> produtos = ProdutoController.getProdutosPorLoja(id);
                 for (Produto produto : produtos) {
                     if (produto.getIdLoja().equalsIgnoreCase(id)) {
                         System.out.println(ProdutoController.formatarProduto(produto));
                     }
                 }
-            }else{
+            } else {
                 String produto = ProdutoController.getProdutoPorID(idProduto);
                 if (produto == null) {
                     System.out.println("Produto não encontrado.");
@@ -110,9 +109,8 @@ public class ProdutoView {
                 } else {
                     System.out.println(produto);
                 }
-                
-            }
 
+            }
 
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
@@ -141,13 +139,28 @@ public class ProdutoView {
         }
     }
 
-    public static void deletarProduto() {
+    public static void deletarProduto(String idLoja) {
         Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("\n=== Deletar Produto ===");
             System.out.print("ID do Produto: ");
             String id = scanner.nextLine();
 
+            String produtoExistente = ProdutoController.getProdutoPorID(id);
+            if (produtoExistente == null) {
+                System.out.println("Produto não encontrado.");
+                return;
+            }
+
+            // Verifica se o usuário tem permissão para editar o produto
+            if (!idLoja.equals("Admin")) {
+                String idLojaProduto = produtoExistente.split("\n")[7].split(": ")[1]; // Extrai o ID da loja do produto
+                if (!idLojaProduto.equals(id)) {
+                    System.out.println("Este produto não pertence à loja com ID " + id + ". Não é possível Deletar.");
+                    return;
+                }
+            }
+            
             boolean deletado = ProdutoController.deleteProdutoPorID(id);
             if (deletado) {
                 System.out.println("Produto removido com sucesso!");
@@ -159,7 +172,7 @@ public class ProdutoView {
         }
     }
 
-    public static void atualizarProduto() {
+    public static void atualizarProduto(String idLoja) {
         Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("\n=== Atualizar Produto ===");
@@ -170,6 +183,15 @@ public class ProdutoView {
             if (produtoExistente == null) {
                 System.out.println("Produto não encontrado.");
                 return;
+            }
+
+            // Verifica se o usuário tem permissão para editar o produto
+            if (!idLoja.equals("Admin")) {
+                String idLojaProduto = produtoExistente.split("\n")[7].split(": ")[1]; // Extrai o ID da loja do produto
+                if (!idLojaProduto.equals(id)) {
+                    System.out.println("Este produto não pertence à loja com ID " + id + ". Não é possível atualizar.");
+                    return;
+                }
             }
 
             System.out.println("Produto Atual:\n" + produtoExistente);
@@ -205,13 +227,8 @@ public class ProdutoView {
             System.out.print("Nova Descrição (atual: " + produtoExistente.split("\n")[4].split(": ")[1] + "): ");
             String descricao = scanner.nextLine();
             descricao = descricao.isEmpty() ? produtoExistente.split("\n")[4].split(": ")[1] : descricao;
-            
 
-
-            System.out.print("ID da Loja (atual: " + produtoExistente.split("\n")[7].split(": ")[1] + "): ");
-            String idLoja = scanner.nextLine();
-            idLoja = idLoja.isEmpty() ? produtoExistente.split("\n")[7].split(": ")[1] : idLoja;
-            
+    
             boolean atualizado = ProdutoController.atualizarProduto(nome, valor, tipo, quantidade, marca, descricao, id,
                     idLoja);
 
