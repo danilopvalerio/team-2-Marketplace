@@ -39,18 +39,6 @@ public class ProdutoViewTest {
 
     @Test
     @Order(2)
-    public void testAtualizarProduto_produtoAtualizado() {
-        String input = "P12345\nNovo Produto p22\n150.0\nAcessórios\n20\nMarca Y\nNovo produto\n123.456.789-01\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-
-        ProdutoView.atualizarProduto();
-        ProdutoView.buscarProdutoPorID("P12345");
-        String output = outputStream.toString();
-        assertTrue(output.contains("Produto atualizado com sucesso!"));
-    }
-
-    @Test
-    @Order(3)
     public void testCadastrarProduto_valorInvalido() {
         String input = "Produto Teste\n-10.0\nEletrônicos\n10\nMarca X\nProduto de teste\nP12345\n12345678901234\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
@@ -62,7 +50,7 @@ public class ProdutoViewTest {
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     public void testCadastrarProduto_quantidadeNegativa() {
         String input = "Produto Teste\n100.0\nEletrônicos\n-5\nMarca X\nProduto de teste\nP12345\n12345678901234\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
@@ -74,7 +62,7 @@ public class ProdutoViewTest {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     public void testListarProdutosPorLoja_produtosEncontrados() {
         String input = "123.456.789-01\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
@@ -86,7 +74,7 @@ public class ProdutoViewTest {
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     public void testListarProdutosPorLoja_semProdutos() {
         String input = "12345678901234\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));

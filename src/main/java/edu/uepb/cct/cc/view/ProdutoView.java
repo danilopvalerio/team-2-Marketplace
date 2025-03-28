@@ -3,6 +3,7 @@ package edu.uepb.cct.cc.view;
 import edu.uepb.cct.cc.controller.ProdutoController;
 import java.util.List;
 import java.util.Scanner;
+import edu.uepb.cct.cc.model.Produto;
 
 public class ProdutoView {
 
@@ -68,13 +69,13 @@ public class ProdutoView {
             System.out.println("\n=== Produtos da Loja ===");
 
             cnpjCpfLoja = (cnpjCpfLoja.equals("Admin")) ? scanner.nextLine() : cnpjCpfLoja;
-            List<String> produtosDaLoja = ProdutoController.getProdutosPorLoja(cnpjCpfLoja);
+            List<Produto> produtosDaLoja = ProdutoController.getProdutosPorLoja(cnpjCpfLoja);
 
             if (produtosDaLoja.isEmpty()) {
                 System.out.println("Nenhum produto encontrado para a loja com CNPJ/CPF: " + cnpjCpfLoja);
             } else {
-                for (String produtoFormatado : produtosDaLoja) {
-                    System.out.println(produtoFormatado);
+                for (Produto produtoFormatado : produtosDaLoja) {
+                    System.out.println(ProdutoController.formatarProduto(produtoFormatado));
                     System.out.println("------------------------------------");
                 }
             }
@@ -90,15 +91,28 @@ public class ProdutoView {
         try {
             System.out.println("\n=== Buscar Produto por ID ===");
 
-            id = (id.equals("Admin")) ? scanner.nextLine() : id;
+            
+            System.out.print("Digite o Id do produto a ser buscado: ");
+            String idProduto = scanner.nextLine();
 
-            String produto = ProdutoController.getProdutoPorID(id);
-            if (produto == null) {
-                System.out.println("Produto não encontrado.");
-                return;
-            } else {
-                System.out.println(produto);
+            if(!(id.equals("Admin"))){
+                List<Produto> produtos = ProdutoController.getProdutosPorLoja(id);
+                for (Produto produto : produtos) {
+                    if (produto.getIdLoja().equalsIgnoreCase(id)) {
+                        System.out.println(ProdutoController.formatarProduto(produto));
+                    }
+                }
+            }else{
+                String produto = ProdutoController.getProdutoPorID(idProduto);
+                if (produto == null) {
+                    System.out.println("Produto não encontrado.");
+                    return;
+                } else {
+                    System.out.println(produto);
+                }
+                
             }
+
 
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());

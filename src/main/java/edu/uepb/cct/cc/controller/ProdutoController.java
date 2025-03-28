@@ -133,23 +133,23 @@ public class ProdutoController {
         return removido;
     }
     
-    public static List<String> getProdutosPorLoja(String cnpjCpfLoja) {
+    public static List<Produto> getProdutosPorLoja(String cnpjCpfLoja) {
         if (cnpjCpfLoja == null || cnpjCpfLoja.isEmpty()) {
             throw new IllegalArgumentException("CNPJ ou CPF inválido.");
         }
         List<Produto> produtos = carregarProdutos();
-        List<String> produtosFormatados = new ArrayList<>();
+        List<Produto> produtosDaLoja = new ArrayList<>();
     
         for (Produto produto : produtos) {
             if (produto.getIdLoja().equalsIgnoreCase(cnpjCpfLoja)) {
-                produtosFormatados.add(formatarProduto(produto));
+                produtosDaLoja.add(produto);
             }
         }
     
-        return produtosFormatados;
+        return produtosDaLoja;
     }
     
-    private static String formatarProduto(Produto produto) {
+    public static String formatarProduto(Produto produto) {
         StringBuilder sb = new StringBuilder();
         sb.append("ID: ").append(produto.getId()).append("\n");
         sb.append("Nome: ").append(produto.getNome()).append("\n");
