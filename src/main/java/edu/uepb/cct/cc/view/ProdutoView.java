@@ -1,5 +1,6 @@
 package edu.uepb.cct.cc.view;
 
+import edu.uepb.cct.cc.controller.LojaController;
 import edu.uepb.cct.cc.controller.ProdutoController;
 import java.util.List;
 import java.util.Scanner;
@@ -51,9 +52,15 @@ public class ProdutoView {
 
             System.out.print("ID da Loja (CNPJ/CPF): ");
             idLoja = (idLoja.equals("Admin")) ? scanner.nextLine() : idLoja;
-
-            ProdutoController.create(nome, valor, tipo, quantidade, marca, descricao, id, idLoja);
-            System.out.println("Produto cadastrado com sucesso!");
+            if (LojaController.getLojaPorCpfCnpj(idLoja) == null) {
+                System.out.println("Loja não cadastrada, verifique o CPF/Cnpj inserido e tente novamente.\n");
+            }
+            if (ProdutoController.getProdutoPorID(id) != null) {
+                System.out.println("Já existe um produto com esse ID.\n");
+            } else {
+                ProdutoController.create(nome, valor, tipo, quantidade, marca, descricao, id, idLoja);
+                System.out.println("Produto cadastrado com sucesso!");
+            }
         } catch (NumberFormatException e) {
             System.out.println("Erro: Entrada numérica inválida.");
         } catch (IllegalArgumentException e) {
@@ -68,6 +75,7 @@ public class ProdutoView {
         try {
             System.out.println("\n=== Produtos da Loja ===");
 
+            System.out.println("Digite o CNPJ/CPF da loja (XXX.XXX.XXX-XX): " + cnpjCpfLoja);
             cnpjCpfLoja = (cnpjCpfLoja.equals("Admin")) ? scanner.nextLine() : cnpjCpfLoja;
             List<Produto> produtosDaLoja = ProdutoController.getProdutosPorLoja(cnpjCpfLoja);
 
@@ -160,7 +168,7 @@ public class ProdutoView {
                     return;
                 }
             }
-            
+
             boolean deletado = ProdutoController.deleteProdutoPorID(id);
             if (deletado) {
                 System.out.println("Produto removido com sucesso!");
@@ -185,10 +193,11 @@ public class ProdutoView {
                 return;
             }
 
+            String idLojaProduto = produtoExistente.split("\n")[7].split(": ")[1];
             // Verifica se o usuário tem permissão para editar o produto
-            if (!idLoja.equals("Admin")) {
-                String idLojaProduto = produtoExistente.split("\n")[7].split(": ")[1]; // Extrai o ID da loja do produto
-                if (!idLojaProduto.equals(id)) {
+            if (!(idLoja.equals("Admin"))) {
+                System.out.println('-' + idLoja + '-' + idLojaProduto + '-');
+                if (!idLojaProduto.equals(idLoja)) {
                     System.out.println("Este produto não pertence à loja com ID " + id + ". Não é possível atualizar.");
                     return;
                 }
@@ -228,9 +237,8 @@ public class ProdutoView {
             String descricao = scanner.nextLine();
             descricao = descricao.isEmpty() ? produtoExistente.split("\n")[4].split(": ")[1] : descricao;
 
-    
             boolean atualizado = ProdutoController.atualizarProduto(nome, valor, tipo, quantidade, marca, descricao, id,
-                    idLoja);
+                    idLojaProduto);
 
             if (atualizado) {
                 System.out.println("Produto atualizado com sucesso!");

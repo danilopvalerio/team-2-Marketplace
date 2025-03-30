@@ -5,7 +5,7 @@
   "tipo" : "vestuario",
   "quantidade" : 20,
   "marca" : "gucci",
-  "descricao" : "Vstido bolinha pp",
+  "descricao" : "Vestido bolinha pp",
   "idLoja" : "123.456.789-10"
 }, {
   "id" : "CP01",
@@ -25,4 +25,13 @@
   "marca" : "prada",
   "descricao" : "calca prada azul pp",
   "idLoja" : "123.456.789-11"
+}, {
+  "id" : "kkdd",
+  "nome" : "teste1",
+  "valor" : 22.0,
+  "tipo" : "md",
+  "quantidade" : 2,
+  "marca" : "kd",
+  "descricao" : "dk",
+  "idLoja" : "111.111.222-09"
 } ]

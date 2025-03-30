@@ -1,1 +1,7 @@
-[]
+[ {
+  "nome" : "Ana Luiza",
+  "email" : "analu@gmail.com",
+  "senha" : "ana123",
+  "cpf" : "123.456.777-90",
+  "endereco" : "rua analu"
+} ]
