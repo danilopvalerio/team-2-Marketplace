@@ -1,5 +1,7 @@
 package edu.uepb.cct.cc.services;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import edu.uepb.cct.cc.controller.*;
 import edu.uepb.cct.cc.model.*;
 
@@ -8,7 +10,7 @@ public class ValidadorLogin {
     public static boolean loginLoja(String id, String senha){
         try {
             Loja loja = LojaController.getLojaPorCpfCnpj(id);
-            return loja != null && loja.getSenha().equals(senha);
+            return loja != null && BCrypt.checkpw(senha, loja.getSenha());
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
             return false;
@@ -18,7 +20,7 @@ public class ValidadorLogin {
     public static boolean loginComprador(String id, String senha){
         try {
             Comprador comprador = CompradorController.getCompradorPorCpf(id);
-            return comprador != null && comprador.getSenha().equals(senha);
+            return comprador != null && BCrypt.checkpw(senha, comprador.getSenha());
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
             return false;

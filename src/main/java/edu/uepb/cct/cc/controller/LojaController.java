@@ -3,6 +3,7 @@ package edu.uepb.cct.cc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import edu.uepb.cct.cc.model.Loja;
+import edu.uepb.cct.cc.services.SecurityHash;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class LojaController {
             }
         }
 
-        Loja novaLoja = new Loja(nome, email, senha, cpfCnpj, endereco);
+        Loja novaLoja = new Loja(nome, email, SecurityHash.hashPassword(senha), cpfCnpj, endereco);
         lojas.add(novaLoja);
         salvarLojas(lojas);
         return novaLoja;

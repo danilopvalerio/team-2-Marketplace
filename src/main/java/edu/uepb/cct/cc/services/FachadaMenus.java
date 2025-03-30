@@ -74,7 +74,7 @@ public class FachadaMenus {
         while (true) {
             System.out.println("\n=== Menu Loja ===");
             System.out.println("1. Listar Lojas");
-            System.out.println("2. Buscar Loja");
+            System.out.println("2. Buscar Loja por CPF/Cnpj");
             System.out.println("0. Voltar");
             System.out.print("Escolha uma opção: ");
 

@@ -3,6 +3,7 @@ package edu.uepb.cct.cc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import edu.uepb.cct.cc.model.Comprador;
+import edu.uepb.cct.cc.services.SecurityHash;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class CompradorController {
         validarCpf(comprador.getCpf());
         validarEndereco(comprador.getEndereco());
 
+        comprador.setSenha(SecurityHash.hashPassword(comprador.getSenha()));
+        
         List<Comprador> compradores = new ArrayList<>();
         File file = new File(ARQUIVO_COMPRADORES);
 
