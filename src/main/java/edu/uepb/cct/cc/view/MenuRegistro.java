@@ -33,7 +33,7 @@ public class MenuRegistro {
                 case "0" -> {
                     return;
                 }
-                default -> System.out.println("⚠️ Opção inválida. Tente novamente.");
+                default -> System.out.println("⚠️ Opção inválida. Tente novamente");
             }
         }
     }
