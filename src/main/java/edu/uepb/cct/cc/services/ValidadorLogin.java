@@ -5,8 +5,11 @@ import org.mindrot.jbcrypt.BCrypt;
 import edu.uepb.cct.cc.controller.*;
 import edu.uepb.cct.cc.model.*;
 
-public class ValidadorLogin {
+import edu.uepb.cct.cc.controller.LojaController;
 
+public class ValidadorLogin extends FachadaLogin {
+
+    
     public static boolean loginLoja(String id, String senha){
         try {
             Loja loja = LojaController.getLojaPorCpfCnpj(id);

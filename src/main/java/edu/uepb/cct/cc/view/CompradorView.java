@@ -6,7 +6,7 @@ import edu.uepb.cct.cc.model.Comprador;
 import java.util.List;
 import java.util.Scanner;
 
-public class CompradorView {
+public class CompradorView extends CompradorController {
 
     public void cadastrarComprador() {
         Scanner scanner = new Scanner(System.in);
@@ -96,8 +96,11 @@ public class CompradorView {
             System.out.println("E-mail: " + compradorSelecionado.getEmail());
             System.out.println("CPF: " + compradorSelecionado.getCpf());
             System.out.println("Endereço: " + compradorSelecionado.getEndereco());
-        } else {
+        }
+        else if(escolha==0){
             System.out.println("Saindo da visualização de compradores.");
+        }else {
+            System.out.println("A entrada inserida é inválida..");
         }
     }
 

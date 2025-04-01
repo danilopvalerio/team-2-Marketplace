@@ -49,6 +49,7 @@ public class FachadaLogin {
                 case "3" -> {
                     if (ValidadorLogin.loginADM(id, senha)) {
                         logadoADM = true;
+                        logadoLoja = false; logadoComprador = false;
                         System.out.println("✅ Login como Admin realizado com sucesso!");
                         FachadaMenus.MenuSelecionador(scanner, logadoADM, logadoComprador, logadoLoja, id, senha);
                     } else {
@@ -58,6 +59,7 @@ public class FachadaLogin {
                 case "2" -> {
                     if (ValidadorLogin.loginLoja(id, senha)) {
                         logadoLoja = true;
+                        logadoADM = false; logadoComprador = false;
                         System.out.println("✅ Login como Loja realizado com sucesso!");
                         FachadaMenus.MenuSelecionador(scanner, logadoADM, logadoComprador, logadoLoja, id, senha);
                     } else {
@@ -67,6 +69,7 @@ public class FachadaLogin {
                 case "1" -> {
                     if (ValidadorLogin.loginComprador(id, senha)) {
                         logadoComprador = true;
+                        logadoLoja = false; logadoADM = false;
                         System.out.println("✅ Login como Comprador realizado com sucesso!");
                         FachadaMenus.MenuSelecionador(scanner, logadoADM, logadoComprador, logadoLoja, id, senha);
                     } else {

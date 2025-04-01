@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class CompradorController {
+public class CompradorController extends Comprador {
     private static final String ARQUIVO_COMPRADORES = "src/main/resources/data/compradores.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = Logger.getLogger(CompradorController.class.getName());

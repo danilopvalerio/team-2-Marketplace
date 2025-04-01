@@ -195,7 +195,6 @@ public class FachadaMenus {
 
     // Menu geral para. OBS: Ao entrar neste menu o usuário já deve ter feito o login.
     public static void MenuSelecionador(Scanner scanner, boolean logadoADM, boolean logadoComprador, boolean logadoLoja, String id, String senha){
-
         String escolha = "5";
 
         while (!escolha.equals("0")) {

@@ -1,8 +1,7 @@
-package edu.uepb.cct.cc.view;
+package edu.uepb.cct.cc.services;
+import edu.uepb.cct.cc.view.*;
 
 import java.util.Scanner;
-
-import edu.uepb.cct.cc.services.FachadaLogin;
 
 public class MenuRegistro {
     public static String escolha;
