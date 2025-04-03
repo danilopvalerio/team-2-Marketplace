@@ -1,4 +1,6 @@
 package edu.uepb.cct.cc.model;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -8,32 +10,17 @@ public class Comprador {
     private String senha;
     private String cpf;
     private String endereco;
-    private List<Venda> historicoDeVendas;
-
+    private List<ItemCarrinho> carrinho;
 
     // Regex para validação de e-mail e CPF
-    private static final Pattern EMAIL_PATTERN = 
-        Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    private static final Pattern CPF_PATTERN = 
-        Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern CPF_PATTERN =
+            Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
 
-    public Comprador(){
-
+    public Comprador() {
+        this.carrinho = new ArrayList<>();
     }
-
-    public boolean AdicionarAoHistoricoDeVendas(Venda venda){
-        try {
-            this.historicoDeVendas.add(venda);
-            return true;    
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public List<Venda> getHistoricoDeVendas(){
-        return this.historicoDeVendas;
-    }
-
 
     public Comprador(String nome, String email, String senha, String cpf, String endereco) {
         this.nome = nome;
@@ -41,14 +28,7 @@ public class Comprador {
         setSenha(senha);
         setCpf(cpf);
         this.endereco = endereco;
-    }
-
-    public boolean removerDoHistoricoDeVendas(Venda venda) {
-        return this.historicoDeVendas.remove(venda);
-    }
-
-    public void setHistoricoDeVendas(List<Venda> historicoDeVendas) {
-        this.historicoDeVendas = historicoDeVendas;
+        this.carrinho = new ArrayList<>();
     }
 
     public String getNome() {
@@ -100,6 +80,33 @@ public class Comprador {
         this.endereco = endereco;
     }
 
+    public void adicionarProdutoAoCarrinho(Produto produto, int quantidade) {
+        for (ItemCarrinho item : carrinho) {
+            if (item.getProduto().equals(produto)) {
+                item.setQuantidade(item.getQuantidade() + quantidade);
+                return;
+            }
+        }
+        carrinho.add(new ItemCarrinho(produto, quantidade));
+    }
+
+    public void removerProdutoDoCarrinho(Produto produto) {
+        carrinho.removeIf(item -> item.getProduto().equals(produto));
+    }
+
+    public void atualizarQuantidadeProduto(Produto produto, int novaQuantidade) {
+        for (ItemCarrinho item : carrinho) {
+            if (item.getProduto().equals(produto)) {
+                item.setQuantidade(novaQuantidade);
+                return;
+            }
+        }
+    }
+
+    public List<ItemCarrinho> listarCarrinho() {
+        return new ArrayList<>(carrinho);
+    }
+
     @Override
     public String toString() {
         return "Comprador {" +
@@ -107,6 +114,38 @@ public class Comprador {
                 ", email='" + email + '\'' +
                 ", cpf='" + cpf + '\'' +
                 ", endereco='" + endereco + '\'' +
+                ", carrinho=" + carrinho +
                 '}';
+    }
+
+    // Classe interna ItemCarrinho
+    private static class ItemCarrinho {
+        private Produto produto;
+        private int quantidade;
+
+        public ItemCarrinho(Produto produto, int quantidade) {
+            this.produto = produto;
+            this.quantidade = quantidade;
+        }
+
+        public Produto getProduto() {
+            return produto;
+        }
+
+        public int getQuantidade() {
+            return quantidade;
+        }
+
+        public void setQuantidade(int quantidade) {
+            this.quantidade = quantidade;
+        }
+
+        @Override
+        public String toString() {
+            return "ItemCarrinho{" +
+                    "produto=" + produto +
+                    ", quantidade=" + quantidade +
+                    '}';
+        }
     }
 }
