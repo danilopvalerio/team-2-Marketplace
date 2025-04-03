@@ -1,4 +1,5 @@
 package edu.uepb.cct.cc.model;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Comprador {
@@ -7,6 +8,8 @@ public class Comprador {
     private String senha;
     private String cpf;
     private String endereco;
+    private List<Venda> historicoDeVendas;
+
 
     // Regex para validação de e-mail e CPF
     private static final Pattern EMAIL_PATTERN = 
@@ -18,12 +21,34 @@ public class Comprador {
 
     }
 
+    public boolean AdicionarAoHistoricoDeVendas(Venda venda){
+        try {
+            this.historicoDeVendas.add(venda);
+            return true;    
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public List<Venda> getHistoricoDeVendas(){
+        return this.historicoDeVendas;
+    }
+
+
     public Comprador(String nome, String email, String senha, String cpf, String endereco) {
         this.nome = nome;
         setEmail(email);
         setSenha(senha);
         setCpf(cpf);
         this.endereco = endereco;
+    }
+
+    public boolean removerDoHistoricoDeVendas(Venda venda) {
+        return this.historicoDeVendas.remove(venda);
+    }
+
+    public void setHistoricoDeVendas(List<Venda> historicoDeVendas) {
+        this.historicoDeVendas = historicoDeVendas;
     }
 
     public String getNome() {
