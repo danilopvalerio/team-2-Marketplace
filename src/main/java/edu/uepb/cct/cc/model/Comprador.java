@@ -11,12 +11,13 @@ public class Comprador {
     private String cpf;
     private String endereco;
     private List<ItemCarrinho> carrinho;
+    private List<Venda> historicoDeVendas;
+
+    // Adicionar get carrinho, setItemCarrinho
 
     // Regex para validação de e-mail e CPF
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    private static final Pattern CPF_PATTERN =
-            Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern CPF_PATTERN = Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
 
     public Comprador() {
         this.carrinho = new ArrayList<>();
@@ -29,6 +30,14 @@ public class Comprador {
         setCpf(cpf);
         this.endereco = endereco;
         this.carrinho = new ArrayList<>();
+    }
+
+    public boolean removerDoHistoricoDeVendas(Venda venda) {
+        return this.historicoDeVendas.remove(venda);
+    }
+
+    public void setHistoricoDeVendas(List<Venda> historicoDeVendas) {
+        this.historicoDeVendas = historicoDeVendas;
     }
 
     public String getNome() {
