@@ -149,6 +149,31 @@ public class CompradorController extends Comprador {
         }
     }
 
+    public static void atualizarCarrinhoDoComprador(String cpf, List<?> novoCarrinho) {
+        List<Comprador> compradores = getTodosCompradores();
+
+        for (Comprador c : compradores) {
+            if (c.getCpf().equals(cpf)) {
+                // Atualiza o carrinho
+                try {
+                    java.lang.reflect.Field field = Comprador.class.getDeclaredField("carrinho");
+                    field.setAccessible(true);
+                    field.set(c, novoCarrinho);
+                } catch (Exception e) {
+                    throw new RuntimeException("Erro ao atualizar carrinho via reflexão: " + e.getMessage());
+                }
+                break;
+            }
+        }
+
+        try (Writer writer = new FileWriter(ARQUIVO_COMPRADORES)) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, compradores);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao salvar carrinho atualizado: " + e.getMessage());
+        }
+    }
+
+
     // Validação de E-mail
     private static void validarEmail(String email) {
         if (email == null || email.isEmpty()) {
