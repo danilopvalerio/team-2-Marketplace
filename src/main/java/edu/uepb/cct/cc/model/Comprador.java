@@ -89,13 +89,18 @@ public class Comprador {
         this.endereco = endereco;
     }
 
-    public void adicionarProdutoAoCarrinho(Produto produto, int quantidade) {
+    public void adicionarAoCarrinho(Produto produto, int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
+        }
+
         for (ItemCarrinho item : carrinho) {
             if (item.getProduto().equals(produto)) {
                 item.setQuantidade(item.getQuantidade() + quantidade);
                 return;
             }
         }
+
         carrinho.add(new ItemCarrinho(produto, quantidade));
     }
 
