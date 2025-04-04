@@ -1,0 +1,42 @@
+[
+  {
+    "id_venda": 123,
+    "produtos": [
+      { "id_produto": "id_produto1", "quantidade": 1, "valor_unitario": 10.0 },
+      { "id_produto": "id_produto2", "quantidade": 2, "valor_unitario": 20.0 },
+      { "id_produto": "id_produto3", "quantidade": 3, "valor_unitario": 30.0 }
+    ],
+    "id_comprador": "123.456.789-10",
+    "valor_total": 140.0,
+    "data_venda": "2001-09-10"
+  },
+  {
+    "id_venda": 124,
+    "produtos": [
+      { "id_produto": "id_produto4", "quantidade": 2, "valor_unitario": 15.0 },
+      { "id_produto": "id_produto5", "quantidade": 1, "valor_unitario": 50.0 }
+    ],
+    "id_comprador": "987.654.321-00",
+    "valor_total": 80.0,
+    "data_venda": "2002-03-15"
+  },
+  {
+    "id_venda": 125,
+    "produtos": [
+      { "id_produto": "id_produto1", "quantidade": 5, "valor_unitario": 10.0 }
+    ],
+    "id_comprador": "321.654.987-00",
+    "valor_total": 50.0,
+    "data_venda": "2003-07-22"
+  },
+  {
+    "id_venda": 126,
+    "produtos": [
+      { "id_produto": "id_produto2", "quantidade": 1, "valor_unitario": 20.0 },
+      { "id_produto": "id_produto6", "quantidade": 2, "valor_unitario": 40.0 }
+    ],
+    "id_comprador": "111.222.333-44",
+    "valor_total": 100.0,
+    "data_venda": "2004-11-30"
+  }
+]

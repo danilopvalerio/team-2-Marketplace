@@ -1,4 +1,7 @@
 package edu.uepb.cct.cc.model;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Loja {
@@ -7,16 +10,14 @@ public class Loja {
     private String senha;
     private String cpfCnpj;
     private String endereco;
+    private List<String> historicoVendas = new ArrayList<>();
 
-    
     // Regex para validação de e-mail e CPF/CNPJ
-    private static final Pattern EMAIL_PATTERN = 
-        Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    private static final Pattern CPF_PATTERN = 
-        Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"); //  o "\d" é para aceitar apenas digitos numéricos
-    private static final Pattern CNPJ_PATTERN = 
-        Pattern.compile("\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}");
-    
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern CPF_PATTERN = Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"); // o "\d" é para
+                                                                                                   // aceitar apenas
+                                                                                                   // digitos numéricos
+    private static final Pattern CNPJ_PATTERN = Pattern.compile("\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}");
 
     public Loja(String nome, String email, String senha, String cpfCnpj, String endereco) {
         this.nome = nome;
@@ -27,6 +28,17 @@ public class Loja {
     }
 
     public Loja() {
+    }
+
+    public List<String> getHistoricoVendas() {
+        return historicoVendas;
+    }
+
+    public void adicionarVendaAoHistorico(String vendaId) {
+        if (vendaId == null || vendaId.isEmpty()) {
+            throw new IllegalArgumentException("ID da venda inválido.");
+        }
+        historicoVendas.add(vendaId);
     }
 
     public String getNome() {
