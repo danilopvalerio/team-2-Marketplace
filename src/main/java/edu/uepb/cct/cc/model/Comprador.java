@@ -3,6 +3,8 @@ package edu.uepb.cct.cc.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import edu.uepb.cct.cc.controller.CompradorController;
+
 
 public class Comprador {
     private String nome;
@@ -105,8 +107,17 @@ public class Comprador {
     }
 
     public void removerProdutoDoCarrinho(Produto produto) {
-        carrinho.removeIf(item -> item.getProduto().equals(produto));
+        boolean removido = carrinho.removeIf(item -> item.getProduto().getId().equals(produto.getId()));
+
+        if (removido) {
+            System.out.println("Produto removido do carrinho com sucesso.");
+            // Atualiza o JSON
+            CompradorController.atualizarCarrinhoDoComprador(this.getCpf(), this.listarCarrinho());
+        } else {
+            System.err.println("Erro: Produto não encontrado no carrinho.");
+        }
     }
+
 
     public void atualizarQuantidadeProduto(Produto produto, int novaQuantidade) {
         for (ItemCarrinho item : carrinho) {
@@ -133,7 +144,7 @@ public class Comprador {
     }
 
     // Classe interna ItemCarrinho
-    private static class ItemCarrinho {
+    public static class ItemCarrinho {
         private Produto produto;
         private int quantidade;
 
