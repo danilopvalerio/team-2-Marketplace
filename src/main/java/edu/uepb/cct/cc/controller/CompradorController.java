@@ -173,7 +173,6 @@ public class CompradorController extends Comprador {
         }
     }
 
-
     // Validação de E-mail
     private static void validarEmail(String email) {
         if (email == null || email.isEmpty()) {
