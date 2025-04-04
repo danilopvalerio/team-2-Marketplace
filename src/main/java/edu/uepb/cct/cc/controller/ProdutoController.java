@@ -13,21 +13,22 @@ public class ProdutoController {
     private static final String ARQUIVO_PRODUTOS = "src/main/resources/data/produtos.json";
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String create(String nome, float valor, String tipo, int quantidade, String marca, String descricao, String id, String idLoja) {
+    public static String create(String nome, float valor, String tipo, int quantidade, String marca, String descricao,
+            String id, String idLoja) {
         if (nome == null || tipo == null || marca == null || descricao == null
                 || id == null || idLoja == null || quantidade <= 0 || valor < 0) {
             throw new IllegalArgumentException("Produto ou dados inválidos.");
         }
-        
+
         List<Produto> produtos = carregarProdutos();
 
         Produto produto = new Produto(nome, valor, tipo, quantidade, marca, descricao, id, idLoja);
         for (Produto p : produtos) {
             if (p.getId().equalsIgnoreCase(produto.getId())) {
                 System.out.println(
-                        "-------------------------------------------------------------------------------------\n" + 
-                        "Não foi possível adicionar o produto pois o ID já está cadastrado no sistema." + 
-                        "-------------------------------------------------------------------------------------\n");
+                        "-------------------------------------------------------------------------------------\n" +
+                                "Não foi possível adicionar o produto pois o ID já está cadastrado no sistema." +
+                                "-------------------------------------------------------------------------------------\n");
                 throw new IllegalArgumentException("Produto já cadastrado no sistema com o mesmo ID.");
             }
         }
@@ -54,16 +55,16 @@ public class ProdutoController {
     public static List<String> getTodosProdutos() {
         List<Produto> produtos = carregarProdutos();
         produtos.sort((p1, p2) -> p1.getNome().compareToIgnoreCase(p2.getNome()));
-        
+
         List<String> produtosFormatados = new ArrayList<>();
         for (Produto produto : produtos) {
             produtosFormatados.add(formatarProduto(produto));
         }
-        
+
         return produtosFormatados;
     }
 
-    private static List<Produto> carregarProdutos() {
+    public static List<Produto> carregarProdutos() {
         File file = new File(ARQUIVO_PRODUTOS);
         if (!file.exists()) {
             return new ArrayList<>();
@@ -76,7 +77,7 @@ public class ProdutoController {
         }
     }
 
-    private static List<Produto> salvarProdutos(List<Produto> produtos) {
+    public static List<Produto> salvarProdutos(List<Produto> produtos) {
         if (produtos == null) {
             throw new IllegalArgumentException("Lista de produtos não pode ser nula.");
         }
@@ -89,7 +90,8 @@ public class ProdutoController {
         }
     }
 
-    public static boolean atualizarProduto(String nome, float valor, String tipo, int quantidade, String marca, String descricao, String id, String idLoja) {
+    public static boolean atualizarProduto(String nome, float valor, String tipo, int quantidade, String marca,
+            String descricao, String id, String idLoja) {
         if (nome == null || tipo == null || marca == null || descricao == null
                 || id == null || idLoja == null || quantidade <= 0 || valor < 0) {
             throw new IllegalArgumentException("Produto ou dados inválidos.");
@@ -97,20 +99,20 @@ public class ProdutoController {
         List<Produto> produtos = carregarProdutos();
         boolean atualizado = false;
         Produto produtoAtualizado = new Produto(nome, valor, tipo, quantidade, marca, descricao, id, idLoja);
-    
+
         for (int i = 0; i < produtos.size(); i++) {
             if (produtos.get(i).getId().equals(id)) {
-                produtoAtualizado.setId(id); 
+                produtoAtualizado.setId(id);
                 produtos.set(i, produtoAtualizado);
                 atualizado = true;
                 break;
             }
         }
-    
+
         if (!atualizado) {
             throw new IllegalArgumentException("Produto não encontrado.");
         }
-    
+
         salvarProdutos(produtos);
         return atualizado;
     }
@@ -121,34 +123,34 @@ public class ProdutoController {
         }
         List<Produto> produtos = carregarProdutos();
         boolean removido = produtos.removeIf(produto -> produto.getId().equalsIgnoreCase(id));
-        
+
         if (!removido) {
             throw new IllegalArgumentException("Produto não encontrado.");
         }
-    
+
         salvarProdutos(produtos);
         System.out.println("------------------------------------\n" + "Produto removido com sucesso.");
-        
+
         // Retorna true se o produto foi removido com sucesso
         return removido;
     }
-    
+
     public static List<Produto> getProdutosPorLoja(String cnpjCpfLoja) {
         if (cnpjCpfLoja == null || cnpjCpfLoja.isEmpty()) {
             throw new IllegalArgumentException("CNPJ ou CPF inválido.");
         }
         List<Produto> produtos = carregarProdutos();
         List<Produto> produtosDaLoja = new ArrayList<>();
-    
+
         for (Produto produto : produtos) {
             if (produto.getIdLoja().equalsIgnoreCase(cnpjCpfLoja)) {
                 produtosDaLoja.add(produto);
             }
         }
-    
+
         return produtosDaLoja;
     }
-    
+
     public static String formatarProduto(Produto produto) {
         StringBuilder sb = new StringBuilder();
         sb.append("ID: ").append(produto.getId()).append("\n");
