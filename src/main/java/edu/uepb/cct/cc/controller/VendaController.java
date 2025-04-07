@@ -195,4 +195,46 @@ public class VendaController {
             System.err.println("❌ Erro ao salvar as vendas: " + e.getMessage());
         }
     }
+
+    public void removerVenda(String idVenda) {
+        // 🔹 Subtask 4.5.1 — Garantir a existência do arquivo
+        garantirArquivoDeVendas();
+
+        // 🔹 Subtask 4.5.2 — Carregar vendas existentes
+        List<Map<String, Object>> vendas = carregarVendasRegistradas();
+
+        // 🔹 Subtask 4.5.3 — Procurar a venda pelo id_venda
+        boolean vendaEncontrada = false;
+        for (Map<String, Object> venda : vendas) {
+            if (idVenda.equals(venda.get("id_venda"))) {
+                vendas.remove(venda); // Remove a venda
+                vendaEncontrada = true;
+                break;
+            }
+        }
+
+        if (!vendaEncontrada) {
+            System.out.println("❌ Venda com ID " + idVenda + " não encontrada.");
+            return;
+        }
+
+        // 🔹 Subtask 4.5.4 — Salvar a lista atualizada no arquivo
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_VENDAS), vendas);
+            System.out.println("✅ Venda com ID " + idVenda + " removida com sucesso.");
+        } catch (IOException e) {
+            System.err.println("❌ Erro ao salvar o arquivo de vendas: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        VendaController controller = new VendaController();
+
+        // Exemplo de ID de venda a ser removido
+        String idVendaParaRemover = "VTESTE-111.111.222-09";
+
+        // Chamada do método para remover a venda
+        controller.removerVenda(idVendaParaRemover);
+    }
+
 }
