@@ -7,11 +7,8 @@ import edu.uepb.cct.cc.model.Venda;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 public class VendaController {
 
@@ -26,7 +23,6 @@ public class VendaController {
             String idProduto = venda.getIdsProdutosVendidos().get(i);
             int quantidadeVendida = venda.getQuantidades().get(i);
 
-            // Buscar o produto correspondente
             Produto produtoEncontrado = null;
             for (Produto p : produtos) {
                 if (p.getId().equals(idProduto)) {
@@ -35,7 +31,6 @@ public class VendaController {
                 }
             }
 
-            // Validar existência e estoque
             if (produtoEncontrado == null) {
                 throw new IllegalArgumentException("Produto com ID " + idProduto + " não encontrado.");
             }
@@ -43,25 +38,20 @@ public class VendaController {
                 throw new IllegalStateException("Estoque insuficiente para o produto " + idProduto + ".");
             }
 
-            // Atualizar quantidade
             produtoEncontrado.setQuantidade(produtoEncontrado.getQuantidade() - quantidadeVendida);
         }
 
-        // Salvar alterações no produtos.json
         produtoController.salvarProdutos(produtos);
     }
 
-    // 🔹 Task 4.4.1 — Garantir a existência do arquivo vendas.json
     public void garantirArquivoDeVendas() {
         File arquivo = new File(ARQUIVO_VENDAS);
         File diretorio = arquivo.getParentFile();
 
-        // Criar diretório se não existir
         if (diretorio != null && !diretorio.exists()) {
             diretorio.mkdirs();
         }
 
-        // Criar o arquivo com conteúdo inicial [] se não existir
         if (!arquivo.exists()) {
             try (FileWriter writer = new FileWriter(arquivo)) {
                 writer.write("[]");
@@ -72,7 +62,6 @@ public class VendaController {
         }
     }
 
-    // 🔹 Task 4.4.2 — Carregar as vendas já registradas
     public List<Map<String, Object>> carregarVendasRegistradas() {
         File arquivo = new File(ARQUIVO_VENDAS);
 
@@ -91,11 +80,11 @@ public class VendaController {
     }
 
     public Map<String, Object> construirVendaParaRegistro(Venda venda) {
-        Map<String, Object> novaVenda = new LinkedHashMap<>(); // 🔁 Usa LinkedHashMap para manter a ordem de inserção
+        Map<String, Object> novaVenda = new HashMap<>();
 
-        // Ordem dos campos conforme desejado
         novaVenda.put("id_venda", venda.getIdVenda());
         novaVenda.put("id_comprador", venda.getIdComprador());
+        novaVenda.put("data", venda.getDataVenda().toString());
 
         List<List<Object>> listaProdutos = new ArrayList<>();
         double valorTotal = 0;
@@ -106,7 +95,9 @@ public class VendaController {
             double valorUnitario = venda.getValoresUnitarios().get(i);
 
             valorTotal += quantidade * valorUnitario;
-            listaProdutos.add(Arrays.asList(idProduto, quantidade, valorUnitario));
+
+            List<Object> produtoInfo = Arrays.asList(idProduto, quantidade, valorUnitario);
+            listaProdutos.add(produtoInfo);
         }
 
         novaVenda.put("produtos", listaProdutos);
@@ -116,33 +107,92 @@ public class VendaController {
     }
 
     public void registrarVenda(Venda venda) {
-        // Garante que o arquivo existe
         garantirArquivoDeVendas();
-
-        // Carrega as vendas atuais
         List<Map<String, Object>> vendasExistentes = carregarVendasRegistradas();
+        Map<String, Object> novaVendaMap = construirVendaParaRegistro(venda);
 
-        // Verifica se já existe uma venda com o mesmo ID
         boolean vendaJaExiste = vendasExistentes.stream()
-                .anyMatch(v -> v.get("id_venda") != null && v.get("id_venda").equals(venda.getIdVenda()));
+                .anyMatch(v -> Objects.equals(v.get("id_venda"), novaVendaMap.get("id_venda")));
 
         if (vendaJaExiste) {
-            System.out.println("⚠️ Venda com ID " + venda.getIdVenda() + " já está registrada.");
+            System.err.println("❌ Venda com ID " + venda.getIdVenda() + " já registrada.");
             return;
         }
 
-        // Constrói o novo registro de venda
-        Map<String, Object> novaVendaMap = construirVendaParaRegistro(venda);
-
-        // Adiciona à lista
         vendasExistentes.add(novaVendaMap);
 
-        // Salva a lista atualizada no arquivo JSON
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_VENDAS), vendasExistentes);
             System.out.println("✅ Venda registrada com sucesso.");
         } catch (IOException e) {
             System.err.println("❌ Erro ao registrar a venda: " + e.getMessage());
+        }
+    }
+
+    public void registrarVendasPorLoja(Venda vendaOriginal) {
+        garantirArquivoDeVendas();
+        List<Map<String, Object>> vendasExistentes = carregarVendasRegistradas();
+
+        ProdutoController produtoController = new ProdutoController();
+        List<Produto> todosProdutos = produtoController.carregarProdutos();
+
+        Map<String, List<Integer>> produtosPorLoja = new HashMap<>();
+
+        for (int i = 0; i < vendaOriginal.getIdsProdutosVendidos().size(); i++) {
+            String idProduto = vendaOriginal.getIdsProdutosVendidos().get(i);
+
+            Produto produto = todosProdutos.stream()
+                    .filter(p -> p.getId().equals(idProduto))
+                    .findFirst()
+                    .orElseThrow(
+                            () -> new IllegalArgumentException("Produto com ID " + idProduto + " não encontrado."));
+
+            String idLoja = produto.getIdLoja();
+
+            produtosPorLoja.computeIfAbsent(idLoja, k -> new ArrayList<>()).add(i);
+        }
+
+        for (Map.Entry<String, List<Integer>> entry : produtosPorLoja.entrySet()) {
+            String idLoja = entry.getKey();
+            List<Integer> indices = entry.getValue();
+
+            List<String> idsSeparados = new ArrayList<>();
+            List<Double> valoresSeparados = new ArrayList<>();
+            List<Integer> quantidadesSeparadas = new ArrayList<>();
+
+            for (int idx : indices) {
+                idsSeparados.add(vendaOriginal.getIdsProdutosVendidos().get(idx));
+                valoresSeparados.add(vendaOriginal.getValoresUnitarios().get(idx));
+                quantidadesSeparadas.add(vendaOriginal.getQuantidades().get(idx));
+            }
+
+            String novoIdVenda = vendaOriginal.getIdVenda() + "-" + idLoja;
+
+            Venda novaVenda = new Venda(
+                    novoIdVenda,
+                    vendaOriginal.getIdComprador(),
+                    LocalDate.now(),
+                    idsSeparados,
+                    valoresSeparados,
+                    quantidadesSeparadas);
+
+            boolean vendaJaExiste = vendasExistentes.stream()
+                    .anyMatch(v -> v.get("id_venda").equals(novoIdVenda));
+
+            if (!vendaJaExiste) {
+                Map<String, Object> vendaMap = construirVendaParaRegistro(novaVenda);
+                vendaMap.put("id_loja", idLoja);
+                vendasExistentes.add(vendaMap);
+
+                removerProdutosDoEstoque(novaVenda);
+            }
+        }
+
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_VENDAS), vendasExistentes);
+            System.out.println("✅ Todas as vendas foram registradas com sucesso.");
+        } catch (IOException e) {
+            System.err.println("❌ Erro ao salvar as vendas: " + e.getMessage());
         }
     }
 }

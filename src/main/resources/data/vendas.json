@@ -1,6 +1,22 @@
 [ {
-  "id_venda" : "V002",
-  "id_comprador" : "987.654.321-00",
-  "produtos" : [ [ "P001", 2, 15.0 ], [ "P003", 1, 25.0 ] ],
-  "valor total" : 55.0
+  "id_comprador" : "123.456.789-00",
+  "data" : "2025-04-07",
+  "produtos" : [ [ "kkdd", 1, 30.0 ] ],
+  "id_venda" : "VTESTE-111.111.222-09",
+  "id_loja" : "111.111.222-09",
+  "valor total" : 30.0
+}, {
+  "id_comprador" : "123.456.789-00",
+  "data" : "2025-04-07",
+  "produtos" : [ [ "CP01", 1, 10.0 ] ],
+  "id_venda" : "VTESTE-123.456.789-10",
+  "id_loja" : "123.456.789-10",
+  "valor total" : 10.0
+}, {
+  "id_comprador" : "123.456.789-00",
+  "data" : "2025-04-07",
+  "produtos" : [ [ "CP012", 2, 20.0 ] ],
+  "id_venda" : "VTESTE-123.456.789-11",
+  "id_loja" : "123.456.789-11",
+  "valor total" : 40.0
 } ]
