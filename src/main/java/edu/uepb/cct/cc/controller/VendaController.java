@@ -152,6 +152,8 @@ public class VendaController {
             produtosPorLoja.computeIfAbsent(idLoja, k -> new ArrayList<>()).add(i);
         }
 
+        int contador = 1;
+
         for (Map.Entry<String, List<Integer>> entry : produtosPorLoja.entrySet()) {
             String idLoja = entry.getKey();
             List<Integer> indices = entry.getValue();
@@ -166,7 +168,7 @@ public class VendaController {
                 quantidadesSeparadas.add(vendaOriginal.getQuantidades().get(idx));
             }
 
-            String novoIdVenda = vendaOriginal.getIdVenda() + "-" + idLoja;
+            String novoIdVenda = "V" + String.format("%02d", contador++); // Gera V01, V02, etc.
 
             Venda novaVenda = new Venda(
                     novoIdVenda,
@@ -176,14 +178,15 @@ public class VendaController {
                     valoresSeparados,
                     quantidadesSeparadas);
 
+            Map<String, Object> vendaMap = construirVendaParaRegistro(novaVenda);
+            vendaMap.put("id_loja", idLoja);
+            vendaMap.put("id_vendaGeral", vendaOriginal.getIdVenda()); // Referência à venda original
+
             boolean vendaJaExiste = vendasExistentes.stream()
                     .anyMatch(v -> v.get("id_venda").equals(novoIdVenda));
 
             if (!vendaJaExiste) {
-                Map<String, Object> vendaMap = construirVendaParaRegistro(novaVenda);
-                vendaMap.put("id_loja", idLoja);
                 vendasExistentes.add(vendaMap);
-
                 removerProdutosDoEstoque(novaVenda);
             }
         }
@@ -197,13 +200,10 @@ public class VendaController {
     }
 
     public void removerVenda(String idVenda) {
-        // 🔹 Subtask 4.5.1 — Garantir a existência do arquivo
         garantirArquivoDeVendas();
 
-        // 🔹 Subtask 4.5.2 — Carregar vendas existentes
         List<Map<String, Object>> vendas = carregarVendasRegistradas();
 
-        // 🔹 Subtask 4.5.3 — Procurar a venda pelo id_venda
         boolean vendaEncontrada = false;
         for (Map<String, Object> venda : vendas) {
             if (idVenda.equals(venda.get("id_venda"))) {
@@ -218,7 +218,6 @@ public class VendaController {
             return;
         }
 
-        // 🔹 Subtask 4.5.4 — Salvar a lista atualizada no arquivo
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_VENDAS), vendas);
             System.out.println("✅ Venda com ID " + idVenda + " removida com sucesso.");
@@ -226,15 +225,4 @@ public class VendaController {
             System.err.println("❌ Erro ao salvar o arquivo de vendas: " + e.getMessage());
         }
     }
-
-    public static void main(String[] args) {
-        VendaController controller = new VendaController();
-
-        // Exemplo de ID de venda a ser removido
-        String idVendaParaRemover = "VTESTE-111.111.222-09";
-
-        // Chamada do método para remover a venda
-        controller.removerVenda(idVendaParaRemover);
-    }
-
 }
