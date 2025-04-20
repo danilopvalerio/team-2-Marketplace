@@ -49,6 +49,39 @@ public class LojaController {
         return null;
     }
 
+    // Histórico de pedidos
+    public static List<Object> getHistoricoPedidosDaLoja(String cpfCnpj) {
+        if (cpfCnpj == null || cpfCnpj.isEmpty()) {
+            throw new IllegalArgumentException("CPF/CNPJ inválido.");
+        }
+
+        File arquivoVendas = new File("src/main/resources/data/vendas.json");
+        List<Object> pedidosDaLoja = new ArrayList<>();
+
+        if (!arquivoVendas.exists()) {
+            return pedidosDaLoja; // Nenhuma venda registrada ainda
+        }
+
+        try (Reader reader = new FileReader(arquivoVendas)) {
+            ObjectMapper mapper = new ObjectMapper();
+            List<Object> todasAsVendas = mapper.readValue(reader, List.class);
+
+            for (Object venda : todasAsVendas) {
+                // Conversão para Map para acessar os campos
+                @SuppressWarnings("unchecked")
+                var vendaMap = (java.util.Map<String, Object>) venda;
+                if (cpfCnpj.equals(vendaMap.get("id_loja"))) {
+                    pedidosDaLoja.add(vendaMap);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao ler o histórico de pedidos da loja.", e);
+        }
+
+        return pedidosDaLoja;
+    }
+
     // Método para listar todas as lojas
     public static List<Loja> getTodasLojas() {
         List<Loja> lojas = carregarLojas();

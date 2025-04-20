@@ -3,7 +3,7 @@
   "nome" : "Vestido bolinha",
   "valor" : 250.0,
   "tipo" : "vestuario",
-  "quantidade" : 20,
+  "quantidade" : 19,
   "marca" : "gucci",
   "descricao" : "Vestido bolinha pp",
   "idLoja" : "123.456.789-10"
@@ -12,7 +12,7 @@
   "nome" : "Calca jeans",
   "valor" : 250.0,
   "tipo" : "vestuario",
-  "quantidade" : 19,
+  "quantidade" : 16,
   "marca" : "prada",
   "descricao" : "calca prada azul pp",
   "idLoja" : "123.456.789-10"
