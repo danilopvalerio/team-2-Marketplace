@@ -1,1 +1,7 @@
-[ ]
+[ {
+  "nome" : "laura",
+  "email" : "laura@gmail.com",
+  "senha" : "$2a$10$/gJpX97ALj/Z3j4z/7hlPOgIGgPePq5KCTEU45Mf23c9tj6S0fyzW",
+  "cpf" : "158.435.194-22",
+  "endereco" : "Jesus"
+} ]

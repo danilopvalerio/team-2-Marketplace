@@ -179,4 +179,13 @@ public class Produto {
                 ", idLoja='" + idLoja + '\'' +
                 '}';
     }
+
+    public void diminuirEstoque(int quantidade) {
+        if (quantidade > this.quantidade) {
+            throw new IllegalArgumentException("Estoque insuficiente para a quantidade solicitada.");
+        }
+        this.quantidade -= quantidade;
+    }
+
+
 }

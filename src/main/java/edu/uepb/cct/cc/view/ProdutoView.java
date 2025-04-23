@@ -8,127 +8,94 @@ import edu.uepb.cct.cc.model.Produto;
 
 public class ProdutoView {
 
+    private static Scanner scanner = new Scanner(System.in);
+
+    // Método para cadastrar um produto
     public static void cadastrarProduto(String idLoja) {
-        Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("\n=== Cadastro de Produto ===");
 
-            System.out.print("Nome: ");
-            String nome = scanner.nextLine();
-            while (nome.isEmpty()) {
-                System.out.print("Nome não pode ser vazio. Insira novamente: ");
-                nome = scanner.nextLine();
-            }
+            String nome = getStringInput("Nome: ");
+            float valor = getFloatInput("Valor: ");
+            String tipo = getStringInput("Tipo: ");
+            int quantidade = getIntInput("Quantidade: ");
+            String marca = getStringInput("Marca: ");
+            String descricao = getStringInput("Descrição: ");
+            String idProduto = getStringInput("ID do Produto: ");
 
-            System.out.print("Valor: ");
-            float valor = Float.parseFloat(scanner.nextLine());
-            while (valor <= 0) {
-                System.out.print("O valor deve ser maior que zero. Insira novamente: ");
-                valor = Float.parseFloat(scanner.nextLine());
-            }
+            idLoja = idLoja.equals("Admin") ? getStringInput("ID da Loja (CNPJ/CPF): ") : idLoja;
 
-            System.out.print("Tipo: ");
-            String tipo = scanner.nextLine();
-            while (tipo.isEmpty()) {
-                System.out.print("Tipo não pode ser vazio. Insira novamente: ");
-                tipo = scanner.nextLine();
-            }
-
-            System.out.print("Quantidade: ");
-            int quantidade = Integer.parseInt(scanner.nextLine());
-            while (quantidade < 0) {
-                System.out.print("A quantidade não pode ser negativa. Insira novamente: ");
-                quantidade = Integer.parseInt(scanner.nextLine());
-            }
-
-            System.out.print("Marca: ");
-            String marca = scanner.nextLine();
-
-            System.out.print("Descrição: ");
-            String descricao = scanner.nextLine();
-
-            System.out.print("ID do Produto: ");
-            String id = scanner.nextLine();
-
-            System.out.print("ID da Loja (CNPJ/CPF): ");
-            idLoja = (idLoja.equals("Admin")) ? scanner.nextLine() : idLoja;
             if (LojaController.getLojaPorCpfCnpj(idLoja) == null) {
-                System.out.println("Loja não cadastrada, verifique o CPF/Cnpj inserido e tente novamente.\n");
+                System.out.println("Loja não cadastrada. Verifique o CPF/CNPJ inserido e tente novamente.");
+                return;
             }
-            if (ProdutoController.getProdutoPorID(id) != null) {
-                System.out.println("Já existe um produto com esse ID.\n");
+
+            if (ProdutoController.getProdutoPorID(idProduto) != null) {
+                System.out.println("Já existe um produto com esse ID.");
             } else {
-                ProdutoController.create(nome, valor, tipo, quantidade, marca, descricao, id, idLoja);
+                ProdutoController.create(nome, valor, tipo, quantidade, marca, descricao, idProduto, idLoja);
                 System.out.println("Produto cadastrado com sucesso!");
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: Entrada numérica inválida.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Erro inesperado ao cadastrar o produto.");
+            System.out.println("Erro inesperado ao cadastrar o produto: " + e.getMessage());
         }
     }
 
+    // Método para listar produtos de uma loja
     public static void listarProdutosPorLoja(String cnpjCpfLoja) {
-        Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("\n=== Produtos da Loja ===");
 
-            System.out.println("Digite o CNPJ/CPF da loja (XXX.XXX.XXX-XX): " + cnpjCpfLoja);
-            cnpjCpfLoja = (cnpjCpfLoja.equals("Admin")) ? scanner.nextLine() : cnpjCpfLoja;
+            cnpjCpfLoja = cnpjCpfLoja.equals("Admin") ? getStringInput("Digite o CNPJ/CPF da loja: ") : cnpjCpfLoja;
             List<Produto> produtosDaLoja = ProdutoController.getProdutosPorLoja(cnpjCpfLoja);
 
             if (produtosDaLoja.isEmpty()) {
                 System.out.println("Nenhum produto encontrado para a loja com CNPJ/CPF: " + cnpjCpfLoja);
             } else {
-                for (Produto produtoFormatado : produtosDaLoja) {
-                    System.out.println(ProdutoController.formatarProduto(produtoFormatado));
+                for (Produto produto : produtosDaLoja) {
+                    System.out.println(ProdutoController.formatarProduto(produto));
                     System.out.println("------------------------------------");
                 }
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Erro inesperado ao listar os produtos da loja.");
+            System.out.println("Erro inesperado ao listar os produtos da loja: " + e.getMessage());
         }
     }
 
+    // Método para buscar um produto pelo ID
     public static void buscarProdutoPorID(String id) {
-        Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("\n=== Buscar Produto por ID ===");
 
-            System.out.print("Digite o Id do produto a ser buscado: ");
-            String idProduto = scanner.nextLine();
+            String idProduto = getStringInput("Digite o ID do produto a ser buscado: ");
 
-            if (!(id.equals("Admin"))) {
+            if (!id.equals("Admin")) {
                 List<Produto> produtos = ProdutoController.getProdutosPorLoja(id);
+                boolean encontrado = false;
                 for (Produto produto : produtos) {
-                    if (produto.getIdLoja().equalsIgnoreCase(id)) {
+                    if (produto.getId().equalsIgnoreCase(idProduto)) {
                         System.out.println(ProdutoController.formatarProduto(produto));
+                        encontrado = true;
+                        break;
                     }
                 }
+                if (!encontrado) {
+                    System.out.println("Produto não encontrado para esta loja.");
+                }
             } else {
-                String produto = ProdutoController.getProdutoPorID(idProduto);
+                Produto produto = ProdutoController.buscarProdutoPorID(idProduto);
                 if (produto == null) {
                     System.out.println("Produto não encontrado.");
-                    return;
                 } else {
-                    System.out.println(produto);
+                    System.out.println(ProdutoController.formatarProduto(produto));
                 }
-
             }
-
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
-            return;
         } catch (Exception e) {
-            System.out.println("Erro inesperado ao buscar o produto.");
-            return;
+            System.out.println("Erro inesperado ao buscar o produto: " + e.getMessage());
         }
     }
 
+    // Método para listar todos os produtos
     public static void listarTodosProdutos() {
         try {
             System.out.println("\n=== Listar Todos os Produtos ===");
@@ -143,112 +110,103 @@ public class ProdutoView {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Erro inesperado ao listar os produtos.");
+            System.out.println("Erro inesperado ao listar os produtos: " + e.getMessage());
         }
     }
 
+    // Método para deletar um produto
     public static void deletarProduto(String idLoja) {
-        Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("\n=== Deletar Produto ===");
-            System.out.print("ID do Produto: ");
-            String id = scanner.nextLine();
+            String idProduto = getStringInput("ID do Produto: ");
 
-            String produtoExistente = ProdutoController.getProdutoPorID(id);
+            Produto produtoExistente = ProdutoController.buscarProdutoPorID(idProduto);
             if (produtoExistente == null) {
                 System.out.println("Produto não encontrado.");
                 return;
             }
 
-            // Verifica se o usuário tem permissão para editar o produto
-            if (!idLoja.equals("Admin")) {
-                String idLojaProduto = produtoExistente.split("\n")[7].split(": ")[1]; // Extrai o ID da loja do produto
-                if (!idLojaProduto.equals(id)) {
-                    System.out.println("Este produto não pertence à loja com ID " + id + ". Não é possível Deletar.");
-                    return;
-                }
+            if (!idLoja.equals("Admin") && !produtoExistente.getIdLoja().equals(idLoja)) {
+                System.out.println("Este produto não pertence à loja com ID " + idLoja + ". Não é possível Deletar.");
+                return;
             }
 
-            boolean deletado = ProdutoController.deleteProdutoPorID(id);
+            boolean deletado = ProdutoController.deleteProdutoPorID(idProduto);
             if (deletado) {
                 System.out.println("Produto removido com sucesso!");
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Erro inesperado ao deletar o produto.");
+            System.out.println("Erro inesperado ao deletar o produto: " + e.getMessage());
         }
     }
 
+    // Método para atualizar um produto
     public static void atualizarProduto(String idLoja) {
-        Scanner scanner = new Scanner(System.in);
         try {
             System.out.println("\n=== Atualizar Produto ===");
-            System.out.print("ID do Produto: ");
-            String id = scanner.nextLine();
+            String idProduto = getStringInput("ID do Produto: ");
 
-            String produtoExistente = ProdutoController.getProdutoPorID(id);
+            Produto produtoExistente = ProdutoController.buscarProdutoPorID(idProduto);
             if (produtoExistente == null) {
                 System.out.println("Produto não encontrado.");
                 return;
             }
 
-            String idLojaProduto = produtoExistente.split("\n")[7].split(": ")[1];
-            // Verifica se o usuário tem permissão para editar o produto
-            if (!(idLoja.equals("Admin"))) {
-                System.out.println('-' + idLoja + '-' + idLojaProduto + '-');
-                if (!idLojaProduto.equals(idLoja)) {
-                    System.out.println("Este produto não pertence à loja com ID " + id + ". Não é possível atualizar.");
-                    return;
-                }
+            if (!idLoja.equals("Admin") && !produtoExistente.getIdLoja().equals(idLoja)) {
+                System.out.println("Este produto não pertence à loja com ID " + idLoja + ". Não é possível atualizar.");
+                return;
             }
 
-            System.out.println("Produto Atual:\n" + produtoExistente);
+            System.out.println("Produto Atual:\n" + ProdutoController.formatarProduto(produtoExistente));
             System.out.println("Deixe em branco para manter o mesmo valor.");
 
-            System.out.print("Novo Nome (atual: " + produtoExistente.split("\n")[1].split(": ")[1] + "): ");
-            String nome = scanner.nextLine();
-            nome = nome.isEmpty() ? produtoExistente.split("\n")[1].split(": ")[1] : nome;
+            String nome = getStringInputWithDefault("Novo Nome", produtoExistente.getNome());
+            float valor = getFloatInputWithDefault("Novo Valor", produtoExistente.getValor());
+            String tipo = getStringInputWithDefault("Novo Tipo", produtoExistente.getTipo());
+            int quantidade = getIntInputWithDefault("Nova Quantidade", produtoExistente.getQuantidade());
+            String marca = getStringInputWithDefault("Nova Marca", produtoExistente.getMarca());
+            String descricao = getStringInputWithDefault("Nova Descrição", produtoExistente.getDescricao());
 
-            System.out.print("Novo Valor (atual: " + produtoExistente.split("\n")[5].split(": ")[1] + "): ");
-            String valorInput = scanner.nextLine();
-            float valor = valorInput.isEmpty() ? Float.parseFloat(produtoExistente.split("\n")[5].split(": ")[1])
-                    : Float.parseFloat(valorInput);
-            if (valor <= 0)
-                throw new IllegalArgumentException("O valor deve ser maior que zero.");
-
-            System.out.print("Novo Tipo (atual: " + produtoExistente.split("\n")[2].split(": ")[1] + "): ");
-            String tipo = scanner.nextLine();
-            tipo = tipo.isEmpty() ? produtoExistente.split("\n")[2].split(": ")[1] : tipo;
-
-            System.out.print("Nova Quantidade (atual: " + produtoExistente.split("\n")[6].split(": ")[1] + "): ");
-            String quantidadeInput = scanner.nextLine();
-            int quantidade = quantidadeInput.isEmpty()
-                    ? Integer.parseInt(produtoExistente.split("\n")[6].split(": ")[1])
-                    : Integer.parseInt(quantidadeInput);
-            if (quantidade < 0)
-                throw new IllegalArgumentException("A quantidade não pode ser negativa.");
-
-            System.out.print("Nova Marca (atual: " + produtoExistente.split("\n")[3].split(": ")[1] + "): ");
-            String marca = scanner.nextLine();
-            marca = marca.isEmpty() ? produtoExistente.split("\n")[3].split(": ")[1] : marca;
-
-            System.out.print("Nova Descrição (atual: " + produtoExistente.split("\n")[4].split(": ")[1] + "): ");
-            String descricao = scanner.nextLine();
-            descricao = descricao.isEmpty() ? produtoExistente.split("\n")[4].split(": ")[1] : descricao;
-
-            boolean atualizado = ProdutoController.atualizarProduto(nome, valor, tipo, quantidade, marca, descricao, id,
-                    idLojaProduto);
-
+            boolean atualizado = ProdutoController.atualizarProduto(nome, valor, tipo, quantidade, marca, descricao, idProduto, produtoExistente.getIdLoja());
             if (atualizado) {
                 System.out.println("Produto atualizado com sucesso!");
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: Entrada numérica inválida.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Erro inesperado ao atualizar o produto: " + e);
+            System.out.println("Erro inesperado ao atualizar o produto: " + e.getMessage());
         }
+    }
+
+    // Métodos auxiliares para ler entradas
+    private static String getStringInput(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine();
+    }
+
+    private static String getStringInputWithDefault(String prompt, String defaultValue) {
+        System.out.print(prompt + " (atual: " + defaultValue + "): ");
+        String input = scanner.nextLine();
+        return input.isEmpty() ? defaultValue : input;
+    }
+
+    private static float getFloatInput(String prompt) {
+        System.out.print(prompt);
+        return Float.parseFloat(scanner.nextLine());
+    }
+
+    private static float getFloatInputWithDefault(String prompt, float defaultValue) {
+        System.out.print(prompt + " (atual: " + defaultValue + "): ");
+        String input = scanner.nextLine();
+        return input.isEmpty() ? defaultValue : Float.parseFloat(input);
+    }
+
+    private static int getIntInput(String prompt) {
+        System.out.print(prompt);
+        return Integer.parseInt(scanner.nextLine());
+    }
+
+    private static int getIntInputWithDefault(String prompt, int defaultValue) {
+        System.out.print(prompt + " (atual: " + defaultValue + "): ");
+        String input = scanner.nextLine();
+        return input.isEmpty() ? defaultValue : Integer.parseInt(input);
     }
 }

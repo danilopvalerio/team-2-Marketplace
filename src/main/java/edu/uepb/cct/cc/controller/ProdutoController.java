@@ -164,4 +164,18 @@ public class ProdutoController {
         sb.append("------------------------------------");
         return sb.toString();
     }
+
+    public static Produto buscarProdutoPorID(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("ID inválido.");
+        }
+        List<Produto> produtos = carregarProdutos();
+        for (Produto produto : produtos) {
+            if (produto.getId().equalsIgnoreCase(id)) {
+                return produto;
+            }
+        }
+        return null; // ou pode lançar exceção se preferir
+    }
+
 }
