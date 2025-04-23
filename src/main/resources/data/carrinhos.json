@@ -1,0 +1,16 @@
+[ {
+  "id" : "111.111.111-11",
+  "carrinho" : [ {
+    "produto" : {
+      "id" : "VB01",
+      "nome" : "Vestido bolinha",
+      "valor" : 250.0,
+      "tipo" : "vestuario",
+      "quantidade" : 19,
+      "marca" : "gucci",
+      "descricao" : "Vestido bolinha pp",
+      "idLoja" : "123.456.789-10"
+    },
+    "quantidade" : 2
+  } ]
+} ]

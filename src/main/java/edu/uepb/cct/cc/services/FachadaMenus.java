@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 import edu.uepb.cct.cc.view.*;
+import edu.uepb.cct.cc.model.Comprador;
 import edu.uepb.cct.cc.model.Produto;
+import edu.uepb.cct.cc.controller.CompradorController;
 import edu.uepb.cct.cc.controller.ProdutoController;
-
 
 public class FachadaMenus {
 
@@ -198,10 +199,12 @@ public class FachadaMenus {
         }
     }
 
-    public static void exibirMenuCarrinho(Scanner scanner, String idComprador) {
-        // Mesmo que o id seja de um admin, o carrinho pode ser manipulado
-        // Suponha que temos uma lista ou coleção para os itens do carrinho
-        List<Produto> carrinho = new ArrayList<>();
+    public static void exibirMenuCarrinho(Scanner scanner, String cpfComprador) {
+        Comprador comprador = CompradorController.getCompradorPorCpf(cpfComprador);
+        if (comprador == null) {
+            System.out.println("Comprador não encontrado!");
+            return;
+        }
 
         while (true) {
             System.out.println("\n================ MENU CARRINHO ================");
@@ -217,14 +220,7 @@ public class FachadaMenus {
 
             switch (escolha) {
                 case "1" -> {
-                    if (carrinho.isEmpty()) {
-                        System.out.println("Seu carrinho está vazio.");
-                    } else {
-                        System.out.println("Itens no carrinho:");
-                        for (Produto produto : carrinho) {
-                            System.out.println(produto.getNome() + " - " + produto.getValor() + " (quantidade: 1)");
-                        }
-                    }
+                    comprador.visualizarCarrinho();
                 }
                 case "2" -> {
                     System.out.print("Digite o ID do produto que deseja adicionar: ");
@@ -234,9 +230,13 @@ public class FachadaMenus {
                     if (produto != null) {
                         System.out.print("Digite a quantidade: ");
                         int quantidade = scanner.nextInt();
-                        for (int i = 0; i < quantidade; i++) {
-                            carrinho.add(produto);
-                        }
+                        scanner.nextLine(); // Limpar buffer
+
+                        comprador.adicionarAoCarrinho(produto, quantidade);
+                        // Atualiza o carrinho no arquivo
+                        CompradorController.atualizarCarrinhoDoComprador(
+                                comprador.getCpf(),
+                                comprador.listarCarrinho());
                         System.out.println("Produto adicionado ao carrinho.");
                     } else {
                         System.out.println("Produto não encontrado.");
@@ -247,23 +247,27 @@ public class FachadaMenus {
                     String idProduto = scanner.nextLine();
                     Produto produto = ProdutoController.buscarProdutoPorID(idProduto);
 
-                    if (produto != null && carrinho.contains(produto)) {
-                        carrinho.remove(produto);
+                    if (produto != null) {
+                        comprador.removerProdutoDoCarrinho(produto);
+                        // Atualiza o carrinho no arquivo
+                        CompradorController.atualizarCarrinhoDoComprador(
+                                comprador.getCpf(),
+                                comprador.listarCarrinho());
                         System.out.println("Produto removido do carrinho.");
                     } else {
-                        System.out.println("Produto não encontrado no carrinho.");
+                        System.out.println("Produto não encontrado.");
                     }
                 }
                 case "4" -> {
-                    if (carrinho.isEmpty()) {
+                    if (comprador.listarCarrinho().isEmpty()) {
                         System.out.println("Carrinho vazio! Não é possível finalizar a compra.");
                     } else {
-                        System.out.println("Resumo da compra:");
-                        for (Produto produto : carrinho) {
-                            System.out.println(produto.getNome() + " - " + produto.getValor());
-                        }
+                        // Aqui você implementaria a lógica de finalização de compra
                         System.out.println("Compra finalizada com sucesso!");
-                        carrinho.clear();
+                        comprador.listarCarrinho().clear();
+                        CompradorController.atualizarCarrinhoDoComprador(
+                                comprador.getCpf(),
+                                new ArrayList<>());
                     }
                 }
                 case "0" -> {
@@ -273,8 +277,6 @@ public class FachadaMenus {
             }
         }
     }
-
-
 
     // Menu geral para. OBS: Ao entrar neste menu o usuário já deve ter feito o
     // login.
@@ -297,16 +299,15 @@ public class FachadaMenus {
                 System.out.print("🔹 Escolha uma opção: ");
             }
 
-
             else if (logadoADM) {
-                    System.out.println("\n================ MENU PRINCIPAL ================");
-                    System.out.println("1️⃣ Menu Loja");
-                    System.out.println("2️⃣ Menu Comprador");
-                    System.out.println("3️⃣ Menu Produto");
-                    System.out.println("4️⃣ Menu Produto para Comprador"); // Opção de Produto para Comprador
-                    System.out.println("0️⃣ Logout");
-                    System.out.print("🔹 Escolha uma opção: ");
-                }
+                System.out.println("\n================ MENU PRINCIPAL ================");
+                System.out.println("1️⃣ Menu Loja");
+                System.out.println("2️⃣ Menu Comprador");
+                System.out.println("3️⃣ Menu Produto");
+                System.out.println("4️⃣ Menu Produto para Comprador"); // Opção de Produto para Comprador
+                System.out.println("0️⃣ Logout");
+                System.out.print("🔹 Escolha uma opção: ");
+            }
 
             escolha = scanner.next();
             scanner.nextLine();
@@ -321,18 +322,19 @@ public class FachadaMenus {
                     default -> System.out.println("⚠️ Opção inválida. Tente novamente.");
                 }
             } else if (logadoADM) {
-                    switch (escolha) {
-                        case "1" -> FachadaMenus.menuLojaCompleto(scanner);
-                        case "2" -> FachadaMenus.menuComprador(scanner);
-                        case "3" -> FachadaMenus.menuProdutoParaAdmin(scanner);
-                        case "4" -> FachadaMenus.menuProdutoParaComprador(scanner, id);  // Chama o menu Produto para Comprador
-                        case "0" -> {
-                            System.out.println("👋 Fazendo logout...");
-                            break;
-                        }
-                        default -> System.out.println("⚠️ Opção inválida. Tente novamente.");
+                switch (escolha) {
+                    case "1" -> FachadaMenus.menuLojaCompleto(scanner);
+                    case "2" -> FachadaMenus.menuComprador(scanner);
+                    case "3" -> FachadaMenus.menuProdutoParaAdmin(scanner);
+                    case "4" -> FachadaMenus.menuProdutoParaComprador(scanner, id); // Chama o menu Produto para
+                                                                                    // Comprador
+                    case "0" -> {
+                        System.out.println("👋 Fazendo logout...");
+                        break;
                     }
-                }else if (logadoComprador) {
+                    default -> System.out.println("⚠️ Opção inválida. Tente novamente.");
+                }
+            } else if (logadoComprador) {
                 switch (escolha) {
                     case "1" -> FachadaMenus.menuProdutoParaComprador(scanner, id);
                     case "2" -> FachadaMenus.menuLojaParaCompradores(scanner);

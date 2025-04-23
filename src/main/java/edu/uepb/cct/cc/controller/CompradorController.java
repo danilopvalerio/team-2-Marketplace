@@ -3,16 +3,16 @@ package edu.uepb.cct.cc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import edu.uepb.cct.cc.model.Comprador;
+import edu.uepb.cct.cc.model.Comprador.ItemCarrinho;
 import edu.uepb.cct.cc.services.SecurityHash;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class CompradorController extends Comprador {
     private static final String ARQUIVO_COMPRADORES = "src/main/resources/data/compradores.json";
+    private static final String ARQUIVO_CARRINHOS = "src/main/resources/data/carrinhos.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = Logger.getLogger(CompradorController.class.getName());
 
@@ -25,7 +25,7 @@ public class CompradorController extends Comprador {
         validarEndereco(comprador.getEndereco());
 
         comprador.setSenha(SecurityHash.hashPassword(comprador.getSenha()));
-        
+
         List<Comprador> compradores = new ArrayList<>();
         File file = new File(ARQUIVO_COMPRADORES);
 
@@ -48,7 +48,8 @@ public class CompradorController extends Comprador {
         // Verifica se o comprador já existe
         for (Comprador c : compradores) {
             if (c.getCpf().equals(comprador.getCpf())) {
-                throw new IllegalArgumentException("Não foi possível adicionar o comprador pois ele já está cadastrado no sistema.");
+                throw new IllegalArgumentException(
+                        "Não foi possível adicionar o comprador pois ele já está cadastrado no sistema.");
             }
         }
 
@@ -69,9 +70,23 @@ public class CompradorController extends Comprador {
         if (!file.exists() || file.length() == 0) {
             return new ArrayList<>();
         }
+
         try (Reader reader = new FileReader(file)) {
             List<Comprador> compradores = objectMapper.readValue(reader,
                     TypeFactory.defaultInstance().constructCollectionType(List.class, Comprador.class));
+
+            // Load carts for each buyer
+            for (Comprador comprador : compradores) {
+                List<ItemCarrinho> carrinho = carregarCarrinhoDoComprador(comprador.getCpf());
+                try {
+                    java.lang.reflect.Field field = Comprador.class.getDeclaredField("carrinho");
+                    field.setAccessible(true);
+                    field.set(comprador, carrinho);
+                } catch (Exception e) {
+                    logger.severe("Erro ao carregar carrinho para comprador: " + e.getMessage());
+                }
+            }
+
             compradores.sort(Comparator.comparing(Comprador::getNome, String.CASE_INSENSITIVE_ORDER));
             return compradores;
         } catch (IOException e) {
@@ -104,6 +119,9 @@ public class CompradorController extends Comprador {
             return "Comprador não encontrado.";
         }
 
+        // Remove also the cart associated with this buyer
+        removerCarrinhoDoComprador(cpf);
+
         try (Writer writer = new FileWriter(ARQUIVO_COMPRADORES)) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, compradores);
             return "Comprador removido com sucesso.";
@@ -122,8 +140,17 @@ public class CompradorController extends Comprador {
 
         for (int i = 0; i < compradores.size(); i++) {
             if (compradores.get(i).getCpf().equals(cpf)) {
+                // Preserve the existing cart
+                List<ItemCarrinho> carrinhoExistente = compradores.get(i).listarCarrinho();
                 compradorAtualizado.setCpf(cpf); // Mantém o CPF original
                 compradores.set(i, compradorAtualizado);
+                try {
+                    java.lang.reflect.Field field = Comprador.class.getDeclaredField("carrinho");
+                    field.setAccessible(true);
+                    field.set(compradorAtualizado, carrinhoExistente);
+                } catch (Exception e) {
+                    logger.severe("Erro ao transferir carrinho: " + e.getMessage());
+                }
                 atualizado = true;
                 break;
             }
@@ -142,34 +169,104 @@ public class CompradorController extends Comprador {
         }
     }
 
+    public static void atualizarCarrinhoDoComprador(String cpf, List<ItemCarrinho> novoCarrinho) {
+
+        Comprador comprador = getCompradorPorCpf(cpf);
+
+        if (comprador == null) {
+            throw new IllegalArgumentException("Comprador não encontrado.");
+        } else {
+            salvarCarrinhoSeparadamente(cpf, novoCarrinho);
+        }
+
+    }
+
+    private static void salvarCarrinhoSeparadamente(String cpf, List<ItemCarrinho> carrinho) {
+        File file = new File(ARQUIVO_CARRINHOS);
+        List<Map<String, Object>> carrinhos = new ArrayList<>();
+
+        // Create parent directory if needed
+        File parentDir = file.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+
+        // Load existing carts if file exists
+        if (file.exists() && file.length() > 0) {
+            try (Reader reader = new FileReader(file)) {
+                carrinhos = objectMapper.readValue(reader,
+                        TypeFactory.defaultInstance().constructCollectionType(List.class, Map.class));
+            } catch (IOException e) {
+                logger.severe("Erro ao ler arquivo de carrinhos: " + e.getMessage());
+            }
+        }
+
+        // Remove existing cart for this buyer if it exists
+        carrinhos.removeIf(c -> c.get("id").equals(cpf));
+
+        // Create new cart entry
+        Map<String, Object> novoCarrinho = new HashMap<>();
+        novoCarrinho.put("id", cpf);
+        novoCarrinho.put("carrinho", carrinho);
+        carrinhos.add(novoCarrinho);
+
+        // Save all carts
+        try (Writer writer = new FileWriter(file)) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, carrinhos);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao salvar carrinho: " + e.getMessage());
+        }
+    }
+
+    public static List<ItemCarrinho> carregarCarrinhoDoComprador(String cpf) {
+        File file = new File(ARQUIVO_CARRINHOS);
+        if (!file.exists() || file.length() == 0) {
+            return new ArrayList<>();
+        }
+
+        try (Reader reader = new FileReader(file)) {
+            List<Map<String, Object>> carrinhos = objectMapper.readValue(reader,
+                    TypeFactory.defaultInstance().constructCollectionType(List.class, Map.class));
+
+            for (Map<String, Object> carrinho : carrinhos) {
+                if (cpf.equals(carrinho.get("id"))) {
+                    return objectMapper.convertValue(carrinho.get("carrinho"),
+                            TypeFactory.defaultInstance().constructCollectionType(List.class, ItemCarrinho.class));
+                }
+            }
+        } catch (IOException e) {
+            logger.severe("Erro ao carregar carrinhos: " + e.getMessage());
+        }
+
+        return new ArrayList<>();
+    }
+
+    private static void removerCarrinhoDoComprador(String cpf) {
+        File file = new File(ARQUIVO_CARRINHOS);
+        if (!file.exists() || file.length() == 0) {
+            return;
+        }
+
+        try (Reader reader = new FileReader(file)) {
+            List<Map<String, Object>> carrinhos = objectMapper.readValue(reader,
+                    TypeFactory.defaultInstance().constructCollectionType(List.class, Map.class));
+
+            // Remove cart for this buyer
+            carrinhos.removeIf(c -> c.get("id").equals(cpf));
+
+            // Save updated carts
+            try (Writer writer = new FileWriter(file)) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, carrinhos);
+            }
+        } catch (IOException e) {
+            logger.severe("Erro ao remover carrinho: " + e.getMessage());
+        }
+    }
+
     // Validação de Nome
     private static void validarNome(String nome) {
         if (nome == null || nome.isEmpty()) {
             throw new IllegalArgumentException("Nome não pode ser vazio.");
-        }
-    }
-
-    public static void atualizarCarrinhoDoComprador(String cpf, List<?> novoCarrinho) {
-        List<Comprador> compradores = getTodosCompradores();
-
-        for (Comprador c : compradores) {
-            if (c.getCpf().equals(cpf)) {
-                // Atualiza o carrinho
-                try {
-                    java.lang.reflect.Field field = Comprador.class.getDeclaredField("carrinho");
-                    field.setAccessible(true);
-                    field.set(c, novoCarrinho);
-                } catch (Exception e) {
-                    throw new RuntimeException("Erro ao atualizar carrinho via reflexão: " + e.getMessage());
-                }
-                break;
-            }
-        }
-
-        try (Writer writer = new FileWriter(ARQUIVO_COMPRADORES)) {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, compradores);
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao salvar carrinho atualizado: " + e.getMessage());
         }
     }
 
@@ -178,7 +275,6 @@ public class CompradorController extends Comprador {
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("E-mail não pode ser vazio.");
         }
-        // Adicionar validação de formato de e-mail se necessário, por exemplo, usando regex.
     }
 
     // Validação de Senha

@@ -3,7 +3,6 @@ package edu.uepb.cct.cc.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-import edu.uepb.cct.cc.controller.CompradorController;
 
 public class Comprador {
     private String nome;
@@ -11,24 +10,24 @@ public class Comprador {
     private String senha;
     private String cpf;
     private String endereco;
-    private List<ItemCarrinho> carrinho; // Carrinho de compras
+    private List<ItemCarrinho> carrinho;
     private List<Venda> historicoDeVendas;
 
-    // Padrões para validação de e-mail e CPF
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final Pattern CPF_PATTERN = Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
 
     public Comprador() {
         this.carrinho = new ArrayList<>();
+        this.historicoDeVendas = new ArrayList<>();
     }
 
     public Comprador(String nome, String email, String senha, String cpf, String endereco) {
+        this();
         this.nome = nome;
         setEmail(email);
         setSenha(senha);
         setCpf(cpf);
         this.endereco = endereco;
-        this.carrinho = new ArrayList<>();
     }
 
     // Getters and setters
@@ -81,7 +80,18 @@ public class Comprador {
         this.endereco = endereco;
     }
 
-    // Método para adicionar um produto ao carrinho
+    public void setCarrinho(List<ItemCarrinho> novoCarrinho) {
+        this.carrinho = novoCarrinho;
+    }
+
+    public List<ItemCarrinho> getCarrinho() {
+        return this.carrinho;
+    }
+
+    public List<ItemCarrinho> listarCarrinho() {
+        return new ArrayList<>(carrinho);
+    }
+
     public void adicionarAoCarrinho(Produto produto, int quantidade) {
         if (quantidade <= 0) {
             throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
@@ -89,67 +99,38 @@ public class Comprador {
 
         for (ItemCarrinho item : carrinho) {
             if (item.getProduto().equals(produto)) {
-                item.aumentarQuantidade(quantidade);  // Aumenta a quantidade se o produto já estiver no carrinho
-                System.out.println("Produto atualizado no carrinho.");
+                item.aumentarQuantidade(quantidade);
                 return;
             }
         }
 
-        // Se o produto não estiver no carrinho, adiciona um novo item
         carrinho.add(new ItemCarrinho(produto, quantidade));
-        System.out.println("Produto adicionado ao carrinho.");
     }
 
-    // Método para remover um produto do carrinho
     public void removerProdutoDoCarrinho(Produto produto) {
         boolean removido = carrinho.removeIf(item -> item.getProduto().getId().equals(produto.getId()));
-
-        if (removido) {
-            System.out.println("Produto removido do carrinho com sucesso.");
-            // Atualiza o carrinho no controlador após a remoção
-            CompradorController.atualizarCarrinhoDoComprador(this.getCpf(), this.listarCarrinho());
-        } else {
-            System.err.println("Erro: Produto não encontrado no carrinho.");
+        if (!removido) {
+            throw new IllegalArgumentException("Produto não encontrado no carrinho.");
         }
     }
 
-    // Método para atualizar a quantidade de um produto no carrinho
     public void atualizarQuantidadeProduto(Produto produto, int novaQuantidade) {
         for (ItemCarrinho item : carrinho) {
             if (item.getProduto().equals(produto)) {
                 item.setQuantidade(novaQuantidade);
-                System.out.println("Quantidade do produto no carrinho atualizada.");
                 return;
             }
         }
-        System.err.println("Produto não encontrado no carrinho.");
+        throw new IllegalArgumentException("Produto não encontrado no carrinho.");
     }
 
-    // Método para listar os itens do carrinho
-    public List<ItemCarrinho> listarCarrinho() {
-        return new ArrayList<>(carrinho);
-    }
-
-    // Método para finalizar a compra
-    public void finalizarCompra() {
+    public void finalizarCompra(Venda venda) {
         if (carrinho.isEmpty()) {
-            System.out.println("Seu carrinho está vazio! Não é possível finalizar a compra.");
-            return;
+            throw new IllegalStateException("Carrinho vazio. Não é possível finalizar a compra.");
         }
 
-        double totalCompra = 0;
-        for (ItemCarrinho item : carrinho) {
-            totalCompra += item.getProduto().getValor() * item.getQuantidade();
-        }
-
-        // Atualiza o estoque dos produtos
-        for (ItemCarrinho item : carrinho) {
-            item.getProduto().diminuirEstoque(item.getQuantidade());
-        }
-
-        System.out.println("Compra finalizada com sucesso!");
-        System.out.println("Total: R$ " + totalCompra);
-        carrinho.clear();  // Limpa o carrinho após a compra
+        historicoDeVendas.add(venda);
+        carrinho.clear();
     }
 
     public void visualizarCarrinho() {
@@ -171,11 +152,12 @@ public class Comprador {
         }
     }
 
-
-    // Classe interna ItemCarrinho
     public static class ItemCarrinho {
         private Produto produto;
         private int quantidade;
+
+        public ItemCarrinho() {
+        }
 
         public ItemCarrinho(Produto produto, int quantidade) {
             this.produto = produto;
@@ -184,6 +166,10 @@ public class Comprador {
 
         public Produto getProduto() {
             return produto;
+        }
+
+        public void setProduto(Produto produto) {
+            this.produto = produto;
         }
 
         public int getQuantidade() {
