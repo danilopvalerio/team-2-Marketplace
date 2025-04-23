@@ -10,7 +10,6 @@ public class FachadaMenus {
     public static void menuComprador(Scanner scanner) {
         CompradorView compradorView = new CompradorView();
 
-
         while (true) {
             System.out.println("\n================ MENU COMPRADOR ================");
             System.out.println("1️⃣  Cadastrar Comprador");
@@ -39,7 +38,6 @@ public class FachadaMenus {
     // Menus de LOJA com diferentes permissões para ADMIN, COMPRADOR
     public static void menuLojaCompleto(Scanner scanner) {
         LojaView lojaView = new LojaView();
-
 
         while (true) {
             System.out.println("\n================ MENU LOJA ================");
@@ -95,7 +93,6 @@ public class FachadaMenus {
     // Menus de PRODUTOS com diferentes permissões para ADMIN, LOJISTA E COMPRADOR
     public static void menuProdutoParaAdmin(Scanner scanner) {
 
-
         while (true) {
             System.out.println("\n================ MENU PRODUTO ================");
             System.out.println("1️⃣ Cadastrar Produto");
@@ -110,7 +107,8 @@ public class FachadaMenus {
             String escolha = scanner.next();
             scanner.nextLine();
 
-            // Tratar na view e no controller para caso o id seja "Admin" liste todos os produtos de todas as lojas
+            // Tratar na view e no controller para caso o id seja "Admin" liste todos os
+            // produtos de todas as lojas
             // Caso o id não seja "Admin", ou seja, caso o usuário seja
 
             switch (escolha) {
@@ -128,7 +126,7 @@ public class FachadaMenus {
         }
     }
 
-    public static void menuProdutoParaLojas(Scanner scanner, String id ) {
+    public static void menuProdutoParaLojas(Scanner scanner, String id) {
         ProdutoView produtoView = new ProdutoView();
 
         while (true) {
@@ -159,15 +157,15 @@ public class FachadaMenus {
         }
     }
 
-    public static void menuProdutoParaComprador(Scanner scanner, String id ) {
-
+    public static void menuProdutoParaComprador(Scanner scanner, String id) {
         while (true) {
             System.out.println("\n================ MENU PRODUTO ================");
             System.out.println("1️⃣ Listar produtos por loja");
             System.out.println("2️⃣ Listar todos os produtos");
             System.out.println("3️⃣ Buscar produtos");
+            System.out.println("4️⃣ Acessar menu carrinho"); // Nova opção
             System.out.println("0️⃣ Voltar");
-            System.out.println("🔹 Escolha uma opção: ");
+            System.out.print("🔹 Escolha uma opção: ");
 
             String escolha = scanner.next();
             scanner.nextLine();
@@ -178,13 +176,15 @@ public class FachadaMenus {
                     String idLoja = scanner.nextLine();
                     ProdutoView.listarProdutosPorLoja(idLoja);
                 }
-
                 case "2" -> ProdutoView.listarTodosProdutos();
-                case "3" ->{
+                case "3" -> {
                     System.out.println("Digite o ID do produto: ");
                     String idProd = scanner.nextLine();
-                    ProdutoView.buscarProdutoPorID(idProd);}
-
+                    ProdutoView.buscarProdutoPorID(idProd);
+                }
+                case "4" -> { // Nova funcionalidade para abrir o menu carrinho
+                    exibirMenuCarrinho(scanner, id); // Chamada do método que gerencia o menu do carrinho
+                }
                 case "0" -> {
                     return;
                 }
@@ -193,8 +193,36 @@ public class FachadaMenus {
         }
     }
 
-    // Menu geral para. OBS: Ao entrar neste menu o usuário já deve ter feito o login.
-    public static void MenuSelecionador(Scanner scanner, boolean logadoADM, boolean logadoComprador, boolean logadoLoja, String id, String senha){
+    public static void exibirMenuCarrinho(Scanner scanner, String idComprador) {
+        while (true) {
+            System.out.println("\n================ MENU CARRINHO ================");
+            System.out.println("1️⃣ Listar itens do carrinho");
+            System.out.println("2️⃣ Adicionar produto ao carrinho");
+            System.out.println("3️⃣ Remover produto do carrinho");
+            System.out.println("4️⃣ Finalizar compra");
+            System.out.println("0️⃣ Voltar");
+            System.out.print("🔹 Escolha uma opção: ");
+
+            String escolha = scanner.next();
+            scanner.nextLine();
+
+            switch (escolha) {
+                case "1" -> System.out.println("Exibindo itens do carrinho...");
+                case "2" -> System.out.println("Adicionando produto ao carrinho...");
+                case "3" -> System.out.println("Removendo produto do carrinho...");
+                case "4" -> System.out.println("Finalizando compra...");
+                case "0" -> {
+                    return;
+                }
+                default -> System.out.println("⚠️ Opção inválida. Tente novamente.");
+            }
+        }
+    }
+
+    // Menu geral para. OBS: Ao entrar neste menu o usuário já deve ter feito o
+    // login.
+    public static void MenuSelecionador(Scanner scanner, boolean logadoADM, boolean logadoComprador, boolean logadoLoja,
+            String id, String senha) {
         String escolha = "5";
 
         while (!escolha.equals("0")) {
