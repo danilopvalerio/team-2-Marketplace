@@ -262,12 +262,10 @@ public class FachadaMenus {
                     if (comprador.listarCarrinho().isEmpty()) {
                         System.out.println("Carrinho vazio! Não é possível finalizar a compra.");
                     } else {
-                        // Aqui você implementaria a lógica de finalização de compra
-                        System.out.println("Compra finalizada com sucesso!");
-                        comprador.listarCarrinho().clear();
-                        CompradorController.atualizarCarrinhoDoComprador(
-                                comprador.getCpf(),
-                                new ArrayList<>());
+                        // Instância da view de vendas e chamada do método finalizarCarrinho
+                        VendaView vendaView = new VendaView();
+                        vendaView.finalizarCarrinho(cpfComprador); // Finaliza a compra com validação e esvaziamento do
+                                                                   // carrinho
                     }
                 }
                 case "0" -> {

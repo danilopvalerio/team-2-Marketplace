@@ -138,8 +138,9 @@ public class Comprador {
             System.out.println("Seu carrinho está vazio.");
             return;
         }
-
-        System.out.println("Produtos no carrinho:");
+        System.out.println("-------------------------------");
+        System.out.println("CARRINHO:");
+        System.out.println("-------------------------------");
         for (ItemCarrinho item : carrinho) {
             Produto produto = item.getProduto();
             System.out.println("Produto: " + produto.getNome());
