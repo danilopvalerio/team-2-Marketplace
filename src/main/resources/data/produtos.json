@@ -1,37 +1,10 @@
 [ {
-  "id" : "VB01",
-  "nome" : "Vestido bolinha",
-  "valor" : 250.0,
-  "tipo" : "vestuario",
-  "quantidade" : 19,
-  "marca" : "gucci",
-  "descricao" : "Vestido bolinha pp",
-  "idLoja" : "123.456.789-10"
-}, {
-  "id" : "CP01",
-  "nome" : "Calca jeans",
-  "valor" : 250.0,
-  "tipo" : "vestuario",
-  "quantidade" : 16,
-  "marca" : "prada",
-  "descricao" : "calca prada azul pp",
-  "idLoja" : "123.456.789-10"
-}, {
-  "id" : "CP012",
-  "nome" : "Calca jeans",
-  "valor" : 250.0,
-  "tipo" : "vestuario",
-  "quantidade" : 20,
-  "marca" : "prada",
-  "descricao" : "calca prada azul pp",
-  "idLoja" : "123.456.789-11"
-}, {
-  "id" : "kkdd",
-  "nome" : "teste1",
-  "valor" : 22.0,
-  "tipo" : "md",
-  "quantidade" : 2,
-  "marca" : "kd",
-  "descricao" : "dk",
-  "idLoja" : "111.111.222-09"
+  "id" : "P001",
+  "nome" : "Produto Teste",
+  "valor" : 100.0,
+  "tipo" : "Eletrônicos",
+  "quantidade" : 10,
+  "marca" : "Marca Teste",
+  "descricao" : "Descrição do produto",
+  "idLoja" : "123.456.789-00"
 } ]

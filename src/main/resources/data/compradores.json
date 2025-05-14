@@ -1,13 +1,8 @@
 [ {
-  "nome" : "laura",
-  "email" : "laura@gmail.com",
-  "senha" : "$2a$10$/gJpX97ALj/Z3j4z/7hlPOgIGgPePq5KCTEU45Mf23c9tj6S0fyzW",
-  "cpf" : "158.435.194-22",
-  "endereco" : "Jesus"
-}, {
-  "nome" : "Danilo",
-  "email" : "danilovalerio@gmail.com",
-  "senha" : "$2a$10$U31Cq6/0R.XFZ0GxCE4GB.bETIY2xnMJ.FcAs8Fvwk0q7JzkIZM5q",
-  "cpf" : "111.111.111-11",
-  "endereco" : "rua maria juaneira 34"
+  "nome" : "João",
+  "email" : "joao@email.com",
+  "senha" : "$2a$10$FXx71QFHbTuo4I4.j7K/ROSOHt9wWZi4Ar3JgJQ7Aw9iFW2C/OgIu",
+  "cpf" : "123.456.789-00",
+  "endereco" : "Rua A",
+  "carrinho" : [ ]
 } ]

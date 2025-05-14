@@ -13,4 +13,79 @@
     },
     "quantidade" : 2
   } ]
+}, {
+  "id" : "123.456.789-00",
+  "carrinho" : [ {
+    "produto" : {
+      "id" : "P001",
+      "nome" : "Produto Teste",
+      "valor" : 100.0,
+      "tipo" : "Eletrônicos",
+      "quantidade" : 10,
+      "marca" : "Marca Teste",
+      "descricao" : "Descrição do produto",
+      "idLoja" : "123.456.789-00"
+    },
+    "quantidade" : 1
+  }, {
+    "produto" : {
+      "id" : "P001",
+      "nome" : "Produto Teste",
+      "valor" : 100.0,
+      "tipo" : "Eletrônicos",
+      "quantidade" : 10,
+      "marca" : "Marca Teste",
+      "descricao" : "Descrição do produto",
+      "idLoja" : "123.456.789-00"
+    },
+    "quantidade" : 2
+  }, {
+    "produto" : {
+      "id" : "P001",
+      "nome" : "Produto Teste",
+      "valor" : 100.0,
+      "tipo" : "Eletrônicos",
+      "quantidade" : 10,
+      "marca" : "Marca Teste",
+      "descricao" : "Descrição do produto",
+      "idLoja" : "123.456.789-00"
+    },
+    "quantidade" : 2
+  }, {
+    "produto" : {
+      "id" : "P001",
+      "nome" : "Produto Teste",
+      "valor" : 100.0,
+      "tipo" : "Eletrônicos",
+      "quantidade" : 10,
+      "marca" : "Marca Teste",
+      "descricao" : "Descrição do produto",
+      "idLoja" : "123.456.789-00"
+    },
+    "quantidade" : 1
+  }, {
+    "produto" : {
+      "id" : "P001",
+      "nome" : "Produto Teste",
+      "valor" : 100.0,
+      "tipo" : "Eletrônicos",
+      "quantidade" : 10,
+      "marca" : "Marca Teste",
+      "descricao" : "Descrição do produto",
+      "idLoja" : "123.456.789-00"
+    },
+    "quantidade" : 1
+  }, {
+    "produto" : {
+      "id" : "P001",
+      "nome" : "Produto Teste",
+      "valor" : 100.0,
+      "tipo" : "Eletrônicos",
+      "quantidade" : 10,
+      "marca" : "Marca Teste",
+      "descricao" : "Descrição do produto",
+      "idLoja" : "123.456.789-00"
+    },
+    "quantidade" : 1
+  } ]
 } ]
