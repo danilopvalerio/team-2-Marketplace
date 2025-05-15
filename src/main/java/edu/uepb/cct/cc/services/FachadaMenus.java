@@ -1,14 +1,19 @@
 package edu.uepb.cct.cc.services;
 
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Map;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import edu.uepb.cct.cc.view.*;
 import edu.uepb.cct.cc.model.Comprador;
 import edu.uepb.cct.cc.model.Produto;
+import edu.uepb.cct.cc.model.Venda;
 import edu.uepb.cct.cc.controller.CompradorController;
 import edu.uepb.cct.cc.controller.ProdutoController;
+import edu.uepb.cct.cc.controller.VendaController;
 
 public class FachadaMenus {
 
@@ -169,7 +174,8 @@ public class FachadaMenus {
             System.out.println("1️⃣ Listar produtos por loja");
             System.out.println("2️⃣ Listar todos os produtos");
             System.out.println("3️⃣ Buscar produtos");
-            System.out.println("4️⃣ Acessar menu carrinho"); // Nova opção
+            System.out.println("4️⃣ Acessar menu carrinho");
+            System.out.println("5️⃣ Ver histórico de compras");
             System.out.println("0️⃣ Voltar");
             System.out.print("🔹 Escolha uma opção: ");
 
@@ -190,6 +196,50 @@ public class FachadaMenus {
                 }
                 case "4" -> { // Nova funcionalidade para abrir o menu carrinho
                     exibirMenuCarrinho(scanner, id); // Chamada do método que gerencia o menu do carrinho
+                }
+                case "5" -> {
+                    // Exibe o histórico de compras do comprador
+                    System.out.println("\n════════════════ HISTÓRICO DE COMPRAS ════════════════");
+                    System.out.println("Comprador: " + id);
+                    System.out.println("══════════════════════════════════════════════════════");
+
+                    Map<String, List<Venda>> vendasPorPedido = VendaController.filtrarEVendasPorCPF(id);
+
+                    if (vendasPorPedido.isEmpty()) {
+                        System.out.println("Nenhuma compra encontrada para este CPF.");
+                        return;
+                    }
+
+                    vendasPorPedido.forEach((idVenda, vendas) -> {
+                        System.out.println("\n🛒 Pedido: " + idVenda);
+
+                        // Agrupa produtos por data (supondo que todas vendas no mesmo pedido têm mesma
+                        // data)
+                        Map<LocalDate, List<Venda>> vendasPorData = vendas.stream()
+                                .collect(Collectors.groupingBy(Venda::getDataVenda));
+
+                        vendasPorData.forEach((data, vendasNaData) -> {
+                            System.out.println("📅 Data: " + data);
+                            System.out.println("--------------------------------------------------");
+
+                            double totalPedido = 0;
+                            for (Venda venda : vendasNaData) {
+                                for (int i = 0; i < venda.getIdsProdutosVendidos().size(); i++) {
+                                    String idProduto = venda.getIdsProdutosVendidos().get(i);
+                                    int quantidade = venda.getQuantidades().get(i);
+                                    double valorUnitario = venda.getValoresUnitarios().get(i);
+                                    double subtotal = quantidade * valorUnitario;
+                                    totalPedido += subtotal;
+
+                                    System.out.printf("├─ %-15s | Qtd: %-3d | R$ %-8.2f | Subtotal: R$ %-8.2f\n",
+                                            idProduto, quantidade, valorUnitario, subtotal);
+                                }
+                            }
+                            System.out.println("--------------------------------------------------");
+                            System.out.printf("Total do Pedido: R$ %.2f\n", totalPedido);
+                        });
+                    });
+                    System.out.println("══════════════════════════════════════════════════════");
                 }
                 case "0" -> {
                     return;

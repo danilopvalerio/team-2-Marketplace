@@ -1,14 +1,31 @@
-[
-  {
-    "id_comprador": "C01",
-    "data": "2025-04-19",
-    "produtos": [
-      ["VB01", 1, 10.0],
-      ["CP01", 2, 15.0]
-    ],
-    "id_venda": "V01",
-    "id_loja": "123.456.789-10",
-    "id_vendaGeral": "V001",
-    "valor total": 40.0
-  }
-]
+[ {
+  "id_comprador" : "111.111.111-11",
+  "data" : "2025-05-15",
+  "produtos" : [ [ "P001", 2, 100.0 ] ],
+  "id_venda" : "A2EEE",
+  "valor total" : 200.0
+}, {
+  "id_comprador" : "111.111.111-11",
+  "data" : "2025-05-15",
+  "produtos" : [ [ "P001", 2, 100.0 ] ],
+  "id_venda" : "7DC9E",
+  "valor total" : 200.0
+}, {
+  "id_comprador" : "111.111.111-11",
+  "data" : "2025-05-15",
+  "produtos" : [ [ "P001", 2, 100.0 ] ],
+  "id_venda" : "F793F",
+  "valor total" : 200.0
+}, {
+  "id_comprador" : "123.456.789-00",
+  "data" : "2025-05-15",
+  "produtos" : [ [ "P001", 2, 3000.0 ] ],
+  "id_venda" : "V001",
+  "valor total" : 6000.0
+}, {
+  "id_comprador" : "C01",
+  "data" : "2025-05-15",
+  "produtos" : [ [ "0000", 1, 10.0 ], [ "000A", 2, 20.0 ] ],
+  "id_venda" : "VTESTE01",
+  "valor total" : 50.0
+} ]

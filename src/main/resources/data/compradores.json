@@ -1,8 +1,1 @@
-[ {
-  "nome" : "João",
-  "email" : "joao@email.com",
-  "senha" : "$2a$10$FXx71QFHbTuo4I4.j7K/ROSOHt9wWZi4Ar3JgJQ7Aw9iFW2C/OgIu",
-  "cpf" : "123.456.789-00",
-  "endereco" : "Rua A",
-  "carrinho" : [ ]
-} ]
+[ ]

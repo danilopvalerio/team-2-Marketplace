@@ -1,47 +1,53 @@
 package edu.uepb.cct.cc.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.uepb.cct.cc.model.Produto;
 import edu.uepb.cct.cc.model.Venda;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class VendaController {
 
     private static final String ARQUIVO_VENDAS = "src/main/resources/data/vendas.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public void removerProdutosDoEstoque(Venda venda) {
-        ProdutoController produtoController = new ProdutoController();
-        List<Produto> produtos = produtoController.carregarProdutos();
+    public static void removerProdutosDoEstoque(Venda venda) {
+        // Carrega todos os produtos atualizados
+        List<Produto> produtos = ProdutoController.carregarProdutos();
+
+        // Cria um mapa para acesso rápido aos produtos por ID
+        Map<String, Produto> produtoMap = produtos.stream()
+                .collect(Collectors.toMap(Produto::getId, p -> p));
 
         for (int i = 0; i < venda.getIdsProdutosVendidos().size(); i++) {
             String idProduto = venda.getIdsProdutosVendidos().get(i);
             int quantidadeVendida = venda.getQuantidades().get(i);
 
-            Produto produtoEncontrado = null;
-            for (Produto p : produtos) {
-                if (p.getId().equals(idProduto)) {
-                    produtoEncontrado = p;
-                    break;
-                }
-            }
+            Produto produto = produtoMap.get(idProduto);
 
-            if (produtoEncontrado == null) {
+            if (produto == null) {
                 throw new IllegalArgumentException("Produto com ID " + idProduto + " não encontrado.");
             }
-            if (produtoEncontrado.getQuantidade() < quantidadeVendida) {
-                throw new IllegalStateException("Estoque insuficiente para o produto " + idProduto + ".");
+
+            if (produto.getQuantidade() < quantidadeVendida) {
+                throw new IllegalStateException("Estoque insuficiente para o produto " + idProduto +
+                        ". Disponível: " + produto.getQuantidade() + ", Solicitado: " + quantidadeVendida);
             }
 
-            produtoEncontrado.setQuantidade(produtoEncontrado.getQuantidade() - quantidadeVendida);
+            // Atualiza a quantidade no estoque
+            produto.setQuantidade(produto.getQuantidade() - quantidadeVendida);
         }
 
-        produtoController.salvarProdutos(produtos);
+        // Salva as alterações no estoque
+        ProdutoController.salvarProdutos(new ArrayList<>(produtoMap.values()));
     }
 
     public void garantirArquivoDeVendas() {
@@ -119,11 +125,15 @@ public class VendaController {
             return;
         }
 
-        vendasExistentes.add(novaVendaMap);
-
+        // Primeiro remover produtos do estoque para garantir que há disponibilidade
         try {
+            removerProdutosDoEstoque(venda);
+            vendasExistentes.add(novaVendaMap);
+
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_VENDAS), vendasExistentes);
             System.out.println("✅ Venda registrada com sucesso.");
+        } catch (IllegalStateException e) {
+            System.err.println("❌ Erro ao processar a venda: " + e.getMessage());
         } catch (IOException e) {
             System.err.println("❌ Erro ao registrar a venda: " + e.getMessage());
         }
@@ -153,6 +163,7 @@ public class VendaController {
         }
 
         int contador = 1;
+        List<Venda> vendasParaRegistrar = new ArrayList<>();
 
         for (Map.Entry<String, List<Integer>> entry : produtosPorLoja.entrySet()) {
             String idLoja = entry.getKey();
@@ -178,6 +189,8 @@ public class VendaController {
                     valoresSeparados,
                     quantidadesSeparadas);
 
+            vendasParaRegistrar.add(novaVenda);
+
             Map<String, Object> vendaMap = construirVendaParaRegistro(novaVenda);
             vendaMap.put("id_loja", idLoja);
             vendaMap.put("id_vendaGeral", vendaOriginal.getIdVenda()); // Referência à venda original
@@ -187,13 +200,20 @@ public class VendaController {
 
             if (!vendaJaExiste) {
                 vendasExistentes.add(vendaMap);
-                removerProdutosDoEstoque(novaVenda);
             }
         }
 
+        // Primeiro verificamos e removemos produtos do estoque para todas as vendas
         try {
+            for (Venda venda : vendasParaRegistrar) {
+                removerProdutosDoEstoque(venda);
+            }
+
+            // Após remover todos os produtos com sucesso, salvamos as vendas
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_VENDAS), vendasExistentes);
             System.out.println("✅ Todas as vendas foram registradas com sucesso.");
+        } catch (IllegalStateException e) {
+            System.err.println("❌ Erro ao processar as vendas: " + e.getMessage());
         } catch (IOException e) {
             System.err.println("❌ Erro ao salvar as vendas: " + e.getMessage());
         }
@@ -224,5 +244,60 @@ public class VendaController {
         } catch (IOException e) {
             System.err.println("❌ Erro ao salvar o arquivo de vendas: " + e.getMessage());
         }
+    }
+
+    public static Map<String, List<Venda>> filtrarEVendasPorCPF(String cpf) {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Venda> todasAsVendas = new ArrayList<>();
+
+        try {
+            // Usa o mesmo caminho que os outros métodos
+            File arquivo = new File(ARQUIVO_VENDAS);
+
+            if (!arquivo.exists() || arquivo.length() == 0) {
+                return Collections.emptyMap();
+            }
+
+            List<Map<String, Object>> vendasJson = mapper.readValue(arquivo,
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
+
+            for (Map<String, Object> vendaJson : vendasJson) {
+                try {
+                    String idVenda = (String) vendaJson.get("id_venda");
+                    String idComprador = (String) vendaJson.get("id_comprador");
+
+                    // Filtra apenas vendas do CPF informado
+                    if (!idComprador.equals(cpf))
+                        continue;
+
+                    LocalDate dataVenda = LocalDate.parse((String) vendaJson.get("data"));
+                    List<List<Object>> produtos = (List<List<Object>>) vendaJson.get("produtos");
+
+                    List<String> idsProdutos = new ArrayList<>();
+                    List<Integer> quantidades = new ArrayList<>();
+                    List<Double> valoresUnitarios = new ArrayList<>();
+
+                    for (List<Object> produto : produtos) {
+                        idsProdutos.add((String) produto.get(0));
+                        quantidades.add((Integer) produto.get(1));
+                        valoresUnitarios.add(((Number) produto.get(2)).doubleValue());
+                    }
+
+                    Venda venda = new Venda(idVenda, idComprador, dataVenda,
+                            idsProdutos, valoresUnitarios, quantidades);
+                    todasAsVendas.add(venda);
+                } catch (Exception e) {
+                    System.err.println("Erro ao processar venda: " + e.getMessage());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao ler arquivo de vendas: " + e.getMessage());
+            return Collections.emptyMap();
+        }
+
+        // Agrupa por ID de venda (pedido)
+        return todasAsVendas.stream()
+                .collect(Collectors.groupingBy(Venda::getIdVenda));
     }
 }

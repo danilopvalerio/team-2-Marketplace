@@ -141,15 +141,15 @@ public class CompradorTest {
     @Test
     void testRemoverProdutoNaoExistenteNoCarrinho() {
         Comprador comprador = new Comprador();
-        Produto produto1 = new Produto("Teclado", 100.0f, "Periférico", 5, "Razer", "Teclado mecânico", "2",
-                "12.345.678/0001-90");
+
         Produto produto2 = new Produto("Monitor", 800.0f, "Periférico", 2, "Dell", "Monitor 24\"", "3",
                 "12.345.678/0001-90");
 
-        comprador.adicionarAoCarrinho(produto1, 1);
-        comprador.removerProdutoDoCarrinho(produto2);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            comprador.removerProdutoDoCarrinho(produto2);
+        });
 
-        assertEquals(1, comprador.listarCarrinho().size());
+        assertEquals("Produto não encontrado no carrinho.", exception.getMessage());
     }
 
 }

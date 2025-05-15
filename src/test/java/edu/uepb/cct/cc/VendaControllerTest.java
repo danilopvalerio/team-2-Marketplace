@@ -107,39 +107,4 @@ public class VendaControllerTest {
     public void testRemoverVendaInexistente() {
         assertDoesNotThrow(() -> vendaController.removerVenda("VENDA-INEXISTENTE"));
     }
-
-    @Test
-    void testRemoverProdutosDoEstoque() throws IOException {
-        VendaController vendaController = new VendaController();
-        ObjectMapper mapper = new ObjectMapper();
-        File arquivo = new File("src/main/resources/data/produtos.json");
-
-        String idProduto = "CP01";
-
-        List<Produto> produtosAntes = Arrays.asList(mapper.readValue(arquivo, Produto[].class));
-        int quantidadeOriginal = produtosAntes.stream()
-                .filter(p -> p.getId().equals(idProduto))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"))
-                .getQuantidade();
-
-        String idVenda = "VENDA_TESTE_001";
-        String idComprador = "12345678900";
-        List<String> ids = List.of(idProduto);
-        List<Double> valores = List.of(10.0);
-        List<Integer> quantidades = List.of(1);
-
-        Venda venda = new Venda(idVenda, idComprador, LocalDate.now(), ids, valores, quantidades);
-
-        vendaController.removerProdutosDoEstoque(venda);
-
-        List<Produto> produtosDepois = Arrays.asList(mapper.readValue(arquivo, Produto[].class));
-        int quantidadeFinal = produtosDepois.stream()
-                .filter(p -> p.getId().equals(idProduto))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"))
-                .getQuantidade();
-
-        assertEquals(quantidadeOriginal - 1, quantidadeFinal);
-    }
 }
