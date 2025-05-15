@@ -52,6 +52,19 @@ public class ProdutoController {
         return null;
     }
 
+    public static Produto getProdutoPorIDOBJ(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("ID inválido.");
+        }
+        List<Produto> produtos = carregarProdutos();
+        for (Produto produto : produtos) {
+            if (produto.getId().equalsIgnoreCase(id)) {
+                return produto;
+            }
+        }
+        return null;
+    }
+
     public static List<String> getTodosProdutos() {
         List<Produto> produtos = carregarProdutos();
         produtos.sort((p1, p2) -> p1.getNome().compareToIgnoreCase(p2.getNome()));

@@ -20,7 +20,7 @@ public class HistoricoComprasTest {
 
     @Test
     void testVerHistoricoVazio() {
-        String cpf = "222.222.222-22";
+        String cpf = "222.222.252-22";
         Comprador comprador = new Comprador("João", "joao@email.com", "senha123", cpf, "Rua A, 123");
         CompradorController.create(comprador);
 

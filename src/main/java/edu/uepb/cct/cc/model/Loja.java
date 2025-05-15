@@ -71,6 +71,11 @@ public class Loja {
         return this;
     }
 
+    public Loja setHistorico(List<String> historico) {
+        this.historicoVendas = historico;
+        return this;
+    }
+
     public String getCpfCnpj() {
         return cpfCnpj;
     }

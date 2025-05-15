@@ -1,13 +1,16 @@
 package edu.uepb.cct.cc.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import edu.uepb.cct.cc.model.Loja;
+import edu.uepb.cct.cc.model.*;
 import edu.uepb.cct.cc.services.SecurityHash;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LojaController {
 
@@ -50,36 +53,16 @@ public class LojaController {
     }
 
     // Histórico de pedidos
-    public static List<Object> getHistoricoPedidosDaLoja(String cpfCnpj) {
-        if (cpfCnpj == null || cpfCnpj.isEmpty()) {
-            throw new IllegalArgumentException("CPF/CNPJ inválido.");
-        }
+    public static List<String> getHistoricoPedidosDaLoja(String cpfCnpj) {
+        return getLojaPorCpfCnpj(cpfCnpj).getHistoricoVendas();
+    }
 
-        File arquivoVendas = new File("src/main/resources/data/vendas.json");
-        List<Object> pedidosDaLoja = new ArrayList<>();
+    public static void setIdVendaHistoricoLoja(String cpfCnpj, String idVenda) {
+        Loja loja = getLojaPorCpfCnpj(cpfCnpj);
+        loja.adicionarVendaAoHistorico(idVenda);
+        atualizarLojaComHistorico(loja.getCpfCnpj(), loja.getNome(), loja.getEmail(),
+                loja.getSenha(), loja.getEndereco(), loja.getHistoricoVendas());
 
-        if (!arquivoVendas.exists()) {
-            return pedidosDaLoja; // Nenhuma venda registrada ainda
-        }
-
-        try (Reader reader = new FileReader(arquivoVendas)) {
-            ObjectMapper mapper = new ObjectMapper();
-            List<Object> todasAsVendas = mapper.readValue(reader, List.class);
-
-            for (Object venda : todasAsVendas) {
-                // Conversão para Map para acessar os campos
-                @SuppressWarnings("unchecked")
-                var vendaMap = (java.util.Map<String, Object>) venda;
-                if (cpfCnpj.equals(vendaMap.get("id_loja"))) {
-                    pedidosDaLoja.add(vendaMap);
-                }
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao ler o histórico de pedidos da loja.", e);
-        }
-
-        return pedidosDaLoja;
     }
 
     // Método para listar todas as lojas
@@ -111,6 +94,46 @@ public class LojaController {
                 }
                 if (endereco != null && !endereco.isEmpty()) {
                     loja.setEndereco(endereco);
+                }
+                lojas.set(i, loja);
+                lojaAtualizada = true;
+                break;
+            }
+        }
+
+        if (!lojaAtualizada) {
+            throw new IllegalArgumentException("Loja não encontrada.");
+        }
+
+        salvarLojas(lojas);
+        return lojas.stream().filter(l -> l.getCpfCnpj().equals(cpfCnpj)).findFirst().orElse(null);
+    }
+
+    public static Loja atualizarLojaComHistorico(String cpfCnpj, String nome, String email, String senha,
+            String endereco, List<String> historicoVendas) {
+        if (cpfCnpj == null || cpfCnpj.isEmpty()) {
+            throw new IllegalArgumentException("CPF/CNPJ inválido.");
+        }
+        List<Loja> lojas = carregarLojas();
+        boolean lojaAtualizada = false;
+
+        for (int i = 0; i < lojas.size(); i++) {
+            if (lojas.get(i).getCpfCnpj().equals(cpfCnpj)) {
+                Loja loja = lojas.get(i);
+                if (nome != null && !nome.isEmpty()) {
+                    loja.setNome(nome);
+                }
+                if (email != null && !email.isEmpty()) {
+                    loja.setEmail(email);
+                }
+                if (senha != null && !senha.isEmpty()) {
+                    loja.setSenha(senha);
+                }
+                if (endereco != null && !endereco.isEmpty()) {
+                    loja.setEndereco(endereco);
+                }
+                if (historicoVendas != null && !historicoVendas.isEmpty()) {
+                    loja.setHistorico(historicoVendas);
                 }
                 lojas.set(i, loja);
                 lojaAtualizada = true;

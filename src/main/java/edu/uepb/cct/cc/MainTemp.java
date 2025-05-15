@@ -5,8 +5,10 @@ import edu.uepb.cct.cc.controller.LojaController;
 import edu.uepb.cct.cc.controller.ProdutoController;
 import edu.uepb.cct.cc.controller.VendaController;
 import edu.uepb.cct.cc.model.Comprador;
+import edu.uepb.cct.cc.model.Produto;
 import edu.uepb.cct.cc.model.Venda;
 import edu.uepb.cct.cc.view.ProdutoView;
+import edu.uepb.cct.cc.view.VendaView;
 
 import java.io.*;
 import java.io.ByteArrayInputStream;
@@ -18,30 +20,21 @@ import java.util.Map;
 public class MainTemp {
 
     public static void main(String[] args) {
-        String cpf = "222.222.222-22";
-        Comprador comprador = new Comprador("Mario", "joao@email.com", "senha123", cpf, "Rua A, 123");
-        CompradorController.create(comprador);
-
-        ProdutoController.create("Smartphone", 2500.0f, "Eletrônico", 5, "Samsung", "Última geração",
-                "0000",
-                "12.345.678/0001-99");
-        ProdutoController.create("Smartphone", 2500.0f, "Eletrônico", 5, "Samsung", "Última geração",
-                "000A",
-                "12.345.678/0001-99");
-
-        List<String> idsProdutos = Arrays.asList("0000", "000A");
+        List<String> idsProdutos = Arrays.asList("BEGEJ", "P001");
         List<Double> valores = Arrays.asList(10.0, 20.0);
         List<Integer> quantidades = Arrays.asList(2, 1);
 
-        Venda venda = new Venda("YYYY", "222.222.222-22", LocalDate.of(2024, 4, 7), idsProdutos, valores, quantidades);
+        Venda venda = new Venda("YPYY", "222.222.222-22", LocalDate.of(2024, 4, 7), idsProdutos, valores, quantidades);
         VendaController vendaController = new VendaController();
-        vendaController.registrarVenda(venda);
-        VendaController.filtrarEVendasPorCPF(cpf);
-        String vendasToString = VendaController.filtrarEVendasPorCPF(cpf).toString();
+        // vendaController.registrarVenda(venda);
+        for (String item : venda.getIdsProdutosVendidos()) {
+            Produto produto = ProdutoController.getProdutoPorIDOBJ(item);
+            if (produto != null) {
+                String cpfCnpjLoja = produto.getIdLoja();
+                System.out.println(cpfCnpjLoja + "-" + venda.getIdVenda());
+                LojaController.setIdVendaHistoricoLoja(cpfCnpjLoja, venda.getIdVenda());
+            }
+        }
 
-        CompradorController.deleteCompradorPorCpf(cpf);
-        ProdutoController.deleteProdutoPorID("0000");
-        ProdutoController.deleteProdutoPorID("000A");
-        vendaController.removerVenda(venda.getIdVenda());
     }
 }

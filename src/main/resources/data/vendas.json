@@ -28,4 +28,22 @@
   "produtos" : [ [ "0000", 1, 10.0 ], [ "000A", 2, 20.0 ] ],
   "id_venda" : "VTESTE01",
   "valor total" : 50.0
+}, {
+  "id_comprador" : "222.222.222-22",
+  "data" : "2025-05-15",
+  "produtos" : [ [ "BEGEJ", 5, 90.0 ] ],
+  "id_venda" : "05D49",
+  "valor total" : 450.0
+}, {
+  "id_comprador" : "222.222.222-22",
+  "data" : "2025-05-15",
+  "produtos" : [ [ "BEGEJ", 4, 90.0 ] ],
+  "id_venda" : "38CE8",
+  "valor total" : 360.0
+}, {
+  "id_comprador" : "222.222.222-22",
+  "data" : "2025-05-15",
+  "produtos" : [ [ "BEGEJ", 3, 90.0 ] ],
+  "id_venda" : "C4368",
+  "valor total" : 270.0
 } ]

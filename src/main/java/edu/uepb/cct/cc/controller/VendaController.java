@@ -2,6 +2,8 @@ package edu.uepb.cct.cc.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.uepb.cct.cc.model.Loja;
 import edu.uepb.cct.cc.model.Produto;
 import edu.uepb.cct.cc.model.Venda;
 
@@ -132,6 +134,19 @@ public class VendaController {
 
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_VENDAS), vendasExistentes);
             System.out.println("✅ Venda registrada com sucesso.");
+
+            for (String item : venda.getIdsProdutosVendidos()) {
+                Produto produto = ProdutoController.getProdutoPorIDOBJ(item);
+                if (produto != null) {
+                    String cpfCnpjLoja = produto.getIdLoja();
+                    try {
+                        LojaController.setIdVendaHistoricoLoja(cpfCnpjLoja, venda.getIdVenda());
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+
+                }
+            }
         } catch (IllegalStateException e) {
             System.err.println("❌ Erro ao processar a venda: " + e.getMessage());
         } catch (IOException e) {
