@@ -1,5 +1,7 @@
 package edu.uepb.cct.cc.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -14,6 +16,8 @@ public class Produto {
     private String marca;
     private String descricao;
     private String idLoja; // CNPJ ou CPF da loja
+    private List<Integer> avaliacoes;
+    private float mediaAvaliacoes;
 
     // Padrões para validação de cpf/cnpj
     private static final String PRODUCT_FIELD_PATTERN = "^[\\p{L}0-9\\s]+$";
@@ -75,7 +79,7 @@ public class Produto {
         } catch (Exception e) {
             throw new IllegalArgumentException("Loja não encontrada para o CNPJ/CPF fornecido.");
         }
-        
+
     }
 
     private boolean validarCnpjOuCpf(String idLoja) {
@@ -120,10 +124,9 @@ public class Produto {
         if (valor <= 0) {
             throw new IllegalArgumentException("O valor do produto deve ser maior que zero.");
         }
-        this.valor = valor; 
+        this.valor = valor;
         return this.valor;
     }
-
 
     public String setTipo(String tipo) {
         if (tipo == null || tipo.trim().isEmpty()) {
@@ -166,7 +169,8 @@ public class Produto {
 
     @Override
     public String toString() {
-        // Formatando o valor usando o locale dos EUA para garantir o ponto como separador
+        // Formatando o valor usando o locale dos EUA para garantir o ponto como
+        // separador
         // decimal
         return "Produto: {" +
                 "id=" + id +
@@ -187,5 +191,46 @@ public class Produto {
         this.quantidade -= quantidade;
     }
 
+    public List<Integer> getAvaliacoes() {
+        return avaliacoes;
+    }
 
+    public void setAvaliacoes(List<Integer> avaliacoes) {
+        if (avaliacoes == null) {
+            this.avaliacoes = new ArrayList<>();
+        } else {
+            // valida todas as notas
+            for (Integer nota : avaliacoes) {
+                if (nota == null || nota < 1 || nota > 5) {
+                    throw new IllegalArgumentException("Nota inválida na lista de avaliações: " + nota);
+                }
+            }
+            this.avaliacoes = new ArrayList<>(avaliacoes);
+        }
+        atualizarMediaAvaliacoes();
+    }
+
+    public float getMediaAvaliacoes() {
+        return mediaAvaliacoes;
+    }
+
+    public void setMediaAvaliacoes(float media_avaliacoes) {
+        if (media_avaliacoes < 0.0f || media_avaliacoes > 5.0f) {
+            throw new IllegalArgumentException("A média de avaliações deve estar entre 0.0 e 5.0.");
+        }
+        this.mediaAvaliacoes = media_avaliacoes;
+    }
+
+    // Método auxiliar para atualizar a média automaticamente
+    private void atualizarMediaAvaliacoes() {
+        if (avaliacoes.isEmpty()) {
+            this.mediaAvaliacoes = 0.0f;
+        } else {
+            float soma = 0.0f;
+            for (Integer nota : avaliacoes) {
+                soma += nota;
+            }
+            this.mediaAvaliacoes = soma / avaliacoes.size();
+        }
+    }
 }
