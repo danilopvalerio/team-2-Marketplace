@@ -191,4 +191,44 @@ public class ProdutoController {
         return null; // ou pode lançar exceção se preferir
     }
 
+    public static void adicionar_avaliacao(String idProduto, int nota) {
+        if (nota < 1 || nota > 5) {
+            throw new IllegalArgumentException("A nota deve ser um valor entre 1 e 5.");
+        }
+        if (idProduto == null || idProduto.isEmpty()) {
+            throw new IllegalArgumentException("ID do produto inválido.");
+        }
+
+        List<Produto> produtos = carregarProdutos();
+        boolean produtoEncontrado = false;
+
+        for (Produto produto : produtos) {
+            if (produto.getId().equalsIgnoreCase(idProduto)) {
+                List<Integer> avaliacoes = produto.getAvaliacoes();
+                if (avaliacoes == null) {
+                    avaliacoes = new ArrayList<>();
+                }
+                avaliacoes.add(nota);
+                produto.setAvaliacoes(avaliacoes);
+
+                // Atualiza a média de avaliações
+                double soma = 0.0;
+                for (int avaliacao : avaliacoes) {
+                    soma += avaliacao;
+                }
+                double media = soma / avaliacoes.size();
+                produto.setMediaAvaliacoes((float) media);
+
+                produtoEncontrado = true;
+                break;
+            }
+        }
+
+        if (!produtoEncontrado) {
+            throw new IllegalArgumentException("Produto com ID informado não encontrado.");
+        }
+
+        salvarProdutos(produtos);
+        System.out.println("------------------------------------\n" + "Avaliação adicionada com sucesso.");
+    }
 }
