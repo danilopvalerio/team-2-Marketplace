@@ -6,5 +6,29 @@
   "quantidade" : 10,
   "marca" : "Marca Teste",
   "descricao" : "Descrição do produto",
-  "idLoja" : "123.456.789-00"
+  "idLoja" : "123.456.789-00",
+  "avaliacoes" : [ ],
+  "mediaAvaliacoes" : 0.0
+}, {
+  "id" : "1",
+  "nome" : "Toalha Grande",
+  "valor" : 10.0,
+  "tipo" : "Casa e Banho",
+  "quantidade" : 300,
+  "marca" : "Marca Teste",
+  "descricao" : "Toalha grande",
+  "idLoja" : "333.333.333-33",
+  "avaliacoes" : [ ],
+  "mediaAvaliacoes" : 0.0
+}, {
+  "id" : "2",
+  "nome" : "Toalha Pequena",
+  "valor" : 7.0,
+  "tipo" : "Casa e Banho",
+  "quantidade" : 200,
+  "marca" : "Marca Teste",
+  "descricao" : "Toalha pequena",
+  "idLoja" : "333.333.333-33",
+  "avaliacoes" : null,
+  "mediaAvaliacoes" : 0.0
 } ]

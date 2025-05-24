@@ -1,6 +1,5 @@
 package edu.uepb.cct.cc.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import edu.uepb.cct.cc.model.*;
@@ -8,9 +7,7 @@ import edu.uepb.cct.cc.services.SecurityHash;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LojaController {
 
@@ -183,6 +180,45 @@ public class LojaController {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, lojas);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static double calcularMediaAvaliacoesLoja(String cpfCnpj) {
+
+        Loja loja = getLojaPorCpfCnpj(cpfCnpj);
+        if (loja != null) {
+            List<Produto> produtos = ProdutoController.getProdutosPorLoja(cpfCnpj);
+
+            if (produtos.isEmpty()) {
+                throw new IllegalArgumentException("A loja não possui produtos.");
+            }
+
+            // calculando media das avaliações de produtos
+            double somaMedias = 0;
+            for (Produto produto : produtos) {
+                somaMedias += produto.getMediaAvaliacoes();
+            }
+            double media = somaMedias / produtos.size();
+
+            loja.set_media_avaliacoes(media);
+            salvarLojas(List.of(loja));
+            return media;
+        }
+        return 0;
+    }
+
+    public static void atribuirConceitoLoja(String cpfCnpj) {
+        Loja loja = getLojaPorCpfCnpj(cpfCnpj);
+
+        if (loja != null) {
+            double media = calcularMediaAvaliacoesLoja(cpfCnpj);
+
+            if (media < 2.0) loja.setConceito("Ruim");
+            else if (media >= 2.0 && media < 3.5) loja.setConceito("Médio");
+            else if (media >= 3.5 && media < 4.5) loja.setConceito("Bom");
+            else if (media >= 4.5) loja.setConceito("Excelente");
+
+            salvarLojas(List.of(loja));
         }
     }
 }
