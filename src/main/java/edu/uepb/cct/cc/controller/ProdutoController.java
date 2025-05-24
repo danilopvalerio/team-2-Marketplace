@@ -14,7 +14,7 @@ public class ProdutoController {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     public static String create(String nome, float valor, String tipo, int quantidade, String marca, String descricao,
-            String id, String idLoja) {
+                                String id, String idLoja) {
         if (nome == null || tipo == null || marca == null || descricao == null
                 || id == null || idLoja == null || quantidade <= 0 || valor < 0) {
             throw new IllegalArgumentException("Produto ou dados inválidos.");
@@ -104,7 +104,7 @@ public class ProdutoController {
     }
 
     public static boolean atualizarProduto(String nome, float valor, String tipo, int quantidade, String marca,
-            String descricao, String id, String idLoja) {
+                                           String descricao, String id, String idLoja) {
         if (nome == null || tipo == null || marca == null || descricao == null
                 || id == null || idLoja == null || quantidade <= 0 || valor < 0) {
             throw new IllegalArgumentException("Produto ou dados inválidos.");
@@ -211,6 +211,7 @@ public class ProdutoController {
                 avaliacoes.add(nota);
                 produto.setAvaliacoes(avaliacoes);
 
+                /*
                 // Atualiza a média de avaliações
                 double soma = 0.0;
                 for (int avaliacao : avaliacoes) {
@@ -221,6 +222,7 @@ public class ProdutoController {
 
                 produtoEncontrado = true;
                 break;
+                */
             }
         }
 
@@ -230,5 +232,22 @@ public class ProdutoController {
 
         salvarProdutos(produtos);
         System.out.println("------------------------------------\n" + "Avaliação adicionada com sucesso.");
+    }
+
+    public static float obter_media_avaliacoes(String idProduto) {
+        List<Produto> produtos = carregarProdutos();
+        for (Produto produto : produtos) {
+            if (produto.getId().equalsIgnoreCase(idProduto)) {
+                List<Integer> avaliacoes = produto.getAvaliacoes();
+                if (avaliacoes == null || avaliacoes.isEmpty()) {
+                    return 0.0f; // ou lançar exceção se preferir
+                }
+                double soma = 0.0;
+                for (int avaliacao : avaliacoes) {
+                    soma += avaliacao;
+                }
+                return (float) (soma / avaliacoes.size());
+            }
+        } return 0.0f;
     }
 }

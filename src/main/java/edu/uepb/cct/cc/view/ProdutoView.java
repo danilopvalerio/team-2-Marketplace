@@ -2,6 +2,8 @@ package edu.uepb.cct.cc.view;
 
 import edu.uepb.cct.cc.controller.LojaController;
 import edu.uepb.cct.cc.controller.ProdutoController;
+
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import edu.uepb.cct.cc.model.Produto;
@@ -209,4 +211,41 @@ public class ProdutoView {
         String input = scanner.nextLine();
         return input.isEmpty() ? defaultValue : Integer.parseInt(input);
     }
+
+
+    // Método para avaliar produto
+    public static void avaliar_produtos_comprados(List<String> idsProdutosComprados) {
+        System.out.println("\n=== Avaliação de Produtos Comprados ===");
+
+        for (String idProduto : idsProdutosComprados) {
+            Produto produto = ProdutoController.buscarProdutoPorID(idProduto);
+            System.out.println("\nProduto comprado: " + produto.getNome());
+            System.out.print("Avalie este produto (1 a 5 | Para não avaliar digite 0):\n ");
+            int nota = scanner.nextInt();
+
+
+            try {
+                if (nota >= 1 && nota <= 5) {
+                    ProdutoController.adicionar_avaliacao(idProduto, nota);
+                    System.out.println("Avaliação registrada com sucesso!\n");
+
+                } else if (nota == 0) {
+                    System.out.println("Produto não avaliado. Próximo produto: \n");
+                } else {
+                    System.out.println("Nota inválida. Por favor, insira um valor entre 1 e 5 ou 0 para não avaliar.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, insira um número inteiro.");
+                scanner.next(); // Limpa o buffer
+            } catch (Exception e) {
+                System.out.println("Erro inesperado ao avaliar o produto: " + e.getMessage());
+            }
+            float media = ProdutoController.obter_media_avaliacoes(idProduto);
+            System.out.printf("Avaliações concluídas! Média atual: %.2f\n\n", media);
+        }
+
+    }
 }
+
+

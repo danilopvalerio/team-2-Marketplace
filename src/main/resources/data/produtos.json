@@ -1,10 +1,12 @@
 [ {
-  "id" : "P001",
-  "nome" : "Produto Teste",
-  "valor" : 100.0,
-  "tipo" : "Eletrônicos",
-  "quantidade" : 10,
-  "marca" : "Marca Teste",
-  "descricao" : "Descrição do produto",
-  "idLoja" : "123.456.789-00"
+  "id" : "123",
+  "nome" : "Notebook",
+  "valor" : 3000.0,
+  "tipo" : "Eletrônico",
+  "quantidade" : 9,
+  "marca" : "Dell",
+  "descricao" : "Alta performance",
+  "idLoja" : "12.345.678/0001-99",
+  "avaliacoes" : [ ],
+  "mediaAvaliacoes" : 0.0
 } ]

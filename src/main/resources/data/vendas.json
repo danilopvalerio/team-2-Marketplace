@@ -46,4 +46,10 @@
   "produtos" : [ [ "BEGEJ", 3, 90.0 ] ],
   "id_venda" : "C4368",
   "valor total" : 270.0
+}, {
+  "id_comprador" : "111.111.111-11",
+  "data" : "2025-05-24",
+  "produtos" : [ [ "123", 1, 3000.0 ] ],
+  "id_venda" : "D24DE",
+  "valor total" : 3000.0
 } ]

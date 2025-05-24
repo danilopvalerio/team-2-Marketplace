@@ -1,1 +1,8 @@
-[]
+[ {
+  "nome" : "Raquel",
+  "email" : "raquel.queiroz@aluno.uepb.edu.br",
+  "senha" : "$2a$10$EI.KZ2q2tQ/dnJtI5WwG0OIqBcl7USer09QZLQ8aLvMmmh5Mc7RrO",
+  "cpf" : "111.111.111-11",
+  "endereco" : "Rua da UEPB",
+  "carrinho" : [ ]
+} ]

@@ -176,6 +176,7 @@ public class FachadaMenus {
             System.out.println("3️⃣ Buscar produtos");
             System.out.println("4️⃣ Acessar menu carrinho");
             System.out.println("5️⃣ Ver histórico de compras");
+            //System.out.println("6️⃣ Adicionar avaliação");
             System.out.println("0️⃣ Voltar");
             System.out.print("🔹 Escolha uma opção: ");
 
@@ -240,6 +241,26 @@ public class FachadaMenus {
                         });
                     });
                     System.out.println("══════════════════════════════════════════════════════");
+                }
+                case "6" -> {
+                    Map<String, List<Venda>> vendasPorPedido = VendaController.filtrarEVendasPorCPF(id);
+                    if (vendasPorPedido.isEmpty()) {
+                        System.out.println("❌ Nenhuma compra encontrada para este CPF.");
+                        break;
+                    }
+                    List<String> idsProdutosComprados = new ArrayList<>();
+
+                    for (List<Venda> vendas : vendasPorPedido.values()) {
+                        for (Venda venda : vendas) {
+                            idsProdutosComprados.addAll(venda.getIdsProdutosVendidos());
+                        }
+                    }
+
+                    if (idsProdutosComprados.isEmpty()) {
+                        System.out.println("❌ Nenhum produto encontrado no histórico de compras.");
+                    } else {
+                        ProdutoView.avaliar_produtos_comprados(idsProdutosComprados);
+                    }
                 }
                 case "0" -> {
                     return;
