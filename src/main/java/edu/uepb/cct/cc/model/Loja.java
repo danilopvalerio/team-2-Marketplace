@@ -11,6 +11,8 @@ public class Loja {
     private String cpfCnpj;
     private String endereco;
     private List<String> historicoVendas = new ArrayList<>();
+    private double media_avaliacoes_produtos;
+    private String conceito;
 
     // Regex para validação de e-mail e CPF/CNPJ
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
@@ -95,6 +97,22 @@ public class Loja {
     public Loja setEndereco(String endereco) {
         this.endereco = endereco;
         return this;
+    }
+
+    public double get_media_avaliacoes() {
+        return media_avaliacoes_produtos;
+    }
+
+    public void set_media_avaliacoes(double media_avaliacoes_produtos) {
+        this.media_avaliacoes_produtos = media_avaliacoes_produtos;
+    }
+
+    public String getConceito() {
+        return conceito;
+    }
+
+    public void setConceito(String conceito) {
+        this.conceito = conceito;
     }
 
     @Override

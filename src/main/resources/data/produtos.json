@@ -1,4 +1,5 @@
 [ {
+<<<<<<< HEAD
   "id" : "123",
   "nome" : "Notebook",
   "valor" : 3000.0,
@@ -9,4 +10,38 @@
   "idLoja" : "12.345.678/0001-99",
   "avaliacoes" : [ ],
   "mediaAvaliacoes" : 0.0
+=======
+  "id" : "P001",
+  "nome" : "Produto Teste",
+  "valor" : 100.0,
+  "tipo" : "Eletrônicos",
+  "quantidade" : 10,
+  "marca" : "Marca Teste",
+  "descricao" : "Descrição do produto",
+  "idLoja" : "123.456.789-00",
+  "avaliacoes" : [ ],
+  "mediaAvaliacoes" : 0.0
+}, {
+  "id" : "1",
+  "nome" : "Toalha Grande",
+  "valor" : 10.0,
+  "tipo" : "Casa e Banho",
+  "quantidade" : 300,
+  "marca" : "Marca Teste",
+  "descricao" : "Toalha grande",
+  "idLoja" : "333.333.333-33",
+  "avaliacoes" : [ ],
+  "mediaAvaliacoes" : 0.0
+}, {
+  "id" : "2",
+  "nome" : "Toalha Pequena",
+  "valor" : 7.0,
+  "tipo" : "Casa e Banho",
+  "quantidade" : 200,
+  "marca" : "Marca Teste",
+  "descricao" : "Toalha pequena",
+  "idLoja" : "333.333.333-33",
+  "avaliacoes" : null,
+  "mediaAvaliacoes" : 0.0
+>>>>>>> b681b06fc1657f5ff689d6de3a6a8c7db6f6fbcd
 } ]
