@@ -1,5 +1,4 @@
 [ {
-<<<<<<< HEAD
   "id" : "123",
   "nome" : "Notebook",
   "valor" : 3000.0,
@@ -7,10 +6,10 @@
   "quantidade" : 9,
   "marca" : "Dell",
   "descricao" : "Alta performance",
-  "idLoja" : "12.345.678/0001-99",
+  "idLoja" : "333.333.333-33",
   "avaliacoes" : [ ],
   "mediaAvaliacoes" : 0.0
-=======
+}, {
   "id" : "P001",
   "nome" : "Produto Teste",
   "valor" : 100.0,
@@ -18,9 +17,9 @@
   "quantidade" : 10,
   "marca" : "Marca Teste",
   "descricao" : "Descrição do produto",
-  "idLoja" : "123.456.789-00",
-  "avaliacoes" : [ ],
-  "mediaAvaliacoes" : 0.0
+  "idLoja" : "333.333.333-33",
+  "avaliacoes" : [ 3, 5, 3, 5, 3, 5, 1, 5 ],
+  "mediaAvaliacoes" : 3.75
 }, {
   "id" : "1",
   "nome" : "Toalha Grande",
@@ -41,7 +40,6 @@
   "marca" : "Marca Teste",
   "descricao" : "Toalha pequena",
   "idLoja" : "333.333.333-33",
-  "avaliacoes" : null,
+  "avaliacoes" : [ ],
   "mediaAvaliacoes" : 0.0
->>>>>>> b681b06fc1657f5ff689d6de3a6a8c7db6f6fbcd
 } ]

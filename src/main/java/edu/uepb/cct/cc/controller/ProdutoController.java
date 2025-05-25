@@ -211,7 +211,6 @@ public class ProdutoController {
                 avaliacoes.add(nota);
                 produto.setAvaliacoes(avaliacoes);
 
-                /*
                 // Atualiza a média de avaliações
                 double soma = 0.0;
                 for (int avaliacao : avaliacoes) {
@@ -222,7 +221,6 @@ public class ProdutoController {
 
                 produtoEncontrado = true;
                 break;
-                */
             }
         }
 
@@ -231,7 +229,6 @@ public class ProdutoController {
         }
 
         salvarProdutos(produtos);
-        System.out.println("------------------------------------\n" + "Avaliação adicionada com sucesso.");
     }
 
     public static float obter_media_avaliacoes(String idProduto) {

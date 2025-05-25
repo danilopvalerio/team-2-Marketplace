@@ -29,27 +29,21 @@
   "id_venda" : "VTESTE01",
   "valor total" : 50.0
 }, {
-  "id_comprador" : "222.222.222-22",
-  "data" : "2025-05-15",
-  "produtos" : [ [ "BEGEJ", 5, 90.0 ] ],
-  "id_venda" : "05D49",
-  "valor total" : 450.0
-}, {
-  "id_comprador" : "222.222.222-22",
-  "data" : "2025-05-15",
-  "produtos" : [ [ "BEGEJ", 4, 90.0 ] ],
-  "id_venda" : "38CE8",
-  "valor total" : 360.0
-}, {
-  "id_comprador" : "222.222.222-22",
-  "data" : "2025-05-15",
-  "produtos" : [ [ "BEGEJ", 3, 90.0 ] ],
-  "id_venda" : "C4368",
-  "valor total" : 270.0
-}, {
   "id_comprador" : "111.111.111-11",
   "data" : "2025-05-24",
   "produtos" : [ [ "123", 1, 3000.0 ] ],
   "id_venda" : "D24DE",
   "valor total" : 3000.0
+}, {
+  "id_comprador" : "222.222.222-22",
+  "data" : "2025-05-25",
+  "produtos" : [ [ "P001", 2, 100.0 ] ],
+  "id_venda" : "A2EBE",
+  "valor total" : 200.0
+}, {
+  "id_comprador" : "222.222.222-22",
+  "data" : "2025-05-25",
+  "produtos" : [ [ "P001", 2, 100.0 ] ],
+  "id_venda" : "7DC8E",
+  "valor total" : 200.0
 } ]

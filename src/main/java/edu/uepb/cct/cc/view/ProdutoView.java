@@ -220,14 +220,17 @@ public class ProdutoView {
         for (String idProduto : idsProdutosComprados) {
             Produto produto = ProdutoController.buscarProdutoPorID(idProduto);
             System.out.println("\nProduto comprado: " + produto.getNome());
-            System.out.print("Avalie este produto (1 a 5 | Para não avaliar digite 0):\n ");
+            System.out.print("Avalie este produto (1 a 5 | Para não avaliar digite 0): ");
             int nota = scanner.nextInt();
-
+            scanner.nextLine(); // consumir \n
 
             try {
                 if (nota >= 1 && nota <= 5) {
                     ProdutoController.adicionar_avaliacao(idProduto, nota);
-                    System.out.println("Avaliação registrada com sucesso!\n");
+                    System.out.println("\nAvaliação registrada com sucesso!");
+
+                    float media = ProdutoController.obter_media_avaliacoes(idProduto);
+                    System.out.printf("Média atual: %.2f\n", media);
 
                 } else if (nota == 0) {
                     System.out.println("Produto não avaliado. Próximo produto: \n");
@@ -237,14 +240,10 @@ public class ProdutoView {
 
             } catch (InputMismatchException e) {
                 System.out.println("Entrada inválida. Por favor, insira um número inteiro.");
-                scanner.next(); // Limpa o buffer
             } catch (Exception e) {
                 System.out.println("Erro inesperado ao avaliar o produto: " + e.getMessage());
             }
-            float media = ProdutoController.obter_media_avaliacoes(idProduto);
-            System.out.printf("Avaliações concluídas! Média atual: %.2f\n\n", media);
         }
-
     }
 }
 

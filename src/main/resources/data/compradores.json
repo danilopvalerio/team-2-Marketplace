@@ -1,16 +1,15 @@
 [ {
-<<<<<<< HEAD
   "nome" : "Raquel",
   "email" : "raquel.queiroz@aluno.uepb.edu.br",
   "senha" : "$2a$10$EI.KZ2q2tQ/dnJtI5WwG0OIqBcl7USer09QZLQ8aLvMmmh5Mc7RrO",
   "cpf" : "111.111.111-11",
   "endereco" : "Rua da UEPB",
-=======
+  "carrinho" : [ ]
+}, {
   "nome" : "Vinicius",
   "email" : "vinicius@gmail.com",
   "senha" : "$2a$10$ckS.CaNSkKfnbhNtprngiON50ncu/yFhAI4MV5jJgJFuaKalqrQ52",
   "cpf" : "222.222.222-22",
   "endereco" : "Rua Testes, 999",
->>>>>>> b681b06fc1657f5ff689d6de3a6a8c7db6f6fbcd
   "carrinho" : [ ]
 } ]

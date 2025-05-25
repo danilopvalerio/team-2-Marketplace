@@ -11,7 +11,7 @@ public class Loja {
     private String cpfCnpj;
     private String endereco;
     private List<String> historicoVendas = new ArrayList<>();
-    private double media_avaliacoes_produtos;
+    private double mediaAvaliacoesProdutos;
     private String conceito;
 
     // Regex para validação de e-mail e CPF/CNPJ
@@ -99,12 +99,12 @@ public class Loja {
         return this;
     }
 
-    public double get_media_avaliacoes() {
-        return media_avaliacoes_produtos;
+    public double getMediaAvaliacoesProdutos() {
+        return mediaAvaliacoesProdutos;
     }
 
-    public void set_media_avaliacoes(double media_avaliacoes_produtos) {
-        this.media_avaliacoes_produtos = media_avaliacoes_produtos;
+    public void setMediaAvaliacoesProdutos(double mediaAvaliacoesProdutos) {
+        this.mediaAvaliacoesProdutos = mediaAvaliacoesProdutos;
     }
 
     public String getConceito() {

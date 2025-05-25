@@ -176,7 +176,7 @@ public class FachadaMenus {
             System.out.println("3️⃣ Buscar produtos");
             System.out.println("4️⃣ Acessar menu carrinho");
             System.out.println("5️⃣ Ver histórico de compras");
-            //System.out.println("6️⃣ Adicionar avaliação");
+            System.out.println("6️⃣ Adicionar avaliação");
             System.out.println("0️⃣ Voltar");
             System.out.print("🔹 Escolha uma opção: ");
 

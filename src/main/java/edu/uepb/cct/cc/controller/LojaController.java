@@ -170,6 +170,7 @@ public class LojaController {
             return objectMapper.readValue(reader,
                     TypeFactory.defaultInstance().constructCollectionType(List.class, Loja.class));
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             throw new RuntimeException("Erro ao carregar lojas.", e);
         }
     }
@@ -200,7 +201,7 @@ public class LojaController {
             }
             double media = somaMedias / produtos.size();
 
-            loja.set_media_avaliacoes(media);
+            loja.setMediaAvaliacoesProdutos(media);
             salvarLojas(List.of(loja));
             return media;
         }
