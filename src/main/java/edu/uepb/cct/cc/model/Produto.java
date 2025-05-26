@@ -214,6 +214,7 @@ public class Produto {
         return mediaAvaliacoes;
     }
 
+
     public void setMediaAvaliacoes(float media_avaliacoes) {
         if (media_avaliacoes < 0.0f || media_avaliacoes > 5.0f) {
             throw new IllegalArgumentException("A média de avaliações deve estar entre 0.0 e 5.0.");
