@@ -174,6 +174,8 @@ public class ProdutoController {
         sb.append("Valor: ").append(produto.getValor()).append("\n");
         sb.append("Quantidade: ").append(produto.getQuantidade()).append("\n");
         sb.append("ID Loja: ").append(produto.getIdLoja()).append("\n");
+        sb.append("Avaliação: ").append(produto.getMediaAvaliacoes()).append("\n");
+
         sb.append("------------------------------------");
         return sb.toString();
     }
