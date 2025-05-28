@@ -56,7 +56,7 @@ public class FachadaMenus {
             System.out.println("2️⃣  Deletar Loja");
             System.out.println("3️⃣  Listar Lojas");
             System.out.println("4️⃣  Buscar Loja");
-            System.out.println("5️⃣  Atualizar Loja");
+            System.out.println("5️⃣  Avaliar Loja");
             System.out.println("0️⃣  Voltar");
             System.out.print("🔹 Escolha uma opção: ");
 
@@ -69,6 +69,7 @@ public class FachadaMenus {
                 case "3" -> lojaView.listarLojas();
                 case "4" -> lojaView.buscarLoja();
                 case "5" -> lojaView.atualizarLoja();
+                case "6" -> lojaView.conceitoLoja();
                 case "0" -> {
                     return;
                 }
@@ -84,6 +85,7 @@ public class FachadaMenus {
             System.out.println("\n================ MENU LOJA ================");
             System.out.println("1️⃣ Listar Lojas");
             System.out.println("2️⃣ Buscar Loja");
+            System.out.println("3️⃣ Avaliar Loja");
             System.out.println("0️⃣ Voltar");
             System.out.print("🔹 Escolha uma opção: ");
 
@@ -93,6 +95,7 @@ public class FachadaMenus {
             switch (escolha) {
                 case "1" -> lojaView.listarLojas();
                 case "2" -> lojaView.buscarLoja();
+                case "3" -> lojaView.conceitoLoja();
                 case "0" -> {
                     return;
                 }

@@ -70,6 +70,7 @@ public class LojaView {
         for (int i = 0; i < lojas.size(); i++) {
             Loja loja = lojas.get(i);
             System.out.println((i + 1) + ". " + loja.getNome() + " - " + loja.getCpfCnpj());
+            System.out.println("Avaliação: " + loja.getConceito());
         }
     }
 
@@ -180,8 +181,16 @@ public class LojaView {
                 System.out.println("Loja não encontrada.");
                 return;
             }
-            LojaController.atribuirConceitoLoja(lojaExistente);
-            System.out.println("Conceito atribuído com sucesso!");
+            if (lojaExistente != null && lojaExistente.getConceito() != null) {
+                System.out.println("Loja já possui um conceito atribuído: " + lojaExistente.getConceito());
+                return;
+            }
+            if (lojaExistente != null && lojaExistente.getConceito() == null) {
+                LojaController.atribuirConceitoLoja(lojaExistente);
+                System.out.println("Conceito atribuído com sucesso!");
+                //System.out.println("Conceito atual da loja: " + lojaExistente.getConceito());
+            }
+
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         } catch (Exception e) {

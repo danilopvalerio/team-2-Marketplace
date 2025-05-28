@@ -7,8 +7,8 @@
   "marca" : "Dell",
   "descricao" : "Alta performance",
   "idLoja" : "333.333.333-33",
-  "avaliacoes" : [ ],
-  "mediaAvaliacoes" : 0.0
+  "avaliacoes" : [ 4 ],
+  "mediaAvaliacoes" : 4.0
 }, {
   "id" : "P001",
   "nome" : "Produto Teste",
@@ -18,8 +18,8 @@
   "marca" : "Marca Teste",
   "descricao" : "Descrição do produto",
   "idLoja" : "333.333.333-33",
-  "avaliacoes" : [ 3, 5, 3, 5, 3, 5, 1, 5 ],
-  "mediaAvaliacoes" : 3.75
+  "avaliacoes" : [ 3, 5, 3, 5, 3, 5, 1, 5, 3, 5 ],
+  "mediaAvaliacoes" : 3.8
 }, {
   "id" : "1",
   "nome" : "Toalha Grande",
@@ -40,6 +40,17 @@
   "marca" : "Marca Teste",
   "descricao" : "Toalha pequena",
   "idLoja" : "333.333.333-33",
+  "avaliacoes" : [ ],
+  "mediaAvaliacoes" : 0.0
+}, {
+  "id" : "4",
+  "nome" : "copo de vidro",
+  "valor" : 12.0,
+  "tipo" : "Cozinha",
+  "quantidade" : 1,
+  "marca" : "Coparias",
+  "descricao" : "copo de vidro resistente",
+  "idLoja" : "111.111.111-11",
   "avaliacoes" : [ ],
   "mediaAvaliacoes" : 0.0
 } ]
