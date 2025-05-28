@@ -157,4 +157,30 @@ public class LojaViewTest {
         
         assertTrue(outputStream.toString().contains("Loja não encontrada."));
     }
+
+    @Test
+    public void exibeConceitoDeveExibirTodosOsConceitosEmOrdem() {
+        lojaView.conceitoLoja();
+        String output = outputStream.toString();
+
+        // Verifica se contém e se está na ordem correta
+        int idxRuim = output.indexOf("Ruim");
+        int idxMedio = output.indexOf("Médio");
+        int idxBom = output.indexOf("Bom");
+        int idxExcelente = output.indexOf("Excelente");
+
+        assertTrue(idxRuim >= 0, "Deveria conter 'Ruim'");
+        assertTrue(idxMedio > idxRuim, "'Médio' deve aparecer após 'Ruim'");
+        assertTrue(idxBom > idxMedio, "'Bom' deve aparecer após 'Médio'");
+        assertTrue(idxExcelente > idxBom, "'Excelente' deve aparecer após 'Bom'");
+    }
+
+    @Test
+    public void exibirConceitoNaoDeveLancarExcecao() {
+        assertDoesNotThrow(() -> lojaView.conceitoLoja());
+    }
+
+
 }
+
+
