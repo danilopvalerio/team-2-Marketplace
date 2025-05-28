@@ -164,4 +164,28 @@ public class LojaView {
             System.out.println("Erro: " + e.getMessage());
         }
     }
+
+    public void conceitoLoja() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=== Atribuir Conceito à Loja ===");
+        System.out.print("Digite o CPF/CNPJ da loja a ser avaliada: ");
+        String cpfCnpj = scanner.nextLine();
+        while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
+            System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
+            cpfCnpj = scanner.nextLine();
+        }
+        try {
+            Loja lojaExistente = LojaController.getLojaPorCpfCnpj(cpfCnpj);
+            if (lojaExistente == null) {
+                System.out.println("Loja não encontrada.");
+                return;
+            }
+            LojaController.atribuirConceitoLoja(lojaExistente);
+            System.out.println("Conceito atribuído com sucesso!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erro inesperado ao atribuir conceito à loja.");
+        }
+    }
 }

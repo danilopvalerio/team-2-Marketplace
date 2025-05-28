@@ -1,10 +1,1 @@
-[ {
-  "nome" : "loja1",
-  "email" : "loja1@gmail.com",
-  "senha" : "$2a$10$71VnLEUodd1H1QVO5rNYm.ckMARItJhLdwo1CpEaw4YK6KaFu/Azy",
-  "cpfCnpj" : "333.333.333-33",
-  "endereco" : "Rua Teste, 998",
-  "historicoVendas" : [ ],
-  "mediaAvaliacoesProdutos" : 0.0,
-  "conceito" : null
-} ]
+[ ]

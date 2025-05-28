@@ -208,11 +208,10 @@ public class LojaController {
         return 0;
     }
 
-    public static void atribuirConceitoLoja(String cpfCnpj) {
-        Loja loja = getLojaPorCpfCnpj(cpfCnpj);
+    public static void atribuirConceitoLoja(Loja loja) {
 
         if (loja != null) {
-            double media = calcularMediaAvaliacoesLoja(cpfCnpj);
+            double media = calcularMediaAvaliacoesLoja(loja.getCpfCnpj());
 
             if (media < 2.0) loja.setConceito("Ruim");
             else if (media >= 2.0 && media < 3.5) loja.setConceito("Médio");
