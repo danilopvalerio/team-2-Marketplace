@@ -1,10 +1,1 @@
-[ {
-  "nome" : "Loja legal",
-  "email" : "lojalegal@gmail.com",
-  "senha" : "$2a$10$g52x9CelYaDxknHIW04c1ekYSLxSfKbbYJwEWv/01/aVcEo3K6Cza",
-  "cpfCnpj" : "111.111.111-11",
-  "endereco" : "rua legal",
-  "historicoVendas" : [ ],
-  "mediaAvaliacoesProdutos" : 0.0,
-  "conceito" : "Ruim"
-} ]
+[ ]

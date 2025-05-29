@@ -1,15 +1,4 @@
 [ {
-  "id" : "123",
-  "nome" : "Notebook",
-  "valor" : 3000.0,
-  "tipo" : "Eletrônico",
-  "quantidade" : 9,
-  "marca" : "Dell",
-  "descricao" : "Alta performance",
-  "idLoja" : "333.333.333-33",
-  "avaliacoes" : [ 4 ],
-  "mediaAvaliacoes" : 4.0
-}, {
   "id" : "P001",
   "nome" : "Produto Teste",
   "valor" : 100.0,
@@ -17,40 +6,7 @@
   "quantidade" : 10,
   "marca" : "Marca Teste",
   "descricao" : "Descrição do produto",
-  "idLoja" : "333.333.333-33",
-  "avaliacoes" : [ 3, 5, 3, 5, 3, 5, 1, 5, 3, 5 ],
-  "mediaAvaliacoes" : 3.8
-}, {
-  "id" : "1",
-  "nome" : "Toalha Grande",
-  "valor" : 10.0,
-  "tipo" : "Casa e Banho",
-  "quantidade" : 300,
-  "marca" : "Marca Teste",
-  "descricao" : "Toalha grande",
-  "idLoja" : "333.333.333-33",
-  "avaliacoes" : [ ],
-  "mediaAvaliacoes" : 0.0
-}, {
-  "id" : "2",
-  "nome" : "Toalha Pequena",
-  "valor" : 7.0,
-  "tipo" : "Casa e Banho",
-  "quantidade" : 200,
-  "marca" : "Marca Teste",
-  "descricao" : "Toalha pequena",
-  "idLoja" : "333.333.333-33",
-  "avaliacoes" : [ ],
-  "mediaAvaliacoes" : 0.0
-}, {
-  "id" : "4",
-  "nome" : "copo de vidro",
-  "valor" : 12.0,
-  "tipo" : "Cozinha",
-  "quantidade" : 1,
-  "marca" : "Coparias",
-  "descricao" : "copo de vidro resistente",
-  "idLoja" : "111.111.111-11",
+  "idLoja" : "123.456.789-00",
   "avaliacoes" : [ ],
   "mediaAvaliacoes" : 0.0
 } ]

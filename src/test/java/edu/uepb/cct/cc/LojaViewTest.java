@@ -158,6 +158,7 @@ public class LojaViewTest {
         assertTrue(outputStream.toString().contains("Loja não encontrada."));
     }
 
+
     @Test
     public void exibeConceitoDeveExibirTodosOsConceitosEmOrdem() {
         lojaView.conceitoLoja();
@@ -176,10 +177,12 @@ public class LojaViewTest {
     }
 
     @Test
-    public void exibirConceitoNaoDeveLancarExcecao() {
-        assertDoesNotThrow(() -> lojaView.conceitoLoja());
-    }
+    public void exibeConceitoLojaVazia() {
+        lojaView.conceitoLoja();
+        String output = outputStream.toString();
+        assertTrue(output.contains("Nenhuma loja cadastrada."));
 
+    }
 
 }
 
