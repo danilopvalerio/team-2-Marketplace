@@ -69,6 +69,7 @@ public class LojaView {
 
         for (int i = 0; i < lojas.size(); i++) {
             Loja loja = lojas.get(i);
+            LojaController.atribuirConceitoLoja(loja);
             System.out.println((i + 1) + ". " + loja.getNome() + " - " + loja.getCpfCnpj());
             System.out.println("Avaliação: " + loja.getConceito());
         }
@@ -166,35 +167,4 @@ public class LojaView {
         }
     }
 
-    public void conceitoLoja() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("=== Atribuir Conceito à Loja ===");
-        System.out.print("Digite o CPF/CNPJ da loja a ser avaliada: ");
-        String cpfCnpj = scanner.nextLine();
-        while (!cpfCnpj.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}")) {
-            System.out.print("CPF/CNPJ inválido. Insira um CPF/CNPJ válido: ");
-            cpfCnpj = scanner.nextLine();
-        }
-        try {
-            Loja lojaExistente = LojaController.getLojaPorCpfCnpj(cpfCnpj);
-            if (lojaExistente == null) {
-                System.out.println("Loja não encontrada.");
-                return;
-            }
-            if (lojaExistente != null && lojaExistente.getConceito() != null) {
-                System.out.println("Loja já possui um conceito atribuído: " + lojaExistente.getConceito());
-                return;
-            }
-            if (lojaExistente != null && lojaExistente.getConceito() == null) {
-                LojaController.atribuirConceitoLoja(lojaExistente);
-                System.out.println("Conceito atribuído com sucesso!");
-                //System.out.println("Conceito atual da loja: " + lojaExistente.getConceito());
-            }
-
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Erro inesperado ao atribuir conceito à loja.");
-        }
-    }
 }
