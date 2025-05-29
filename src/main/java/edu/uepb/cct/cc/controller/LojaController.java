@@ -186,7 +186,15 @@ public class LojaController {
 
     public static double calcularMediaAvaliacoesLoja(String cpfCnpj) {
 
-        Loja loja = getLojaPorCpfCnpj(cpfCnpj);
+        List<Loja> lojas = carregarLojas();
+        Loja loja = null;
+
+        for (Loja l : lojas) {
+            if (l.getCpfCnpj().equals(cpfCnpj)) {
+                loja = l;
+            }
+        }
+
         if (loja != null) {
             List<Produto> produtos = ProdutoController.getProdutosPorLoja(cpfCnpj);
 
@@ -196,13 +204,20 @@ public class LojaController {
 
             // calculando media das avaliações de produtos
             double somaMedias = 0;
+            int produtosContabilizados = 0;
             for (Produto produto : produtos) {
-                somaMedias += produto.getMediaAvaliacoes();
+                if (produto.getMediaAvaliacoes() > 0) {
+                    somaMedias += produto.getMediaAvaliacoes();
+                    produtosContabilizados++;
+                }
             }
-            double media = somaMedias / produtos.size();
+            if (somaMedias == 0) {
+                throw new IllegalArgumentException("A loja não tem produtos avaliados.");
+            }
+            double media = somaMedias / produtosContabilizados;
 
             loja.setMediaAvaliacoesProdutos(media);
-            salvarLojas(List.of(loja));
+            salvarLojas(lojas);
             return media;
         }
         return 0;
@@ -210,15 +225,19 @@ public class LojaController {
 
     public static void atribuirConceitoLoja(Loja loja) {
 
-        if (loja != null) {
-            double media = calcularMediaAvaliacoesLoja(loja.getCpfCnpj());
+        String cpfCnpj = loja.getCpfCnpj();
+        List<Loja> lojas = carregarLojas();
 
-            if (media < 2.0) loja.setConceito("Ruim");
-            else if (media >= 2.0 && media < 3.5) loja.setConceito("Médio");
-            else if (media >= 3.5 && media < 4.5) loja.setConceito("Bom");
-            else if (media >= 4.5) loja.setConceito("Excelente");
+        for (Loja l : lojas) {
+            if (l.getCpfCnpj().equals(cpfCnpj)) {
+                double media = calcularMediaAvaliacoesLoja(cpfCnpj);
 
-            salvarLojas(List.of(loja));
+                if (media < 2.0) loja.setConceito("Ruim");
+                else if (media >= 2.0 && media < 3.5) loja.setConceito("Médio");
+                else if (media >= 3.5 && media < 4.5) loja.setConceito("Bom");
+                else if (media >= 4.5) loja.setConceito("Excelente");
+            }
         }
+        salvarLojas(lojas);
     }
 }
