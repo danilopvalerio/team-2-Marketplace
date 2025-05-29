@@ -34,7 +34,7 @@ public class HistoricoComprasTest {
     @Test
     void testVerificaHistoricoComPedidos() {
         String cpf = "222.222.222-22";
-        Comprador comprador = new Comprador("Mario", "joao@email.com", "senha123", cpf, "Rua A, 123");
+        Comprador comprador = new Comprador("Roberto", "joao@email.com", "senha123", cpf, "Rua A, 123");
         CompradorController.create(comprador);
 
         ProdutoController.create("Smartphone", 2500.0f, "Eletrônico", 5, "Samsung", "Última geração",

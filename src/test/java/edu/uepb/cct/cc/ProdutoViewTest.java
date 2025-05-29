@@ -88,4 +88,7 @@ class ProdutoViewTest {
         assertEquals(5, produto.getAvaliacoes().size());
         assertEquals(4.2f, produto.getMediaAvaliacoes(), 0.01f); // margem de erro de 0.01
     }
+
+
+
 }
