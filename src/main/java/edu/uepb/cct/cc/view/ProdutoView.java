@@ -217,25 +217,21 @@ public class ProdutoView {
     public static void avaliar_produtos_comprados(List<String> idsProdutosComprados) {
         System.out.println("\n=== Avaliação de Produtos Comprados ===");
 
+
         for (String idProduto : idsProdutosComprados) {
-            Produto produto = ProdutoController.buscarProdutoPorID(idProduto);
-            System.out.println("\nProduto comprado: " + produto.getNome());
-            System.out.print("Avalie este produto (1 a 5 | Para não avaliar digite 0): ");
-            int nota = scanner.nextInt();
-            scanner.nextLine(); // consumir \n
 
             try {
-                if (nota >= 1 && nota <= 5) {
-                    ProdutoController.adicionar_avaliacao(idProduto, nota);
-                    System.out.println("\nAvaliação registrada com sucesso!");
-
-                    float media = ProdutoController.obter_media_avaliacoes(idProduto);
-                    System.out.printf("Média atual: %.2f\n", media);
-
-                } else if (nota == 0) {
-                    System.out.println("Produto não avaliado. Próximo produto: \n");
+                Produto produto = ProdutoController.buscarProdutoPorID(idProduto);
+                if (produto == null) {
+                    System.out.println("Produto com ID " + idProduto + " não encontrado.");
+                    continue;
                 } else {
-                    System.out.println("Nota inválida. Por favor, insira um valor entre 1 e 5 ou 0 para não avaliar.");
+                    System.out.println("Produto encontrado: " + produto.getNome());
+                    System.out.print("Avalie este produto (1 a 5 | Para não avaliar digite 0): ");
+                    int nota = scanner.nextInt();
+                    scanner.nextLine(); // consumir \n
+                    ProdutoController.adicionar_avaliacao(idProduto, nota);
+
                 }
 
             } catch (InputMismatchException e) {
