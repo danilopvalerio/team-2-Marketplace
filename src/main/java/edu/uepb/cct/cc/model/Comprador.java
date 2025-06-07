@@ -12,6 +12,7 @@ public class Comprador {
     private String endereco;
     private List<ItemCarrinho> carrinho;
     private List<Venda> historicoDeVendas;
+    private int score;
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final Pattern CPF_PATTERN = Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
@@ -28,9 +29,18 @@ public class Comprador {
         setSenha(senha);
         setCpf(cpf);
         this.endereco = endereco;
+        this.score = 0;
     }
 
     // Getters and setters
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public String getNome() {
         return nome;
     }

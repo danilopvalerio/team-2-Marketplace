@@ -1,5 +1,6 @@
 package edu.uepb.cct.cc.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import edu.uepb.cct.cc.model.Comprador;
@@ -62,6 +63,35 @@ public class CompradorController extends Comprador {
             System.out.println("Comprador adicionado com sucesso.");
         } catch (IOException e) {
             logger.severe("Erro ao salvar o comprador: " + e.getMessage());
+        }
+    }
+
+    public static void adicionarScore(String cpf, int pontos) {
+        List<Comprador> compradores = carregarCompradores();
+        for (Comprador c : compradores) {
+            if (c.getCpf().equals(cpf)) {
+                c.setScore(c.getScore() + pontos);
+                break;
+            }
+        }
+        salvarCompradores(compradores);
+    }
+
+    public static List<Comprador> carregarCompradores() {
+        try {
+            return objectMapper.readValue(new File(ARQUIVO_COMPRADORES),
+                    new TypeReference<List<Comprador>>() {
+                    });
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public static void salvarCompradores(List<Comprador> compradores) {
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_COMPRADORES), compradores);
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar compradores: " + e.getMessage());
         }
     }
 
