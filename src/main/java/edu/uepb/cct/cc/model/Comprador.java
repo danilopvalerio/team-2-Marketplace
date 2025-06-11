@@ -205,4 +205,18 @@ public class Comprador {
                     '}';
         }
     }
+
+    @Override
+    public String toString() {
+        return "Comprador{" +
+                "nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", carrinho=" + carrinho +
+                ", historicoDeVendas=" + historicoDeVendas +
+                ", score=" + score +
+                '}';
+    }
 }
