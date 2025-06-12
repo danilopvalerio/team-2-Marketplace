@@ -63,6 +63,8 @@ public class VendaView {
 
             VendaController vendaController = new VendaController();
             vendaController.registrarVenda(venda); // Registrar a venda no sistema
+            VendaController controller = new VendaController();
+
 
             // Esvaziar o carrinho
             comprador.getCarrinho().clear();
@@ -73,4 +75,5 @@ public class VendaView {
             System.out.println("❌ Ocorreu um erro ao processar a venda: " + e.getMessage());
         }
     }
+
 }

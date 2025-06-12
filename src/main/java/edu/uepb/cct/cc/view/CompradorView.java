@@ -184,4 +184,20 @@ public class CompradorView extends CompradorController {
         String resultado = CompradorController.deleteCompradorPorCpf(cpf);
         System.out.println(resultado);
     }
+
+    public void exibirScoreComprador() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Digite o CPF do comprador: ");
+        String cpf = scanner.nextLine();
+
+        Comprador comprador = CompradorController.getCompradorPorCpf(cpf);
+        if (comprador != null) {
+            System.out.println("📊 Score atual de " + comprador.getNome() + ": " + comprador.getScore());
+        } else {
+            System.out.println("❌ Comprador não encontrado.");
+        }
+    }
+
+
+
 }

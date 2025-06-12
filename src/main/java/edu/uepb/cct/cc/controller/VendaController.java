@@ -3,6 +3,7 @@ package edu.uepb.cct.cc.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.uepb.cct.cc.model.Comprador;
 import edu.uepb.cct.cc.model.Loja;
 import edu.uepb.cct.cc.model.Produto;
 import edu.uepb.cct.cc.model.Venda;
@@ -153,6 +154,57 @@ public class VendaController {
             System.err.println("❌ Erro ao registrar a venda: " + e.getMessage());
         }
     }
+
+    // método para registrar vendas por comprador e contar score
+    public void registrarVendasPorComprador(Venda vendaOriginal) {
+        garantirArquivoDeVendas();
+        List<Map<String, Object>> vendasExistentes = carregarVendasRegistradas();
+
+        Map<String, Object> vendaMap = construirVendaParaRegistro(vendaOriginal);
+        boolean vendaJaExiste = vendasExistentes.stream()
+                .anyMatch(v -> v.get("id_venda").equals(vendaOriginal.getIdVenda()));
+
+        if (vendaJaExiste) {
+            System.err.println("❌ Venda com ID " + vendaOriginal.getIdVenda() + " já registrada.");
+            return;
+        }
+
+        vendasExistentes.add(vendaMap);
+
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(ARQUIVO_VENDAS), vendasExistentes);
+            System.out.println("✅ Venda registrada com sucesso.");
+
+            // === NOVA LÓGICA DE SCORE ===
+            Comprador comprador = new Comprador();
+            String cpfComprador = vendaOriginal.getIdComprador();
+            List<Comprador> compradores = CompradorController.carregarCompradores();
+
+            for (Comprador c : compradores) {
+                if (c.getCpf().equals(cpfComprador)) {
+                    int novoScore = c.getScore() + 1;
+
+                    if (novoScore >= 5) {
+                        System.out.println("🎉 Parabéns, " + c.getNome() + "! Você acumulou 5 pontos e ganhou frete grátis nesta compra!");
+                        c.setScore(0); // Zera após o benefício
+                    } else {
+                        c.setScore(novoScore);
+                        System.out.println("⭐ Você ganhou 1 ponto! Score atual: " + c.getScore());
+                    }
+
+                    break;
+                }
+            }
+
+            CompradorController.salvarCompradores(compradores);
+            // ============================
+
+        } catch (IOException e) {
+            System.err.println("❌ Erro ao registrar a venda: " + e.getMessage());
+        }
+    }
+
+
 
     public void registrarVendasPorLoja(Venda vendaOriginal) {
         garantirArquivoDeVendas();

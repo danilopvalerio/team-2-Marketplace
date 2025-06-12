@@ -70,6 +70,7 @@ public class CompradorController extends Comprador {
         List<Comprador> compradores = carregarCompradores();
         for (Comprador c : compradores) {
             if (c.getCpf().equals(cpf)) {
+                int novoScore = c.getScore() + pontos;
                 c.setScore(c.getScore() + pontos);
                 break;
             }
