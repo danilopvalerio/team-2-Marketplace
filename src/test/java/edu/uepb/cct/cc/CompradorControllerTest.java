@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -122,5 +123,72 @@ public class CompradorControllerTest {
         assertEquals("Ana", compradores.get(0).getNome());
         assertEquals("Carlos", compradores.get(1).getNome());
         assertEquals("Zara", compradores.get(2).getNome());
+    }
+
+    @Test
+    public void testAdicionarScore() {
+        String cpf = "333.222.111-99";
+
+        // cria comprador novo
+        Comprador comprador1 = new Comprador("João", "joao@email.com", "senha123", cpf, "Rua Testes, 997");
+        CompradorController.create(comprador1);
+
+        // testa adição de score
+        CompradorController.adicionarScore(cpf,3);
+
+        Comprador compCriado = CompradorController.getCompradorPorCpf(cpf);
+        assertEquals(3,compCriado.getScore());
+    }
+
+    @Test
+    public void testCarregarCompradores() {
+        // cria comprador novo
+        Comprador comprador1 = new Comprador("João", "joao@email.com", "senha123", "222.678.000-00", "Rua Testes, 997");
+        CompradorController.create(comprador1);
+
+        List<Comprador> compradores = CompradorController.getTodosCompradores();
+        List<Comprador> compradoresTest = CompradorController.carregarCompradores();
+
+        // dados extraidos para comparar
+        String toStringExpected = compradores.get(0).toString();
+        String toStringActual = compradoresTest.get(0).toString();
+
+        assertEquals(toStringExpected,toStringActual);
+    }
+
+    @Test
+    public void testCarregarCompradoresComListaVazia() {
+        List<Comprador> compradores = CompradorController.carregarCompradores();
+        assertTrue(compradores.isEmpty());
+    }
+
+    @Test
+    public void testSalvarCompradores() {
+        Comprador comprador1 = new Comprador("João", "joao@email.com", "senha123", "222.678.000-99", "Rua Testes, 997");
+        Comprador comprador2 = new Comprador("Maria","maria@email.com","senha123", "333.678.000-99", "Rua Testes, 996");
+        Comprador comprador3 = new Comprador("José", "jose@email.com", "senha123", "444.678.000-99", "Rua Testes, 995");
+
+        List<Comprador> compradores = new ArrayList<Comprador>();
+        compradores.add(comprador1);
+        compradores.add(comprador2);
+        compradores.add(comprador3);
+
+        CompradorController.salvarCompradores(compradores);
+
+        List<Comprador> compradoresTest = CompradorController.carregarCompradores();
+
+        for (int i = 0; i < compradoresTest.size(); i++) {
+            String compExpected = compradores.get(i).toString();
+            String compActual = compradoresTest.get(i).toString();
+
+            assertEquals(compExpected,compActual);
+        }
+    }
+
+    @Test
+    public void testSalvarComradoresComListaVazia() {
+        CompradorController.salvarCompradores(new ArrayList<Comprador>());
+        List<Comprador> compradores = CompradorController.carregarCompradores();
+        assertTrue(compradores.isEmpty());
     }
 }
