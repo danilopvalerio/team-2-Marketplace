@@ -96,6 +96,7 @@ public class CompradorView extends CompradorController {
             System.out.println("E-mail: " + compradorSelecionado.getEmail());
             System.out.println("CPF: " + compradorSelecionado.getCpf());
             System.out.println("Endereço: " + compradorSelecionado.getEndereco());
+            System.out.println("Score: " + compradorSelecionado.getScore()); // testar essa funcionalidade
         }
         else if(escolha==0){
             System.out.println("Saindo da visualização de compradores.");
